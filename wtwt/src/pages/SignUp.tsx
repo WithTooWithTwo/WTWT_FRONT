@@ -29,6 +29,26 @@ function SignIn({navigation}: SignUnScreenProps) {
     const passwordRef = useRef<TextInput | null>(null);
     const checkPwdRef = useRef<TextInput | null>(null);
 
+
+    const onChangeName = useCallback((text: string) => {
+        setName(text.trim());
+    }, []);
+    const onChangeNickname = useCallback((text: string) => {
+        setNickname(text.trim());
+    }, []);
+    const onChangeEmail = useCallback((text: string) => {
+        setEmail(text.trim());
+    }, []);
+    const onChangePhone = useCallback((text: string) => {
+        setPhone(text.trim());
+    }, []);
+    const onChangePassword = useCallback((text: string) => {
+        setPassword(text.trim());
+    }, []);
+    const onChangeCheckPwd = useCallback((text: string) => {
+        setCheckPwd(text.trim());
+    }, []);
+
     const toSignIn = useCallback(() => {
         navigation.navigate('SignIn');
     }, [navigation]);
@@ -49,6 +69,10 @@ function SignIn({navigation}: SignUnScreenProps) {
         if (!password || !password.trim()) {
             return Alert.alert('알림', '비밀번호를 입력해주세요');
         }
+        if (!checkPwd || !checkPwd.trim()) {
+            console.log(password);
+            return Alert.alert('알림', '비밀번호 확인을 입력해주세요');
+        }
 
         if (
             !/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/.test(
@@ -63,34 +87,15 @@ function SignIn({navigation}: SignUnScreenProps) {
                 '비밀번호는 영문,숫자,특수문자($@^!%*#?&)를 모두 포함하여 8자 이상 입력해야합니다.',
             );
         }
-        if (checkPwd != password) {
+        if (password !== checkPwd) {
             return Alert.alert('알림', '비밀번호가 일치하지 않습니다');
         }
-        console.log(name, nickname, phone, email, password);
+        console.log(name, nickname, phone, email, password, checkPwd);
         Alert.alert('알림', '회원가입 되었습니다.');
         toSignIn();
-    }, [name, nickname, phone, email, password]);
+    }, [name, nickname, phone, email, password, checkPwd]);
 
-    const onChangeName = useCallback((text: string) => {
-        setName(text);
-    }, []);
-    const onChangeNickname = useCallback((text: string) => {
-        setNickname(text);
-    }, []);
-    const onChangeEmail = useCallback((text: string) => {
-        setEmail(text);
-    }, []);
-    const onChangePassword = useCallback((text: string) => {
-        setPassword(text);
-    }, []);
-    const onChangePhone = useCallback((text: string) => {
-        setPhone(text);
-    }, []);
-    const onChangeCheckPwd = useCallback((text: string) => {
-        setCheckPwd(text);
-    }, []);
-
-    const canGoNext = name && nickname && phone && email && password;
+    const canGoNext = name && nickname && phone && email && password && checkPwd;
 
     return (
         <DismissKeyboardView style={styles.container}>
@@ -186,11 +191,12 @@ function SignIn({navigation}: SignUnScreenProps) {
                         autoCapitalize="none"
                         placeholder="비밀번호를 입력해주세요"
                         onChangeText={onChangePassword}
-                        secureTextEntry
+                        // secureTextEntry
                         returnKeyType="next"
                         importantForAutofill="yes"
                         autoComplete="password"
-                        textContentType="password"
+                        // textContentType={'oneTimeCode'}
+                        blurOnSubmit={false}
                         ref={passwordRef}
                         onSubmitEditing={() => {
                             // 엔터시 비밀번호 창으로 이동하기
@@ -207,13 +213,15 @@ function SignIn({navigation}: SignUnScreenProps) {
                         placeholder="비밀번호를 다시 한 번 입력해주세요"
                         onChangeText={onChangeCheckPwd}
                         autoCapitalize="none"
-                        secureTextEntry
-                        returnKeyType="next"
+                        // secureTextEntry
+                        blurOnSubmit={false}
+                        returnKeyType="send"
                         importantForAutofill="yes"
                         autoComplete="password"
                         textContentType="password"
                         ref={checkPwdRef}
                         clearButtonMode="while-editing"
+                        onSubmitEditing={onSubmit}
                     />
                 </View>
             </View>
