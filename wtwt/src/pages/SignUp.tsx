@@ -23,6 +23,9 @@ function SignIn({navigation}: SignUnScreenProps) {
     const [name, setName] = useState('');
     const [nickname, setNickname] = useState('');
     const [gender, setGender] = useState('MALE');
+    const [bYear, setBYear] = useState('');
+    const [bMonth, setBMonth] = useState('');
+    const [bDay, setBDay] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -53,6 +56,15 @@ function SignIn({navigation}: SignUnScreenProps) {
     }, []);
     const onChangeCheckPwd = useCallback((text: string) => {
         setCheckPwd(text.trim());
+    }, []);
+    const onChangeBYear = useCallback((text: string) => {
+        setBYear(text.trim());
+    }, []);
+    const onChangeBMonth = useCallback((text: string) => {
+        setBMonth(text.trim());
+    }, []);
+    const onChangeBDay = useCallback((text: string) => {
+        setBDay(text.trim());
     }, []);
 
 
@@ -96,7 +108,7 @@ function SignIn({navigation}: SignUnScreenProps) {
         if (password !== checkPwd) {
             return Alert.alert('알림', '비밀번호가 일치하지 않습니다');
         }
-        console.log(name, nickname, phone, email, password, checkPwd);
+        console.log(name, nickname, gender, bYear, phone, email, password, checkPwd);
 
         try{
             setLoading(true);
@@ -123,8 +135,8 @@ function SignIn({navigation}: SignUnScreenProps) {
     const canGoNext = name && nickname && phone && email && password && checkPwd;
 
     return (
+        <ScrollView>
         <DismissKeyboardView style={styles.container}>
-            <ScrollView>
             <View style={styles.inputZone}>
                 <View style={styles.textGroup}>
                     <Text style={styles.textLabel}>이름</Text>
@@ -185,7 +197,42 @@ function SignIn({navigation}: SignUnScreenProps) {
                             <Text style={styles.radioText}>선택 안함</Text>
 
                     </View>
+                </View>
+                <View style={styles.textGroup}>
+                    <Text style={styles.textLabel}>생년월일</Text>
+                    <View style={styles.birthdayGroup}>
+                        <TextInput
+                            value={bYear}
+                            style={styles.birthdayInput}
+                            placeholder="년"
+                            keyboardType="numbers-and-punctuation"
+                            onChangeText={onChangeBYear}
+                            returnKeyType="next"
+                            blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                            clearButtonMode="while-editing"
+                        />
+                        <TextInput
+                            value={bMonth}
+                            style={styles.birthdayInput}
+                            placeholder="월"
+                            keyboardType="numbers-and-punctuation"
+                            onChangeText={onChangeBMonth}
+                            returnKeyType="next"
+                            blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                            clearButtonMode="while-editing"
+                        />
+                        <TextInput
+                            value={bDay}
+                            style={styles.birthdayInput}
+                            placeholder="일"
+                            keyboardType="numbers-and-punctuation"
+                            onChangeText={onChangeBDay}
+                            returnKeyType="next"
+                            blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                            clearButtonMode="while-editing"
+                        />
                     </View>
+                </View>
                 <View style={styles.textGroup}>
                     <Text style={styles.textLabel}>휴대폰 번호</Text>
                     <TextInput
@@ -283,8 +330,8 @@ function SignIn({navigation}: SignUnScreenProps) {
                     }
                 </Pressable>
             </View>
-            </ScrollView>
         </DismissKeyboardView>
+        </ScrollView>
     );
 }
 
@@ -333,6 +380,17 @@ const styles = StyleSheet.create({
         paddingHorizontal: 7,
         marginRight: 5,
         color: '#707070'
+    },
+    birthdayGroup: {
+        flexDirection: "row",
+        alignItems: "flex-start"
+    },
+    birthdayInput: {
+        flex: 1,
+        height: 50,
+        paddingLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#EFEFEF',
     }
 });
 
