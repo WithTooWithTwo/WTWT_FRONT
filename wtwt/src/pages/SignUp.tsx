@@ -4,6 +4,9 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  KeyboardAvoidingView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -19,6 +22,9 @@ import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {RadioButton} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import ImagePicker from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {blue500} from 'react-native-paper/lib/typescript/styles/colors';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -42,11 +48,6 @@ function SignIn({navigation}: SignUpScreenProps) {
   const [mode, setMode] = useState('date'); // 모달 유형
   const [visible, setVisible] = useState(false); // 모달 노출 여부
 
-  const onPressTime = () => {
-    // 시간 클릭 시
-    setMode('time'); // 모달 유형을 time으로 변경
-    setVisible(true); // 모달 open
-  };
   const onPressDate = () => {
     // 날짜 클릭 시
     setMode('date'); // 모달 유형을 date로 변경
@@ -145,19 +146,19 @@ function SignIn({navigation}: SignUpScreenProps) {
     if (password !== checkPwd) {
       return Alert.alert('알림', '비밀번호가 일치하지 않습니다');
     }
-    // console.log(date);
-    console.log(
-      name,
-      nickname,
-      gender,
-      bYear,
-      bMonth,
-      bDay,
-      phoneNumber,
-      email,
-      password,
-      checkPwd,
-    );
+    // console.log(
+    //   name,
+    //   phoneNumber,
+    //   statusMessage,
+    //   email,
+    //   password,
+    //   checkPwd,
+    //   nickname,
+    //   gender,
+    //   bYear,
+    //   bMonth,
+    //   bDay,
+    // );
 
     try {
       setLoading(true);
@@ -165,16 +166,16 @@ function SignIn({navigation}: SignUpScreenProps) {
       const response = await axios.post(
         `${Config.API_URL}`,
         {
-          name,
-          phoneNumber,
-          email,
-          password,
-          nickname,
-          statusMessage,
-          gender,
-          bYear,
-          bMonth,
-          bDay,
+          name: name,
+          phoneNumber: phoneNumber,
+          email: email,
+          password: password,
+          nickname: nickname,
+          statusMessage: statusMessage,
+          gender: gender,
+          bYear: bYear,
+          bMonth: bMonth,
+          bDay: bDay,
         },
         //{headers : {}}
       );
@@ -202,229 +203,296 @@ function SignIn({navigation}: SignUpScreenProps) {
     navigation,
   ]);
 
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = (event: any) => {
+    const {contentOffset} = event.nativeEvent;
+    setScrollPosition(contentOffset.y);
+  };
+
+  const handleKeyboardSubmit = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd();
+    }
+  };
+
+  const handleScrollUp = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({y: 0});
+    }
+  };
+
   const canGoNext =
     name && nickname && phoneNumber && email && password && checkPwd;
 
   return (
     <>
-      <ScrollView>
-        <DismissKeyboardView style={styles.container}>
-          <View style={styles.titleZone}>
-            <Text style={styles.title}>회원가입</Text>
-          </View>
-          <View style={styles.inputZone}>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>이름</Text>
-              <TextInput
-                value={name}
-                style={styles.textInput}
-                placeholder="이름을 입력해주세요"
-                onChangeText={onChangeName}
-                importantForAutofill="yes"
-                autoCapitalize="none"
-                autoComplete="name"
-                //keyboardType="email-address"
-                textContentType="name"
-                returnKeyType="next"
-                ref={nameRef}
-                onSubmitEditing={() => {
-                  // 엔터시 비밀번호 창으로 이동하기
-                  nicknameRef.current?.focus();
-                }}
-                blurOnSubmit={false} //키보드 내려가지 않게 하려고
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>휴대폰 번호</Text>
-              <TextInput
-                value={phoneNumber}
-                style={styles.textInput}
-                placeholder="휴대폰 번호를 입력해주세요"
-                onChangeText={onChangePhone}
-                importantForAutofill="yes"
-                keyboardType="numbers-and-punctuation"
-                // autoComplete="password"
-                returnKeyType="next"
-                ref={phoneRef}
-                onSubmitEditing={() => {
-                  emailRef.current?.focus();
-                }}
-                blurOnSubmit={false} //키보드 내려가지 않게 하려고
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>이메일</Text>
-              <TextInput
-                value={email}
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholder="이메일을 입력해주세요"
-                onChangeText={onChangeEmail}
-                importantForAutofill="yes"
-                autoComplete="email"
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                returnKeyType="next"
-                ref={emailRef}
-                onSubmitEditing={() => {
-                  // 엔터시 비밀번호 창으로 이동하기
-                  passwordRef.current?.focus();
-                }}
-                blurOnSubmit={false} //키보드 내려가지 않게 하려고
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>비밀번호</Text>
-              <TextInput
-                value={password}
-                style={styles.textInput}
-                autoCapitalize="none"
-                placeholder="비밀번호를 입력해주세요"
-                onChangeText={onChangePassword}
-                secureTextEntry
-                returnKeyType="next"
-                importantForAutofill="yes"
-                autoComplete="password"
-                textContentType={'oneTimeCode'}
-                blurOnSubmit={false}
-                ref={passwordRef}
-                onSubmitEditing={() => {
-                  // 엔터시 비밀번호 창으로 이동하기
-                  checkPwdRef.current?.focus();
-                }}
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>비밀번호 확인</Text>
-              <TextInput
-                value={checkPwd}
-                style={styles.textInput}
-                placeholder="비밀번호를 다시 한 번 입력해주세요"
-                onChangeText={onChangeCheckPwd}
-                autoCapitalize="none"
-                secureTextEntry
-                blurOnSubmit={false}
-                returnKeyType="send"
-                importantForAutofill="yes"
-                autoComplete="password"
-                textContentType={'oneTimeCode'}
-                ref={checkPwdRef}
-                clearButtonMode="while-editing"
-                //onSubmitEditing={onSubmit}
-              />
-            </View>
-            <View style={styles.space}></View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>닉네임</Text>
-              <TextInput
-                value={nickname}
-                style={styles.textInput}
-                placeholder="닉네임을 입력해주세요"
-                onChangeText={onChangeNickname}
-                autoCapitalize="none"
-                importantForAutofill="yes"
-                //autoComplete="password"
-                //textContentType="password"
-                ref={nicknameRef}
-                onSubmitEditing={() => {
-                  // 엔터시 비밀번호 창으로 이동하기
-                  phoneRef.current?.focus();
-                }}
-                blurOnSubmit={false} //키보드 내려가지 않게 하려고
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>한줄 소개</Text>
-              <TextInput
-                value={statusMessage}
-                style={styles.textInput}
-                placeholder="간단한 인삿말을 입력해주세요"
-                onChangeText={onChangeStatusMessage}
-                importantForAutofill="yes"
-                autoCapitalize="none"
-                autoComplete="name"
-                textContentType="name"
-                returnKeyType="next"
-                ref={nameRef}
-                onSubmitEditing={() => {
-                  // 엔터시 비밀번호 창으로 이동하기
-                  nicknameRef.current?.focus();
-                }}
-                blurOnSubmit={false} //키보드 내려가지 않게 하려고
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>성별</Text>
-              <View style={styles.radio}>
-                <View style={styles.radioBox}>
-                  <RadioButton
-                    value="FEMALE"
-                    status={gender === 'FEMALE' ? 'checked' : 'unchecked'}
-                    onPress={() => setGender('FEMALE')}
-                  />
-                  <Text style={styles.radioText}>여자</Text>
-                </View>
-                <View style={styles.radioBox}>
-                  <RadioButton
-                    value="MALE"
-                    status={gender === 'MALE' ? 'checked' : 'unchecked'}
-                    onPress={() => setGender('MALE')}
-                  />
-                  <Text style={styles.radioText}>남자</Text>
-                </View>
-                <View style={styles.radioBox}>
-                  <RadioButton
-                    value="HIDE"
-                    status={gender === 'HIDE' ? 'checked' : 'unchecked'}
-                    onPress={() => setGender('HIDE')}
-                  />
-                  <Text style={styles.radioText}>선택 안함</Text>
+      <KeyboardAvoidingView>
+        <ScrollView
+          ref={scrollViewRef}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}>
+          <DismissKeyboardView style={styles.container}>
+            <View style={styles.inputZone}>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>이름</Text>
+                <TextInput
+                  value={name}
+                  style={styles.textInput}
+                  placeholder="이름을 입력해주세요"
+                  onChangeText={onChangeName}
+                  importantForAutofill="yes"
+                  autoCapitalize="none"
+                  autoComplete="name"
+                  //keyboardType="email-address"
+                  textContentType="name"
+                  returnKeyType="next"
+                  ref={nameRef}
+                  onSubmitEditing={() => {
+                    // 엔터시 비밀번호 창으로 이동하기
+                    nicknameRef.current?.focus();
+                  }}
+                  blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                  clearButtonMode="while-editing"
+                />
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>휴대폰 번호</Text>
+                <TextInput
+                  value={phoneNumber}
+                  style={styles.textInput}
+                  placeholder="휴대폰 번호를 입력해주세요"
+                  onChangeText={onChangePhone}
+                  importantForAutofill="yes"
+                  keyboardType="numbers-and-punctuation"
+                  returnKeyType="next"
+                  ref={phoneRef}
+                  onSubmitEditing={() => {
+                    emailRef.current?.focus();
+                  }}
+                  blurOnSubmit={true} //키보드 내려가지 않게 하려고
+                  clearButtonMode="while-editing"
+                />
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>이메일</Text>
+                <TextInput
+                  value={email}
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  placeholder="이메일을 입력해주세요"
+                  onChangeText={onChangeEmail}
+                  importantForAutofill="yes"
+                  autoComplete="email"
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  returnKeyType="next"
+                  ref={emailRef}
+                  onSubmitEditing={() => {
+                    // 엔터시 비밀번호 창으로 이동하기
+                    passwordRef.current?.focus();
+                  }}
+                  blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                  clearButtonMode="while-editing"
+                />
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>비밀번호</Text>
+                <TextInput
+                  value={password}
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  placeholder="비밀번호를 입력해주세요"
+                  onChangeText={onChangePassword}
+                  secureTextEntry
+                  returnKeyType="next"
+                  importantForAutofill="yes"
+                  autoComplete="password"
+                  textContentType={'oneTimeCode'}
+                  blurOnSubmit={false}
+                  ref={passwordRef}
+                  onSubmitEditing={() => {
+                    // 엔터시 비밀번호 창으로 이동하기
+                    checkPwdRef.current?.focus();
+                  }}
+                  clearButtonMode="while-editing"
+                />
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>비밀번호 확인</Text>
+                <TextInput
+                  value={checkPwd}
+                  style={styles.textInput}
+                  placeholder="비밀번호를 다시 한 번 입력해주세요"
+                  onChangeText={onChangeCheckPwd}
+                  autoCapitalize="none"
+                  secureTextEntry
+                  blurOnSubmit={false}
+                  returnKeyType="send"
+                  importantForAutofill="yes"
+                  autoComplete="password"
+                  textContentType={'oneTimeCode'}
+                  ref={checkPwdRef}
+                  clearButtonMode="while-editing"
+                  onSubmitEditing={() => {
+                    // 엔터시 비밀번호 창으로 이동하기
+                    nicknameRef.current?.focus();
+                    handleKeyboardSubmit();
+                  }}
+                  //onSubmitEditing={onSubmit}
+                />
+              </View>
+              <View style={styles.space}></View>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingBottom: 40,
+                }}>
+                <View style={styles.imageCircle}>
+                  <Icon name="user" color="#BDBDBD" size={70} />
                 </View>
               </View>
-            </View>
-            <View style={styles.textGroup}>
-              <Text style={styles.textLabel}>생년월일</Text>
-              <Pressable onPress={onPressDate}>
-                <View style={styles.dateBox}>
-                  <Text style={styles.dateText}>
-                    {date.getFullYear()} - {date.getMonth() + 1} -{' '}
-                    {date.getDate()}
-                  </Text>
-                </View>
-              </Pressable>
 
-              <DateTimePickerModal
-                isVisible={visible}
-                onConfirm={onConfirm}
-                onCancel={onCancel}
-                date={date}
-              />
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>닉네임</Text>
+                <TextInput
+                  value={nickname}
+                  style={styles.textInput}
+                  placeholder="닉네임을 입력해주세요"
+                  onChangeText={onChangeNickname}
+                  autoCapitalize="none"
+                  importantForAutofill="yes"
+                  ref={nicknameRef}
+                  onSubmitEditing={() => {
+                    // 엔터시 비밀번호 창으로 이동하기
+                    phoneRef.current?.focus();
+                  }}
+                  blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                  clearButtonMode="while-editing"
+                />
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>한줄 소개</Text>
+                <TextInput
+                  value={statusMessage}
+                  style={styles.textInput}
+                  placeholder="간단한 인삿말을 입력해주세요"
+                  onChangeText={onChangeStatusMessage}
+                  importantForAutofill="yes"
+                  autoCapitalize="none"
+                  autoComplete="name"
+                  textContentType="name"
+                  returnKeyType="next"
+                  ref={nameRef}
+                  onSubmitEditing={() => {
+                    // 엔터시 비밀번호 창으로 이동하기
+                    nicknameRef.current?.focus();
+                    scrollViewRef.current?.scrollToEnd();
+                  }}
+                  blurOnSubmit={false} //키보드 내려가지 않게 하려고
+                  clearButtonMode="while-editing"
+                />
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>성별</Text>
+                <View style={styles.radio}>
+                  <View style={styles.radioBox}>
+                    <RadioButton
+                      value="FEMALE"
+                      status={gender === 'FEMALE' ? 'checked' : 'unchecked'}
+                      onPress={() => setGender('FEMALE')}
+                    />
+                    <Text style={styles.radioText}>여자</Text>
+                  </View>
+                  <View style={styles.radioBox}>
+                    <RadioButton
+                      value="MALE"
+                      status={gender === 'MALE' ? 'checked' : 'unchecked'}
+                      onPress={() => setGender('MALE')}
+                    />
+                    <Text style={styles.radioText}>남자</Text>
+                  </View>
+                  <View style={styles.radioBox}>
+                    <RadioButton
+                      value="HIDE"
+                      status={gender === 'HIDE' ? 'checked' : 'unchecked'}
+                      onPress={() => setGender('HIDE')}
+                    />
+                    <Text style={styles.radioText}>선택 안함</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.textGroup}>
+                <Text style={styles.textLabel}>생년월일</Text>
+                <Pressable onPress={onPressDate}>
+                  <View style={styles.dateBox}>
+                    <Text style={styles.dateText}>
+                      {date.getFullYear()} - {date.getMonth() + 1} -{' '}
+                      {date.getDate()}
+                    </Text>
+                  </View>
+                </Pressable>
+
+                <DateTimePickerModal
+                  isVisible={visible}
+                  onConfirm={onConfirm}
+                  onCancel={onCancel}
+                  date={date}
+                />
+              </View>
+              <View style={{paddingBottom: 10}} />
             </View>
+          </DismissKeyboardView>
+        </ScrollView>
+        <View style={styles.titleZone}>
+          <Text style={styles.title}>회원가입</Text>
+          <View style={styles.scrollBox}>
+            <Pressable
+              onPress={handleScrollUp}
+              style={[
+                styles.circle,
+                {
+                  backgroundColor:
+                    scrollPosition >= styles.circle.height / 2
+                      ? '#D9D9D9'
+                      : '#3B70FF',
+                },
+              ]}
+            />
+            <View style={styles.circleLine}></View>
+            <Pressable
+              onPress={handleKeyboardSubmit}
+              style={[
+                styles.circle,
+                {
+                  backgroundColor:
+                    scrollPosition >= styles.circle.height / 2
+                      ? '#3B70FF'
+                      : '#D9D9D9',
+                },
+              ]}
+            />
           </View>
-        </DismissKeyboardView>
-      </ScrollView>
-      <View style={styles.buttonZone}>
-        <Pressable
-          onPress={onSubmit}
-          style={
-            !canGoNext
-              ? styles.loginButton
-              : [styles.loginButton, styles.loginButtonActive]
-          }
-          disabled={!canGoNext || loading}>
-          {loading ? (
-            <ActivityIndicator color="blue" />
-          ) : (
-            <Text style={styles.loginButtonText}>회원가입 하기</Text>
-          )}
-        </Pressable>
-      </View>
+        </View>
+        <View style={styles.buttonZone}>
+          <Pressable
+            onPress={onSubmit}
+            style={
+              !canGoNext
+                ? styles.loginButton
+                : [styles.loginButton, styles.loginButtonActive]
+            }
+            disabled={!canGoNext || loading}>
+            {loading ? (
+              <ActivityIndicator color="blue" />
+            ) : (
+              <Text style={styles.loginButtonText}>회원가입 하기</Text>
+            )}
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
     </>
   );
 }
@@ -434,15 +502,42 @@ const styles = StyleSheet.create({
     padding: 25,
     backgroundColor: 'white',
     flex: 1,
-    marginBottom: 120,
+    paddingBottom: 100,
+    marginBottom: 30,
+    paddingTop: 170,
   },
   titleZone: {
     height: 150,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    top: 0,
+    width: ScreenWidth,
+    backgroundColor: 'white',
+    paddingLeft: 30,
+    paddingTop: 50,
+    flexDirection: 'row',
+    paddingHorizontal: 30,
+    alignItems: 'center',
   },
   title: {
     fontSize: 23,
     fontWeight: '600',
+  },
+  circle: {
+    width: 22,
+    height: 22,
+    borderRadius: 100,
+    alignSelf: 'center',
+    backgroundColor: 'transparent',
+  },
+  circleLine: {
+    width: 30,
+    height: 1,
+    backgroundColor: '#D9D9D9',
+  },
+  scrollBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputZone: {
     marginBottom: 0,
@@ -456,8 +551,10 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 55,
+    marginTop: 3,
     paddingLeft: 10,
     backgroundColor: '#EFEFEF',
+    borderRadius: 10,
   },
   dateBox: {
     justifyContent: 'center',
@@ -477,17 +574,20 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     height: 65,
+    backgroundColor: '#3C70FF80',
+    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#D9D9D9',
+    borderRadius: 10,
     margin: 20,
   },
   loginButtonText: {
     textAlign: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 19,
+    fontWeight: '500',
+    color: 'white',
   },
   loginButtonActive: {
-    backgroundColor: 'skyblue',
+    backgroundColor: '#3C70FF',
   },
   radio: {
     flexDirection: 'row',
@@ -516,7 +616,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFEFEF',
   },
   space: {
-    height: 100,
+    height: 280,
+  },
+  imageCircle: {
+    borderRadius: 100,
+    backgroundColor: '#D9D9D9',
+    height: 110,
+    width: 110,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
