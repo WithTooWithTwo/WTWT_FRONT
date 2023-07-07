@@ -14,9 +14,9 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Config from 'react-native-config';
 import axios, {AxiosError} from 'axios';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {MainStackParamList} from './Main';
+import {ListStackParamList} from './List';
 
-type NewPostScreenProps = NativeStackScreenProps<MainStackParamList, 'NewPost'>;
+type NewPostScreenProps = NativeStackScreenProps<ListStackParamList, 'NewPost'>;
 
 function NewPost({navigation}: NewPostScreenProps) {
   const [country, setCountry] = useState('');
@@ -100,7 +100,7 @@ function NewPost({navigation}: NewPostScreenProps) {
       }
     } finally {
       setLoading(false);
-      navigation.navigate('List');
+      navigation.navigate('ListBoard');
     }
   }, [loading, country, title, content, firstDay, lastDay, headCount]);
 
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D960',
     justifyContent: 'center',
     alignItems: 'center',
+
     borderRadius: 7,
     paddingLeft: 20,
   },

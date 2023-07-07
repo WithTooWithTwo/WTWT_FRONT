@@ -14,6 +14,7 @@ import {RootState} from './src/store/reducer';
 import Chat from './src/pages/Chat';
 import Group from './src/pages/Group';
 import MyPage from './src/pages/MyPage';
+import MainStack from './src/pages/MainStack';
 
 // 타입은 문서에 정의된 거 사용하는 것임
 // 탭과 스택 네비게이터를 동시에 사용 가능
@@ -24,11 +25,11 @@ function AppInner() {
 
   return (
     <NavigationContainer>
-      {!isLoggedIn ? (
+      {isLoggedIn ? (
         <Tab.Navigator>
           <Tab.Screen
-            name="Main"
-            component={Main}
+            name="MainStack"
+            component={MainStack}
             options={{headerShown: false}}
           />
           <Tab.Screen

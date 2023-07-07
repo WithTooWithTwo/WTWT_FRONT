@@ -6,10 +6,11 @@ import {RootState} from './src/store/reducer';
 import AppInner from './AppInner';
 // 어떤 페이지 들어가야 하는지 미리 정의해놓고 시작하기
 export type LoggedInParamList = {
-  Main: undefined;
+  MainStack: undefined;
   Chat: undefined;
   Group: undefined;
   MyPage: undefined;
+  NewPost: undefined;
   // Complete: {orderId: string}; // delivery 안에 있음
 };
 

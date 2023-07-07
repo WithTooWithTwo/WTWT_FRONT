@@ -27,6 +27,8 @@ function SignIn({navigation}: SignInScreenProps) {
   const passwordRef = useRef<TextInput | null>(null);
 
   const onSubmit = useCallback(async () => {
+    Alert.alert('알림', '로그인 되었습니다.');
+
     if (loading) {
       return;
     }
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   loginButtonActive: {
-    backgroundColor: '3C70FF',
+    backgroundColor: '#3C70FF',
   },
   joinButton: {
     textAlign: 'center',
