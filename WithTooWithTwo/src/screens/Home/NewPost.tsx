@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -20,6 +21,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {storePosts} from '../../util/post';
 import {addPosts} from '../../slices/postsSlice';
 import {RootState} from '../../store/store';
+import {RadioButton} from 'react-native-paper';
+import IconButton from '../../components/UI/IconButton';
+import FeatherIcon from 'react-native-vector-icons/Feather';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
@@ -30,29 +34,42 @@ function NewPost({navigation}: NewPostScreenProps) {
   const [firstDay, setFirstDay] = useState(new Date());
   const [lastDay, setLastDay] = useState(new Date());
   const [category, setCategory] = useState('');
-  const [headCount, setHeadCount] = useState('');
+  const [headCount, setHeadCount] = useState('1');
   const [loading, setLoading] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const [thunder, setThunder] = useState(false);
   const dispatch = useDispatch();
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
+  const [isFirstDatePickerVisible, setFirstDatePickerVisibility] =
+    useState(false);
+  const [isLastDatePickerVisible, setLastDatePickerVisibility] =
+    useState(false);
+  const showFirstDatePicker = () => {
+    setFirstDatePickerVisibility(true);
   };
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+  const hideFirstDatePicker = () => {
+    setFirstDatePickerVisibility(false);
+  };
+
+  const showLastDatePicker = () => {
+    setLastDatePickerVisibility(true);
+  };
+
+  const hideLastDatePicker = () => {
+    setLastDatePickerVisibility(false);
   };
 
   const handleFirstConfirm = (date: Date) => {
     // console.warn('A date has been picked: ', date);
     setFirstDay(date);
-    hideDatePicker();
+    hideFirstDatePicker();
   };
 
   const handleLastConfirm = (date: Date) => {
     // console.warn('A date has been picked: ', date);
     setLastDay(date);
-    hideDatePicker();
+    hideLastDatePicker();
   };
 
   const onChangeTitle = useCallback((text: string) => {
@@ -68,6 +85,20 @@ function NewPost({navigation}: NewPostScreenProps) {
   const onChangeHeadCount = useCallback((text: string) => {
     setHeadCount(text);
   }, []);
+
+  const onChangeThunder = useCallback((value: boolean) => {
+    setThunder(value);
+  }, []);
+
+  const plusHeadCount = () => {
+    setHeadCount((+headCount + 1).toString());
+  };
+
+  const minusHeadCount = () => {
+    if (+headCount > 0) {
+      setHeadCount((+headCount - 1).toString());
+    }
+  };
 
   const postsData = {
     category_id: category,
@@ -111,24 +142,39 @@ function NewPost({navigation}: NewPostScreenProps) {
         <View style={styles.container}>
           <View style={styles.headerZone}>
             <Pressable style={styles.postButton} onPress={onSubmit}>
-              <Text>작성하기</Text>
+              <Text style={{color: '#3C70FF', fontWeight: '600'}}>
+                작성하기
+              </Text>
             </Pressable>
           </View>
           <View style={styles.writingZone}>
             <View style={styles.countryCategory}>
-              <RNPickerSelect
-                placeholder={{label: '나라선택', value: 0}}
-                onValueChange={onChangeCategory}
-                fixAndroidTouchableBug={true}
-                useNativeAndroidPickerStyle={false}
-                items={[
-                  {label: '프랑스', value: 1},
-                  {label: '영국', value: 2},
-                  {label: '스페인', value: 3},
-                  {label: '이탈리아', value: 4},
-                  {label: '독일', value: 5},
-                ]}
+              <View style={styles.countryCategoryText}>
+                <RNPickerSelect
+                  placeholder={{label: '나라선택', value: 0}}
+                  onValueChange={onChangeCategory}
+                  fixAndroidTouchableBug={true}
+                  useNativeAndroidPickerStyle={false}
+                  items={[
+                    {label: '프랑스', value: 1},
+                    {label: '영국', value: 2},
+                    {label: '스페인', value: 3},
+                    {label: '이탈리아', value: 4},
+                    {label: '독일', value: 5},
+                  ]}
+                />
+              </View>
+            </View>
+            <View style={styles.radioBox}>
+              <RadioButton
+                value="FEMALE"
+                color="#3C70FF"
+                status={thunder === true ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  thunder === true ? setThunder(false) : setThunder(true);
+                }}
               />
+              <Text style={styles.radioText}>번개만남으로 올리기</Text>
             </View>
             <TextInput
               value={title}
@@ -152,39 +198,76 @@ function NewPost({navigation}: NewPostScreenProps) {
             <View style={styles.infoZone}>
               <Text style={styles.infoTitleText}>동행 정보</Text>
               <View style={styles.date}>
-                <Pressable style={styles.dateBox} onPress={showDatePicker}>
-                  <Text>시작 날짜</Text>
+                <Pressable style={styles.dateBox} onPress={showFirstDatePicker}>
+                  <Text>
+                    {firstDay.getFullYear()} - {firstDay.getMonth() + 1} -{' '}
+                    {firstDay.getDate()}
+                  </Text>
                 </Pressable>
                 <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
+                  isVisible={isFirstDatePickerVisible}
                   mode="date"
                   onConfirm={handleFirstConfirm}
-                  onCancel={hideDatePicker}
+                  onCancel={hideFirstDatePicker}
                 />
-                <Pressable style={styles.dateBox} onPress={showDatePicker}>
-                  <Text>종료 날짜</Text>
+                <Text>~</Text>
+                <Pressable style={styles.dateBox} onPress={showLastDatePicker}>
+                  <Text>
+                    {lastDay.getFullYear()} - {lastDay.getMonth() + 1} -{' '}
+                    {lastDay.getDate()}
+                  </Text>
                 </Pressable>
                 <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
+                  isVisible={isLastDatePickerVisible}
                   mode="date"
                   onConfirm={handleLastConfirm}
-                  onCancel={hideDatePicker}
+                  onCancel={hideLastDatePicker}
                 />
-                <View style={[styles.dateBox, {width: 60, paddingLeft: 25}]}>
-                  <RNPickerSelect
-                    placeholder={{label: '인원 선택', value: 0}}
-                    onValueChange={onChangeHeadCount}
-                    fixAndroidTouchableBug={true}
-                    useNativeAndroidPickerStyle={false}
-                    items={[
-                      {label: '1', value: 1},
-                      {label: '2', value: 2},
-                      {label: '3', value: 3},
-                      {label: '4', value: 4},
-                      {label: '5', value: 5},
-                      {label: '6', value: 6},
-                    ]}
-                  />
+              </View>
+              <View style={styles.headCountBox}>
+                <Text style={[styles.headCountLabel, {marginLeft: 7}]}>
+                  인원
+                </Text>
+                <View style={styles.headCountButtons}>
+                  <TouchableOpacity onPress={minusHeadCount}>
+                    <Text style={styles.headCountButtonText}>-</Text>
+                  </TouchableOpacity>
+                  <Text>{headCount}</Text>
+                  {/*<RNPickerSelect*/}
+                  {/*  placeholder={{label: '0', value: 0}}*/}
+                  {/*  onValueChange={onChangeHeadCount}*/}
+                  {/*  fixAndroidTouchableBug={true}*/}
+                  {/*  useNativeAndroidPickerStyle={false}*/}
+                  {/*  style={{*/}
+                  {/*    placeholder: {color: 'grey'},*/}
+                  {/*  }}*/}
+                  {/*  items={[*/}
+                  {/*    {label: '1', value: 1},*/}
+                  {/*    {label: '2', value: 2},*/}
+                  {/*    {label: '3', value: 3},*/}
+                  {/*    {label: '4', value: 4},*/}
+                  {/*    {label: '5', value: 5},*/}
+                  {/*    {label: '6', value: 6},*/}
+                  {/*  ]}*/}
+                  {/*/>*/}
+                  <TouchableOpacity onPress={plusHeadCount}>
+                    <Text style={styles.headCountButtonText}>+</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.groupPeople}>
+                <Text style={styles.groupPeopleLabel}>그룹 인원 추가하기</Text>
+                <FeatherIcon name="plus" color="#3C70FF" size={25} />
+              </View>
+            </View>
+            <View style={styles.infoZone}>
+              <Text style={styles.infoTitleText}>동행인 설정</Text>
+              <View style={styles.infoBox}>
+                <View style={styles.preferBox}>
+                  <Text style={styles.preferText}>선호하는 성별</Text>
+                </View>
+                <View style={styles.preferBox}>
+                  <Text style={styles.preferText}>선호하는 나이대</Text>
                 </View>
               </View>
             </View>
@@ -196,7 +279,9 @@ function NewPost({navigation}: NewPostScreenProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: '#F8F8F9',
+  },
   headerZone: {
     height: 60,
     backgroundColor: '#D9D9D980',
@@ -206,25 +291,41 @@ const styles = StyleSheet.create({
   },
   postButton: {},
   writingZone: {
-    marginTop: 20,
+    marginVertical: 20,
     marginHorizontal: 30,
   },
   countryCategory: {
-    width: 90,
+    width: 100,
+    height: 40,
     padding: 10,
-    backgroundColor: '#D9D9D960',
+    backgroundColor: '#D9D9D950',
     justifyContent: 'center',
     alignItems: 'center',
-
     borderRadius: 7,
-    paddingLeft: 20,
   },
-  countryCategoryText: {
-    textAlign: 'center',
+  countryCategoryText: {},
+  radio: {
+    flexDirection: 'row',
+    paddingVertical: 7,
+    justifyContent: 'space-between',
+  },
+  radioBox: {
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  radioText: {
+    paddingTop: 10,
+    paddingHorizontal: 7,
+    marginLeft: 10,
+    marginRight: 5,
+    color: '#707070',
+  },
+  radioButton: {
+    color: '#3C70FF',
   },
   titleBox: {
     marginTop: 10,
-    backgroundColor: '#D9D9D960',
+    backgroundColor: '#D9D9D950',
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 13,
@@ -232,7 +333,7 @@ const styles = StyleSheet.create({
   contentBlock: {
     marginTop: 10,
     height: 350,
-    backgroundColor: '#D9D9D960',
+    backgroundColor: '#D9D9D950',
     borderRadius: 13,
     padding: 20,
     justifyContent: 'flex-start',
@@ -242,25 +343,79 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   infoZone: {
-    marginTop: 20,
+    marginTop: 40,
   },
   infoTitleText: {
-    fontSize: 16,
+    fontSize: 17,
+  },
+  infoBox: {
+    backgroundColor: '#D9D9D950',
+    borderRadius: 7,
+    padding: 20,
+    marginTop: 20,
   },
   date: {
     marginTop: 20,
+    marginBottom: 15,
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   dateBox: {
-    width: 120,
+    width: 140,
     padding: 15,
-    marginRight: 10,
-    backgroundColor: '#D9D9D960',
+    marginRight: 0,
+    backgroundColor: '#D9D9D950',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 7,
   },
-  numPeople: {},
+  headCountBox: {
+    width: 180,
+    padding: 15,
+    marginBottom: 15,
+    borderRadius: 7,
+    backgroundColor: '#D9D9D950',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  headCountButtons: {
+    width: 100,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headCountButtonText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: 'grey',
+  },
+  headCountLabel: {
+    paddingTop: 2,
+    fontSize: 15,
+    color: '#8F8F8F',
+  },
+  groupPeople: {
+    padding: 17,
+    borderRadius: 7,
+    backgroundColor: '#D9D9D950',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  groupPeopleLabel: {
+    marginLeft: 3,
+    fontSize: 15,
+    color: '#8F8F8F',
+  },
+  preferBox: {
+    marginBottom: 20,
+  },
+  preferText: {
+    fontSize: 15,
+    color: '#707070',
+  },
 });
 
 export default NewPost;
