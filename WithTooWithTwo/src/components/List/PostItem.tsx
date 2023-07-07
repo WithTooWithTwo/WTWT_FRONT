@@ -8,6 +8,9 @@ import {
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {PostsType} from '../../slices/postsSlice';
+import StateButton from './StateButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 
 function PostItem({
   id,
@@ -35,25 +38,37 @@ function PostItem({
         <Text style={styles.dateText}>1시간 전</Text>
       </View>
       <Text style={styles.titleText}>{title}</Text>
-      <Text style={styles.innerText}>{content}</Text>
+      <View style={styles.contentBox}>
+        <Text style={styles.contentText}>
+          {content.length < 50 ? content : content.slice(0, 50) + '...'}
+        </Text>
+      </View>
       <View style={styles.footerBox}>
-        <Text style={styles.stateText}>모집 중</Text>
-        <Text style={styles.commentText}>1/{headCount}</Text>
-        <Text style={styles.likeText}>6</Text>
+        <StateButton state="recruit" />
+        <View style={styles.iconBox}>
+          <View style={styles.iconLabel}>
+            <Ionicons name="eye" color="#3C70FF90" size={14} />
+            <Text style={styles.iconText}>2,290</Text>
+          </View>
+          <View style={styles.iconLabel}>
+            <FontAwesome name="user-alt" color="#3C70FF90" size={13} />
+            <Text style={styles.iconText}>
+              {companions.length + 1}/{headCount}
+            </Text>
+          </View>
+        </View>
       </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  postZone: {
-    marginHorizontal: 25,
-    marginTop: 13,
-  },
   postBlock: {
-    backgroundColor: '#D9D9D980',
+    backgroundColor: '#FFFFFF',
     padding: 20,
-    marginBottom: 15,
+    marginBottom: 10,
+    height: 160,
+    borderRadius: 10,
   },
   infoBox: {
     flexDirection: 'row',
@@ -64,41 +79,45 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   dateText: {
+    color: '#A7A7A7',
     fontSize: 10,
   },
   titleText: {
     paddingBottom: 5,
-    fontWeight: 'bold',
+    fontWeight: '500',
     fontSize: 16,
   },
-  innerText: {
-    paddingBottom: 13,
-    color: '#B1B1B1',
+  contentBox: {
+    marginTop: 5,
+    height: 38,
+  },
+  contentText: {
+    color: '#808080',
     fontSize: 12,
+    fontWeight: '300',
   },
   footerBox: {
     flexDirection: 'row',
-    borderTopWidth: 1,
-    borderTopColor: '#C9C9C9',
-    paddingTop: 12,
+    justifyContent: 'space-between',
   },
-  stateText: {
-    flex: 13,
+  iconBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 5,
+    paddingBottom: 5,
   },
-  commentText: {
-    flex: 1,
-    paddingRight: 10,
+  iconLabel: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 10,
   },
-  likeText: {
-    flex: 1,
-  },
-  absoluteView: {
-    backgroundColor: '#c9c9c9',
-    position: 'absolute',
-    right: 30,
-    bottom: 30,
-    padding: 15,
-    borderRadius: 50,
+  iconText: {
+    fontSize: 10,
+    marginLeft: 7,
+    color: '#AEAEAE',
+    fontWeight: '400',
   },
 });
 export default PostItem;

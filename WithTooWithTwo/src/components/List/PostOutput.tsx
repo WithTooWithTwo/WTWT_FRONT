@@ -24,12 +24,6 @@ function PostOutput({posts}: {posts: PostsType[]}) {
   );
 }
 const styles = StyleSheet.create({
-  container: {},
-  headerZone: {
-    height: 60,
-    backgroundColor: '#D9D9D980',
-    justifyContent: 'center',
-    paddingLeft: 30,
-  },
+  container: {margin: 22},
 });
 export default PostOutput;

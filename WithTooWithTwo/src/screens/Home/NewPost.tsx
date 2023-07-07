@@ -16,9 +16,10 @@ import axios, {AxiosError} from 'axios';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {storePosts} from '../../util/post';
 import {addPosts} from '../../slices/postsSlice';
+import {RootState} from '../../store/store';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
@@ -32,6 +33,7 @@ function NewPost({navigation}: NewPostScreenProps) {
   const [headCount, setHeadCount] = useState('');
   const [loading, setLoading] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const dispatch = useDispatch();
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -82,11 +84,11 @@ function NewPost({navigation}: NewPostScreenProps) {
   };
 
   const onSubmit = useCallback(async () => {
-    const dispatch = useDispatch();
     try {
       setLoading(true);
       const response = await storePosts(postsData);
-      console.log(response);
+      dispatch(addPosts({postsData, id: response.data.id}));
+      // console.log(response);
       Alert.alert('알림', '등록 되었습니다!');
       navigation.navigate('Main');
     } catch (error) {

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   absoluteView: {
-    backgroundColor: '#c9c9c9',
+    backgroundColor: '#3C70FF',
     position: 'absolute',
     right: 30,
     bottom: 30,
