@@ -24,6 +24,9 @@ import {RootState} from '../../store/store';
 import {RadioButton} from 'react-native-paper';
 import IconButton from '../../components/UI/IconButton';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import RadioButtonGroup from 'react-native-paper';
+import Slider from '@react-native-community/slider';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
@@ -36,6 +39,8 @@ function NewPost({navigation}: NewPostScreenProps) {
   const [category, setCategory] = useState('');
   const [headCount, setHeadCount] = useState('1');
   const [loading, setLoading] = useState(false);
+  const [preferGender, setPreferGender] = useState('FEMALE');
+  const [range, setRange] = useState([10, 20]);
 
   const [thunder, setThunder] = useState(false);
   const dispatch = useDispatch();
@@ -88,6 +93,14 @@ function NewPost({navigation}: NewPostScreenProps) {
 
   const onChangeThunder = useCallback((value: boolean) => {
     setThunder(value);
+  }, []);
+
+  const onChangePreferGender = useCallback((text: string) => {
+    setPreferGender(text);
+  }, []);
+
+  const onChangeRange = useCallback((value: Array<number>) => {
+    setRange(value);
   }, []);
 
   const plusHeadCount = () => {
@@ -169,6 +182,7 @@ function NewPost({navigation}: NewPostScreenProps) {
               <RadioButton
                 value="FEMALE"
                 color="#3C70FF"
+                uncheckedColor="#3C70FF"
                 status={thunder === true ? 'checked' : 'unchecked'}
                 onPress={() => {
                   thunder === true ? setThunder(false) : setThunder(true);
@@ -230,7 +244,7 @@ function NewPost({navigation}: NewPostScreenProps) {
                 </Text>
                 <View style={styles.headCountButtons}>
                   <TouchableOpacity onPress={minusHeadCount}>
-                    <Text style={styles.headCountButtonText}>-</Text>
+                    <Text style={styles.headCountButtonText}> -</Text>
                   </TouchableOpacity>
                   <Text>{headCount}</Text>
                   {/*<RNPickerSelect*/}
@@ -251,7 +265,7 @@ function NewPost({navigation}: NewPostScreenProps) {
                   {/*  ]}*/}
                   {/*/>*/}
                   <TouchableOpacity onPress={plusHeadCount}>
-                    <Text style={styles.headCountButtonText}>+</Text>
+                    <Text style={styles.headCountButtonText}> + </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -265,12 +279,53 @@ function NewPost({navigation}: NewPostScreenProps) {
               <View style={styles.infoBox}>
                 <View style={styles.preferBox}>
                   <Text style={styles.preferText}>선호하는 성별</Text>
+                  <RadioButton.Group
+                    onValueChange={value => onChangePreferGender(value)}
+                    value={preferGender}>
+                    <View style={styles.preferGenderGroup}>
+                      <View style={styles.preferGenderBox}>
+                        <RadioButton value="FEMALE" color="#3C70FF" />
+                        <Text style={styles.preferGenderLabel}>여자</Text>
+                      </View>
+                      <View style={styles.preferGenderBox}>
+                        <RadioButton value="MALE" color="#3C70FF" />
+                        <Text style={styles.preferGenderLabel}>남자</Text>
+                      </View>
+                      <View style={styles.preferGenderBox}>
+                        <RadioButton value="NOMATTER" color="#3C70FF" />
+                        <Text style={styles.preferGenderLabel}>상관없음</Text>
+                      </View>
+                    </View>
+                  </RadioButton.Group>
                 </View>
                 <View style={styles.preferBox}>
                   <Text style={styles.preferText}>선호하는 나이대</Text>
+                  <View style={styles.preferAgeBox}>
+                    <Pressable style={styles.preferAgeButton}>
+                      <Text style={styles.preferAgeLabel}>{range[0]}대</Text>
+                    </Pressable>
+                    <Text
+                      style={[styles.preferAgeLabel, {marginHorizontal: 10}]}>
+                      ~
+                    </Text>
+                    <Pressable style={styles.preferAgeButton}>
+                      <Text style={styles.preferAgeLabel}>{range[1]}대</Text>
+                    </Pressable>
+                  </View>
+                  <MultiSlider
+                    values={range}
+                    min={0}
+                    max={70}
+                    step={10}
+                    trackStyle={{height: 5}}
+                    onValuesChange={onChangeRange}
+                  />
                 </View>
               </View>
             </View>
+            <Pressable style={styles.submitButton} onPress={onSubmit}>
+              <Text style={styles.submitText}>작성하기</Text>
+            </Pressable>
           </View>
         </View>
       </ScrollView>
@@ -415,6 +470,50 @@ const styles = StyleSheet.create({
   preferText: {
     fontSize: 15,
     color: '#707070',
+  },
+  preferGenderGroup: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+  },
+  preferGenderBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  preferGenderLabel: {
+    color: '#979797',
+    fontSize: 16,
+    marginLeft: 5,
+  },
+  preferAgeBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 15,
+    paddingBottom: 10,
+  },
+  preferAgeButton: {
+    backgroundColor: 'rgba(248,248,248,0.97)',
+    paddingVertical: 14,
+    paddingHorizontal: 17,
+    borderRadius: 6,
+  },
+  preferAgeLabel: {
+    color: '#979797',
+    fontSize: 16,
+  },
+  submitButton: {
+    marginTop: 30,
+    flex: 1,
+    paddingVertical: 20,
+    borderRadius: 6,
+    backgroundColor: '#3C70FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  submitText: {
+    fontSize: 18,
+    color: 'white',
   },
 });
 
