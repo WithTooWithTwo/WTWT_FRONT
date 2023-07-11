@@ -22,7 +22,7 @@ function PostListScreen() {
       try {
         const posts = await fetchPost();
         dispatch(setPosts(posts));
-        console.log(posts);
+        // console.log(posts);
       } catch (error) {
         //setError('Could not fetch expense!');
       }

@@ -6,11 +6,13 @@ import MainScreen from '../Home/MainScreen';
 import NewPost from '../Home/NewPost';
 import PostItem from '../../components/List/PostItem';
 import PostDetail from '../Home/PostDetail';
+import NoticeScreen from '../Notice/NoticeScreen';
 
 export type HomeStackParamList = {
   Main: undefined;
   NewPost: undefined;
   PostDetail: {postId: string};
+  Notice: undefined;
 };
 type HomeStackScreenProps = BottomTabScreenProps<
   AuthenticatedTabParamList,
@@ -33,6 +35,11 @@ function HomeScreen({navigation}: HomeStackScreenProps) {
       <HomeStack.Screen
         name="PostDetail"
         component={PostDetail}
+        options={{headerShown: false}}
+      />
+      <HomeStack.Screen
+        name="Notice"
+        component={NoticeScreen}
         options={{headerShown: false}}
       />
     </HomeStack.Navigator>

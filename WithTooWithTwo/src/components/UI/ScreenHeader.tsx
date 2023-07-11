@@ -27,7 +27,7 @@ function screenHeader({title, isGoBack}: {title: string; isGoBack: boolean}) {
 const styles = StyleSheet.create({
   headerZone: {
     height: 60,
-    backgroundColor: '#D9D9D960',
+    backgroundColor: '#D9D9D930',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
