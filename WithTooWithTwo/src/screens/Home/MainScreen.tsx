@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import InitialScreen from './InitialScreen';
 import FastMeetScreen from './FastMeetScreen';
 import PostListScreen from './PostListScreen';
+import MainHeader from '../../components/UI/MainHeader';
 
 export type MainTabParamList = {
   Initial: undefined;
@@ -26,9 +27,7 @@ function MainScreen({navigation}: MainScreenProps) {
   }, [navigation]);
   return (
     <>
-      <View style={styles.headerZone}>
-        <Text style={styles.headerText}>전체 </Text>
-      </View>
+      <MainHeader title="전체" />
       <Tab.Navigator
         initialRouteName="Initial"
         screenOptions={{
