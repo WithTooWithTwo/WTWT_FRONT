@@ -14,6 +14,7 @@ export type HomeStackParamList = {
   PostDetail: {postId: string};
   Notice: undefined;
 };
+
 type HomeStackScreenProps = BottomTabScreenProps<
   AuthenticatedTabParamList,
   'Home'

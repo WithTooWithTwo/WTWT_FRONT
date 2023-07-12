@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {PostsType, PostsTypeWithoutId} from '../slices/postsSlice';
-
 const URL = 'https://wtwt-test-c77ec-default-rtdb.firebaseio.com';
 
 export async function storePosts(posts: PostsTypeWithoutId) {
