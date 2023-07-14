@@ -3,13 +3,21 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 
-function screenHeader({title, isGoBack}: {title: string; isGoBack: boolean}) {
+function screenHeader({
+  title,
+  color,
+  isGoBack,
+}: {
+  title: string;
+  color: string;
+  isGoBack: boolean;
+}) {
   const navigation = useNavigation();
   const goBackHandler = () => {
     navigation.goBack();
   };
   return (
-    <View style={styles.headerZone}>
+    <View style={[styles.headerZone, {backgroundColor: color}]}>
       {isGoBack && (
         <Icon
           name="left"
@@ -27,7 +35,7 @@ function screenHeader({title, isGoBack}: {title: string; isGoBack: boolean}) {
 const styles = StyleSheet.create({
   headerZone: {
     height: 60,
-    backgroundColor: '#D9D9D930',
+    //backgroundColor: '#D9D9D930',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

@@ -21,8 +21,16 @@ const GroupStack = createNativeStackNavigator<GroupStackParamList>();
 function GroupScreen({navigation}: GroupStackScreenProps) {
   return (
     <GroupStack.Navigator>
-      <GroupStack.Screen name="GroupList" component={GroupListScreen} />
-      <GroupStack.Screen name="GroupDetail" component={GroupDetailScreen} />
+      <GroupStack.Screen
+        name="GroupList"
+        component={GroupListScreen}
+        options={{headerShown: false}}
+      />
+      <GroupStack.Screen
+        name="GroupDetail"
+        component={GroupDetailScreen}
+        options={{headerShown: false}}
+      />
     </GroupStack.Navigator>
   );
 }

@@ -4,7 +4,7 @@ import ScreenHeader from '../../components/UI/ScreenHeader';
 function ChatScreen() {
   return (
     <SafeAreaView>
-      <ScreenHeader title="채팅" isGoBack={false} />
+      <ScreenHeader title="채팅" color="#D9D9D930" isGoBack={false} />
     </SafeAreaView>
   );
 }
