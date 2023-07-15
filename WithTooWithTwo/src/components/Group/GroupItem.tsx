@@ -8,28 +8,73 @@ import {
 } from 'react-native';
 import {Colors} from '../../constants/styles';
 import LinearGradient from 'react-native-linear-gradient';
+import {GroupType} from '../../util/group';
+import {useNavigation} from '@react-navigation/native';
 
-function GroupItem() {
+function GroupItem({
+  groupId,
+  groupImage,
+  groupName,
+  firstDay,
+  headCounts,
+  leader,
+  members,
+  notice,
+  places,
+  memos,
+  dday,
+}: GroupType) {
+  const navigation = useNavigation<any>();
+  const groupMainPressHandler = () => {
+    navigation.navigate('GroupDetail', {
+      screen: 'GroupMain',
+      params: {groupId: groupId},
+    });
+  };
+
+  const groupChatPressHandler = () => {
+    navigation.navigate('GroupDetail', {
+      screen: 'GroupChat',
+      params: {groupId: groupId},
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.dateBox}>
         <View style={styles.dDay}>
-          <Text style={styles.dDayText}>D - 10</Text>
+          <Text style={styles.dDayText}>D - {dday}</Text>
         </View>
-        <Text style={styles.dDate}>2023.02.32</Text>
+        <Text style={styles.dDate}>{firstDay}</Text>
       </View>
       <View style={styles.mainBox}>
-        <ImageBackground
-          source={require('../../assets/group_main.png')}
-          resizeMode="cover"
-          style={styles.image}>
-          <View style={styles.imageBox}>
-            <Text style={styles.title}>독일 여행팟</Text>
-            <Text style={styles.leader}>닉네임</Text>
+        {groupImage && (
+          <Pressable onPress={groupMainPressHandler}>
+            <ImageBackground
+              source={require('../../assets/group_main.png')}
+              resizeMode="cover"
+              style={styles.image}>
+              <View style={styles.imageBox}>
+                <Text style={[styles.title, {color: '#FFF'}]}>{groupName}</Text>
+                <Text style={[styles.leader, {color: '#FFF'}]}>
+                  {leader.nickname}
+                </Text>
+              </View>
+            </ImageBackground>
+          </Pressable>
+        )}
+        {!groupImage && (
+          <View>
+            <Pressable style={styles.titleBox}>
+              <Text style={[styles.title, {color: '#000'}]}>{groupName}</Text>
+              <Text style={[styles.leader, {color: '#000'}]}>
+                {leader.nickname}
+              </Text>
+            </Pressable>
+            <View style={styles.line} />
           </View>
-        </ImageBackground>
-
-        <View style={styles.chatBox}>
+        )}
+        <Pressable style={styles.chatBox} onPress={groupChatPressHandler}>
           <Image
             source={require('../../assets/group_main.png')}
             style={styles.chatImage}
@@ -40,14 +85,16 @@ function GroupItem() {
               안녕하세요! 글 보고 연락드려요!
             </Text>
           </View>
-        </View>
+        </Pressable>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    marginBottom: 25,
+  },
   mainBox: {
     backgroundColor: '#FFF',
     borderRadius: 10,
@@ -95,13 +142,11 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   title: {
-    color: '#FFF',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '600',
     marginBottom: 7,
   },
   leader: {
-    color: '#FFF',
     fontSize: 11,
     fontWeight: '300',
   },
@@ -127,6 +172,18 @@ const styles = StyleSheet.create({
     fontWeight: '300',
     fontSize: 12,
     color: '#343434',
+  },
+  titleBox: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 13,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  line: {
+    marginHorizontal: 20,
+    height: 1,
+    backgroundColor: '#E4E4E4',
   },
 });
 export default GroupItem;

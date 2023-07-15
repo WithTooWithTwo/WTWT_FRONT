@@ -47,11 +47,11 @@ function PostItem({
         <StateButton state="recruit" />
         <View style={styles.iconBox}>
           <View style={styles.iconLabel}>
-            <Ionicons name="eye" color="#3C70FF90" size={14} />
+            <Ionicons name="eye" color="#3C70FF99" size={14} />
             <Text style={styles.iconText}>2,290</Text>
           </View>
           <View style={styles.iconLabel}>
-            <FontAwesome name="user-alt" color="#3C70FF90" size={13} />
+            <FontAwesome name="user-alt" color="#3C70FF99" size={13} />
             <Text style={styles.iconText}>
               {companions.length + 1}/{headCount}
             </Text>
