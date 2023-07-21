@@ -131,7 +131,7 @@ function NewPost({navigation}: NewPostScreenProps) {
     try {
       setLoading(true);
       const response = await storePosts(postsData);
-      dispatch(addPosts({postsData, id: response.data.id}));
+      dispatch(addPosts({...postsData, id: response.data.key}));
       // console.log(response);
       Alert.alert('알림', '등록 되었습니다!');
       navigation.navigate('Main');
@@ -247,23 +247,7 @@ function NewPost({navigation}: NewPostScreenProps) {
                     <Text style={styles.headCountButtonText}> -</Text>
                   </TouchableOpacity>
                   <Text>{headCount}</Text>
-                  {/*<RNPickerSelect*/}
-                  {/*  placeholder={{label: '0', value: 0}}*/}
-                  {/*  onValueChange={onChangeHeadCount}*/}
-                  {/*  fixAndroidTouchableBug={true}*/}
-                  {/*  useNativeAndroidPickerStyle={false}*/}
-                  {/*  style={{*/}
-                  {/*    placeholder: {color: 'grey'},*/}
-                  {/*  }}*/}
-                  {/*  items={[*/}
-                  {/*    {label: '1', value: 1},*/}
-                  {/*    {label: '2', value: 2},*/}
-                  {/*    {label: '3', value: 3},*/}
-                  {/*    {label: '4', value: 4},*/}
-                  {/*    {label: '5', value: 5},*/}
-                  {/*    {label: '6', value: 6},*/}
-                  {/*  ]}*/}
-                  {/*/>*/}
+
                   <TouchableOpacity onPress={plusHeadCount}>
                     <Text style={styles.headCountButtonText}> + </Text>
                   </TouchableOpacity>

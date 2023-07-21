@@ -34,6 +34,7 @@ function HotItem({
         </Text>
         <View style={styles.titleBox}>
           <Text>{title.length < 30 ? title : title.slice(0, 30)}</Text>
+          {/*<Text>{title}</Text>*/}
         </View>
         <View style={styles.iconLabel}>
           <Ionicons name="eye" color="#3C70FF90" size={14} />

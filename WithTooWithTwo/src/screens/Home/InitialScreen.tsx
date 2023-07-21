@@ -6,12 +6,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import PostsSlice, {PostsType, setPosts} from '../../slices/postsSlice';
 import PostItem from '../../components/List/PostItem';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {fetchPost} from '../../util/post';
 import HotItem from '../../components/List/HotItem';
 
 type InitialProps = MaterialTopTabScreenProps<MainTabParamList, 'Initial'>;
 function InitialScreen({navigation}: InitialProps) {
+  // const [posts, setPosts] = useState(Array<PostsType>);
   const posts = useSelector((state: RootState) => state.post);
   const dispatch = useDispatch();
   useEffect(() => {

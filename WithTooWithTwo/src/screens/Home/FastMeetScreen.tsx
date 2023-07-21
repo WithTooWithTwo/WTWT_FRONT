@@ -6,12 +6,13 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {fetchPost} from '../../util/post';
-import {setPosts} from '../../slices/postsSlice';
+import {PostsType, setPosts} from '../../slices/postsSlice';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import PostOutput from '../../components/List/PostOutput';
 
 type FastMeetProps = MaterialTopTabScreenProps<MainTabParamList, 'FastMeet'>;
 function FastMeetScreen() {
+  // const [posts, setPosts] = useState(Array<PostsType>);
   const [isFetching, setIsFetching] = useState(true);
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function FastMeetScreen() {
       try {
         const posts = await fetchPost();
         dispatch(setPosts(posts));
-        console.log(posts);
+        // console.log(posts);
       } catch (error) {
         //setError('Could not fetch expense!');
       }

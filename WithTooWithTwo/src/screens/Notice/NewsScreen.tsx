@@ -5,6 +5,7 @@ function NewsScreen() {
   return (
     <View style={styles.container}>
       <NewsItem />
+      <NewsItem />
     </View>
   );
 }

@@ -12,14 +12,15 @@ import {RootState} from '../../store/store';
 
 type PostListProps = MaterialTopTabScreenProps<MainTabParamList, 'PostList'>;
 function PostListScreen() {
+  //const [posts, setPosts] = useState(Array<PostsType>);
   const [isFetching, setIsFetching] = useState(true);
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
   const posts = useSelector((state: RootState) => state.post);
   useEffect(() => {
     async function getPosts() {
-      setIsFetching(true);
       try {
+        setIsFetching(true);
         const posts = await fetchPost();
         dispatch(setPosts(posts));
         // console.log(posts);

@@ -10,6 +10,7 @@ function GroupOutput({groups}: {groups: GroupType[]}) {
   return (
     <>
       <FlatList
+        style={{paddingHorizontal: 30, paddingVertical: 30}}
         data={groups}
         renderItem={renderGroupItem}
         keyExtractor={(item, index) =>

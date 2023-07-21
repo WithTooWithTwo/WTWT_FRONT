@@ -6,6 +6,7 @@ function InvitationsScreen() {
   return (
     <View style={styles.container}>
       <InvitationItem />
+      <InvitationItem />
     </View>
   );
 }

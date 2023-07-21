@@ -32,80 +32,89 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
   const groups = useSelector((state: RootState) => state.group).groups;
   const selectedGroup = groups.find(group => group.groupId == id)!;
   return (
-    <SafeAreaView>
-      <ScreenHeader title="그룹" color={Colors.screenHeader} isGoBack={true} />
-      <ScrollView>
-        <Image
-          source={require('../../assets/group_main.png')}
-          resizeMode="cover"
-          style={styles.image}
+    <View style={{backgroundColor: 'white'}}>
+      <SafeAreaView style={{backgroundColor: Colors.grey1}}>
+        <ScreenHeader
+          title="그룹"
+          color={Colors.screenHeader}
+          isGoBack={true}
         />
-        <View style={styles.mainBox}>
-          <View style={styles.dDayBox}>
-            <Text style={styles.dDay}>D - {selectedGroup.dday}</Text>
+        <ScrollView>
+          <Image
+            source={require('../../assets/group_main.png')}
+            resizeMode="cover"
+            style={styles.image}
+          />
+          <View style={styles.mainBox}>
+            <View style={styles.dDayBox}>
+              <Text style={styles.dDay}>D - {selectedGroup.dday}</Text>
+            </View>
+            <Text style={styles.title}>{selectedGroup.groupName}</Text>
+            <View style={styles.dateBox}>
+              <Text style={styles.date}>{selectedGroup.firstDay}</Text>
+              <FontAwesome name="user-alt" color="#3C70FF99" size={12} />
+              <Text style={styles.headCount}>{selectedGroup.headCounts}명</Text>
+            </View>
+            <View style={styles.keywordBox}>
+              <Text style={styles.keyword}></Text>
+              <Text style={styles.keyword}></Text>
+            </View>
+            <View style={styles.memberBox}>
+              <MemberItem
+                groupId={selectedGroup.groupId}
+                leader={selectedGroup.leader.nickname}
+                members={selectedGroup.members}
+              />
+            </View>
+            <View style={styles.noticeBox}>
+              <Text style={styles.noticeTitle}>NOTICE</Text>
+              <View style={styles.noticeList}>
+                {selectedGroup.notice.map((el, i) => (
+                  <Text key={i} style={styles.noticeItem}>
+                    {el}
+                  </Text>
+                ))}
+              </View>
+            </View>
           </View>
-          <Text style={styles.title}>{selectedGroup.groupName}</Text>
-          <View style={styles.dateBox}>
-            <Text style={styles.date}>{selectedGroup.firstDay}</Text>
-            <FontAwesome name="user-alt" color="#3C70FF99" size={12} />
-            <Text style={styles.headCount}>{selectedGroup.headCounts}명</Text>
+          <View style={styles.placeBox}>
+            <View style={styles.placeTitle}>
+              <Text style={styles.placeTitleText}>꼭 들릴 맛집</Text>
+            </View>
+            <ScrollView horizontal={true} style={styles.placeContent}>
+              {selectedGroup.places.map((el, i) => (
+                <View key={i} style={styles.placeItem}>
+                  <Image
+                    style={styles.placeImage}
+                    source={require('../../assets/place1.png')}
+                  />
+                  <Text style={styles.placeText}>{el}</Text>
+                </View>
+              ))}
+            </ScrollView>
           </View>
-          <View style={styles.keywordBox}>
-            <Text style={styles.keyword}></Text>
-            <Text style={styles.keyword}></Text>
-          </View>
-          <View style={styles.memberBox}>
-            <MemberItem
-              groupId={selectedGroup.groupId}
-              leader={selectedGroup.leader.nickname}
-              members={selectedGroup.members}
-            />
-          </View>
-          <View style={styles.noticeBox}>
-            <Text style={styles.noticeTitle}>NOTICE</Text>
-            <View style={styles.noticeList}>
-              {selectedGroup.notice.map((el, i) => (
-                <Text key={i} style={styles.noticeItem}>
+          <View style={styles.placeBox}>
+            <View style={styles.placeTitle}>
+              <Text style={styles.placeTitleText}>가고싶은 여행지</Text>
+            </View>
+            <View style={styles.memoContent}>
+              {selectedGroup.memos.map((el, i) => (
+                <Text key={i} style={styles.memoItem}>
                   {el}
                 </Text>
               ))}
             </View>
           </View>
-        </View>
-        <View style={styles.placeBox}>
-          <View style={styles.placeTitle}>
-            <Text style={styles.placeTitleText}>꼭 들릴 맛집</Text>
-          </View>
-          <ScrollView horizontal={true} style={styles.placeContent}>
-            {selectedGroup.places.map((el, i) => (
-              <View key={i} style={styles.placeItem}>
-                <Image
-                  style={styles.placeImage}
-                  source={require('../../assets/place1.png')}
-                />
-                <Text style={styles.placeText}>{el}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
-        <View style={styles.placeBox}>
-          <View style={styles.placeTitle}>
-            <Text style={styles.placeTitleText}>가고싶은 여행지</Text>
-          </View>
-          <View style={styles.memoContent}>
-            {selectedGroup.memos.map((el, i) => (
-              <Text key={i} style={styles.memoItem}>
-                {el}
-              </Text>
-            ))}
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+  },
   image: {
     width: '100%',
     height: 200,

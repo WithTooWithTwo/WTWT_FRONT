@@ -20,6 +20,7 @@ import {setPosts} from '../../slices/postsSlice';
 import GroupOutput from '../../components/Group/GroupOutput';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {setGroups} from '../../slices/groupSlice';
+import {Colors} from '../../constants/styles';
 
 function GroupListScreen() {
   const [isFetching, setIsFetching] = useState(true);
@@ -54,23 +55,23 @@ function GroupListScreen() {
 
   console.log(groups.groups);
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScreenHeader title="그룹" color="#FFFFFF" isGoBack={false} />
-      {/*<Pressable onPress={onPress}>*/}
-      {/*  <Text>Press!</Text>*/}
-      {/*</Pressable>*/}
-      <View style={styles.container}>
-        <GroupOutput groups={groups.groups} />
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <SafeAreaView style={{flex: 1, backgroundColor: Colors.grey1}}>
+        <ScreenHeader title="그룹" color="#FFFFFF" isGoBack={false} />
+        {/*<Pressable onPress={onPress}>*/}
+        {/*  <Text>Press!</Text>*/}
+        {/*</Pressable>*/}
+        <View style={styles.container}>
+          <GroupOutput groups={groups.groups} />
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 30,
-    paddingVertical: 30,
   },
 });
 
