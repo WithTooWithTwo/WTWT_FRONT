@@ -8,7 +8,7 @@ function screenHeader({
   color,
   isGoBack,
 }: {
-  title: string;
+  title?: string;
   color: string;
   isGoBack: boolean;
 }) {

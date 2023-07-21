@@ -52,7 +52,6 @@ function MainScreen({navigation}: MainScreenProps) {
           component={InitialScreen}
           options={{tabBarLabel: '홈'}}
         />
-
         <Tab.Screen
           name="FastMeet"
           component={FastMeetScreen}

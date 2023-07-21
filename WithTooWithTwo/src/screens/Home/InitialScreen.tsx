@@ -38,15 +38,15 @@ function InitialScreen({navigation}: InitialProps) {
         <View style={styles.container}>
           <View style={styles.box}>
             <Text style={styles.title}>번개 만남</Text>
-            {renderPosts.map(post => (
-              <PostItem key={post.id} {...post} />
+            {renderPosts.map((post, index) => (
+              <PostItem key={index} {...post} />
             ))}
           </View>
           <View style={styles.box}>
             <Text style={styles.title}>실시간 HOT</Text>
             {renderHots.map((post, i) => (
               <HotItem
-                key={post.id}
+                key={i}
                 id={post.id!}
                 title={post.title}
                 views={2293}
@@ -56,8 +56,8 @@ function InitialScreen({navigation}: InitialProps) {
           </View>
           <View style={styles.box}>
             <Text style={styles.title}>게시판</Text>
-            {renderPosts.map(post => (
-              <PostItem key={post.id} {...post} />
+            {renderPosts.map((post, index) => (
+              <PostItem key={index} {...post} />
             ))}
           </View>
         </View>

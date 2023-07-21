@@ -40,7 +40,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
     <>
       <View style={styles.container}>
         <SafeAreaView style={{flex: 1}}>
-          <ScreenHeader title="" color="white" isGoBack={true} />
+          <ScreenHeader color="white" isGoBack={true} />
           <ScrollView>
             <View style={styles.headerBox}>
               <Text style={styles.title}>{selectedPost.title}</Text>

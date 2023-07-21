@@ -10,9 +10,10 @@ import {getFormattedDate} from '../../util/date';
 import {Colors} from '../../constants/styles';
 
 function PostInfo({postData}: {postData: PostsType}) {
+  console.log(postData.preferGender);
   const changeGenderToKorean = (gender: string) => {
-    if (gender === 'FEMAIL') return '여성';
-    if (gender === 'MAIL') return '남성';
+    if (gender === 'FEMALE') return '여성';
+    if (gender === 'MALE') return '남성';
     if (gender === 'NOMATTER') return '상관없음';
   };
 

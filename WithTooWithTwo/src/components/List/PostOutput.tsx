@@ -9,19 +9,16 @@ function PostOutput({posts}: {posts: PostsType[]}) {
   };
   return (
     <>
-      <View style={styles.container}>
-        <FlatList
-          data={posts}
-          renderItem={({item}) => renderPostItem({itemData: item})}
-          keyExtractor={(item, index) =>
-            item?.id?.toString() || index.toString()
-          }
-        />
-      </View>
+      <FlatList
+        style={styles.container}
+        data={posts}
+        renderItem={({item}) => renderPostItem({itemData: item})}
+        keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
+      />
     </>
   );
 }
 const styles = StyleSheet.create({
-  container: {margin: 22},
+  container: {padding: 30},
 });
 export default PostOutput;

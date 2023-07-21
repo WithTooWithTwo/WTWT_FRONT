@@ -122,16 +122,17 @@ function NewPost({navigation}: NewPostScreenProps) {
     lastDay: lastDay.toString(),
     headCount: +headCount,
     companions: ['p1'],
-    preferGender: 'FEMAIL',
-    preferMinAge: 20,
-    preferMaxAge: 30,
+    preferGender: preferGender,
+    preferMinAge: range[0],
+    preferMaxAge: range[1],
   };
+  console.log(postsData);
 
   const onSubmit = useCallback(async () => {
     try {
       setLoading(true);
       const response = await storePosts(postsData);
-      dispatch(addPosts({...postsData, id: response.data.key}));
+      dispatch(addPosts({...postsData, id: response.data.id}));
       // console.log(response);
       Alert.alert('알림', '등록 되었습니다!');
       navigation.navigate('Main');
@@ -144,7 +145,17 @@ function NewPost({navigation}: NewPostScreenProps) {
     } finally {
       setLoading(false);
     }
-  }, [loading, category, title, content, firstDay, lastDay, headCount]);
+  }, [
+    loading,
+    category,
+    title,
+    content,
+    firstDay,
+    lastDay,
+    headCount,
+    preferGender,
+    range,
+  ]);
 
   if (loading) {
     return <LoadingOverlay />;
