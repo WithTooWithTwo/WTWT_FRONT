@@ -9,17 +9,15 @@ function PostOutput({posts}: {posts: PostsType[]}) {
   };
   return (
     <>
-      <SafeAreaView>
-        <View style={styles.container}>
-          <FlatList
-            data={posts}
-            renderItem={({item}) => renderPostItem({itemData: item})}
-            keyExtractor={(item, index) =>
-              item?.id?.toString() || index.toString()
-            }
-          />
-        </View>
-      </SafeAreaView>
+      <View style={styles.container}>
+        <FlatList
+          data={posts}
+          renderItem={({item}) => renderPostItem({itemData: item})}
+          keyExtractor={(item, index) =>
+            item?.id?.toString() || index.toString()
+          }
+        />
+      </View>
     </>
   );
 }

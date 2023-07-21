@@ -55,8 +55,8 @@ function GroupListScreen() {
 
   console.log(groups.groups);
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={{flex: 1, backgroundColor: Colors.grey1}}>
+    <View style={{flex: 1, backgroundColor: 'white'}}>
+      <SafeAreaView style={{flex: 1}}>
         <ScreenHeader title="그룹" color="#FFFFFF" isGoBack={false} />
         {/*<Pressable onPress={onPress}>*/}
         {/*  <Text>Press!</Text>*/}
@@ -72,6 +72,7 @@ function GroupListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: Colors.grey1,
   },
 });
 

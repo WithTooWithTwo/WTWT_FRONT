@@ -7,7 +7,7 @@ function MemberItem({
   leader,
   members,
 }: {
-  groupId: string;
+  groupId?: string;
   leader: string;
   members: string[];
 }) {

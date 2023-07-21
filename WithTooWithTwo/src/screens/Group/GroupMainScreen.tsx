@@ -32,13 +32,9 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
   const groups = useSelector((state: RootState) => state.group).groups;
   const selectedGroup = groups.find(group => group.groupId == id)!;
   return (
-    <View style={{backgroundColor: 'white'}}>
+    <View>
       <SafeAreaView style={{backgroundColor: Colors.grey1}}>
-        <ScreenHeader
-          title="그룹"
-          color={Colors.screenHeader}
-          isGoBack={true}
-        />
+        <ScreenHeader title="그룹" color={Colors.grey1} isGoBack={true} />
         <ScrollView>
           <Image
             source={require('../../assets/group_main.png')}
