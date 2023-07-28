@@ -16,9 +16,11 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
+import {fetchOnePost, fetchPost} from '../../util/post';
+import {PostsType, setNormalPosts} from '../../slices/postsSlice';
 
 type PostDetailScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -33,9 +35,37 @@ type PostDetailScreenProps = {
 
 function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
-  const posts = useSelector((state: RootState) => state.post);
-  const selectedPost = posts.posts.find(post => post.id === selectedPostId)!;
+  // const posts = useSelector((state: RootState) => state.post).posts;
+  // console.log(posts);
+  // const selectedPost = posts.find(
+  //   post => post.id.toString() == selectedPostId,
+  // )!;
 
+  const [selectedPost, setSelectedPost] = useState<PostsType | null>(null);
+
+  useEffect(() => {
+    async function getPosts() {
+      try {
+        const posts = await fetchOnePost(selectedPostId);
+        setSelectedPost(posts);
+        console.log(posts);
+      } catch (error) {
+        //setError('Could not fetch expense!');
+      }
+    }
+    getPosts();
+  }, [selectedPostId]);
+
+  if (!selectedPost) {
+    return (
+      <View style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+          {/* 로딩 상태에 대한 UI */}
+          <Text>Loading...</Text>
+        </SafeAreaView>
+      </View>
+    );
+  }
   return (
     <>
       <View style={styles.container}>
@@ -48,7 +78,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                 <Text style={styles.dateText}>2023.04.22</Text>
                 <View style={styles.viewsBox}>
                   <Ionicons name="eye" color="#3C70FF99" size={14} />
-                  <Text style={styles.viewsText}>111</Text>
+                  <Text style={styles.viewsText}>{selectedPost.hits}</Text>
                 </View>
               </View>
               <View style={styles.writerBox}>
@@ -56,7 +86,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                   source={require('../../assets/group_main.png')}
                   style={styles.writerImage}
                 />
-                <Text style={styles.writerText}>{selectedPost.writer_id}</Text>
+                <Text style={styles.writerText}>{selectedPost.writer.id}</Text>
               </View>
             </View>
 

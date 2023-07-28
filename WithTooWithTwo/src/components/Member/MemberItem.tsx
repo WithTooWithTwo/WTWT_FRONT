@@ -1,15 +1,16 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {Colors} from '../../constants/styles';
 import {useNavigation} from '@react-navigation/native';
+import {GroupMember} from '../../util/group';
 
 function MemberItem({
   groupId,
   leader,
   members,
 }: {
-  groupId?: string;
+  groupId?: number;
   leader: string;
-  members: string[];
+  members: GroupMember[];
 }) {
   const navigation = useNavigation<any>();
   const pressMemberHandler = () => {};
@@ -28,14 +29,14 @@ function MemberItem({
         </Pressable>
       </View>
       <View style={styles.memberBox}>
-        {members.map((el, index) => (
-          <Pressable
-            onPress={pressMemberHandler}
-            key={index}
-            style={[styles.memberItem, {left: index * -10, zIndex: index}]}>
-            <Text style={styles.itemText}>{el}</Text>
-          </Pressable>
-        ))}
+        {/*{members.map((el, index) => (*/}
+        {/*  <Pressable*/}
+        {/*    onPress={pressMemberHandler}*/}
+        {/*    key={index}*/}
+        {/*    style={[styles.memberItem, {left: index * -10, zIndex: index}]}>*/}
+        {/*    <Text style={styles.itemText}>{el.nickname}</Text>*/}
+        {/*  </Pressable>*/}
+        {/*))}*/}
       </View>
       <Pressable onPress={pressMemberListHandler}>
         <Text> more </Text>

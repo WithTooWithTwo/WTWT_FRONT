@@ -21,7 +21,7 @@ type GroupMemberProps = {
 function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
   const id = route.params?.groupId;
   const groups = useSelector((state: RootState) => state.group).groups;
-  const selectedGroup = groups.find(group => group.groupId == id)!;
+  const selectedGroup = groups.find(group => group.id.toString() == id)!;
   const members = selectedGroup.members;
 
   return (
@@ -30,7 +30,7 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
       <View style={styles.itemBox}>
         {members.map((el, i) => (
           <Text style={styles.item} key={i}>
-            {el}
+            {el.nickname}
           </Text>
         ))}
       </View>

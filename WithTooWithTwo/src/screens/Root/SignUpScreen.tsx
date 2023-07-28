@@ -156,15 +156,16 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
       nickname: nickname,
       statusMessage: statusMessage,
       gender: gender,
-      bYear: bYear,
-      bMonth: bMonth,
-      bDay: bDay,
+      bYear: date.getFullYear(),
+      bMonth: date.getMonth() + 1,
+      bDay: date.getDay(),
+      profileImage: 'test',
     };
 
     try {
       setIsAuthenticating(true);
       const token = await createUser(value);
-      // dispatch(authenticate(token));
+      dispatch(authenticate(token));
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('Login');
     } catch (error) {

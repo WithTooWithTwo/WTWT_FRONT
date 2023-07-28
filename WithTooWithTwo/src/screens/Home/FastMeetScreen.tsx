@@ -6,7 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {fetchPost} from '../../util/post';
-import {PostsType, setPosts} from '../../slices/postsSlice';
+import {PostsType, setLightningPosts, setPosts} from '../../slices/postsSlice';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import PostOutput from '../../components/List/PostOutput';
 
@@ -16,13 +16,13 @@ function FastMeetScreen() {
   const [isFetching, setIsFetching] = useState(true);
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
-  const posts = useSelector((state: RootState) => state.post);
+  const posts = useSelector((state: RootState) => state.post.lightningPosts);
   useEffect(() => {
     async function getPosts() {
       setIsFetching(true);
       try {
-        const posts = await fetchPost();
-        dispatch(setPosts(posts));
+        const posts = await fetchPost('?lightning=true');
+        dispatch(setLightningPosts(posts));
         // console.log(posts);
       } catch (error) {
         //setError('Could not fetch expense!');
@@ -38,7 +38,7 @@ function FastMeetScreen() {
   return (
     <>
       <SafeAreaView style={{backgroundColor: '#F8F8F9'}}>
-        <PostOutput posts={posts.posts} />
+        <PostOutput posts={posts} />
       </SafeAreaView>
     </>
   );

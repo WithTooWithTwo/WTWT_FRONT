@@ -10,11 +10,10 @@ import {getFormattedDate} from '../../util/date';
 import {Colors} from '../../constants/styles';
 
 function PostInfo({postData}: {postData: PostsType}) {
-  console.log(postData.preferGender);
   const changeGenderToKorean = (gender: string) => {
     if (gender === 'FEMALE') return '여성';
     if (gender === 'MALE') return '남성';
-    if (gender === 'NOMATTER') return '상관없음';
+    if (gender === 'NONE' || gender === null) return '상관없음';
   };
 
   return (
@@ -32,12 +31,14 @@ function PostInfo({postData}: {postData: PostsType}) {
         <View style={styles.itemBox}>
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {getFormattedDate(new Date(postData.firstDay))}
+              {/*{getFormattedDate(new Date(postData.firstDay))}*/}
+              {postData.firstDay}
             </Text>
           </View>
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {getFormattedDate(new Date(postData.lastDay))}
+              {/*{getFormattedDate(new Date(postData.lastDay))}*/}
+              {postData.lastDay}
             </Text>
           </View>
         </View>
@@ -94,12 +95,12 @@ function PostInfo({postData}: {postData: PostsType}) {
         <View style={styles.itemBox}>
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {changeGenderToKorean(postData.preferGender)}
+              {changeGenderToKorean(postData.preference.gender!)}
             </Text>
           </View>
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {postData.preferMinAge}대 - {postData.preferMaxAge}대
+              {postData.preference.minAge} - {postData.preference.maxAge}
             </Text>
           </View>
         </View>

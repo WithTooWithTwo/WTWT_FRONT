@@ -1,4 +1,5 @@
 import {
+  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -11,49 +12,49 @@ import {PostsType} from '../../slices/postsSlice';
 import StateButton from './StateButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
+import {TotalPostType} from '../../util/post';
+import {detailDate} from '../../util/date';
 
-function PostItem({
-  id,
-  category_id,
-  writer_id,
-  title,
-  content,
-  firstDay,
-  lastDay,
-  headCount,
-  companions,
-  preferGender,
-  preferMinAge,
-  preferMaxAge,
-}: PostsType) {
+function PostItem(post: TotalPostType) {
   const navigation = useNavigation<any>();
   const postPressHandler = () => {
-    navigation.navigate('PostDetail', {postId: id});
+    navigation.navigate('PostDetail', {postId: post.id.toString()});
   };
 
   return (
     <Pressable onPress={postPressHandler} style={styles.postBlock}>
       <View style={styles.infoBox}>
-        <Text style={styles.userText}>{writer_id}</Text>
-        <Text style={styles.dateText}>1시간 전</Text>
+        <View style={styles.writerBox}>
+          <Image
+            style={styles.writerImage}
+            source={require('../../assets/group_main.png')}
+          />
+          <Text style={styles.writerText}>{post.writer.id}</Text>
+        </View>
+
+        <Text style={styles.dateText}>{detailDate(post.createdAt)}</Text>
       </View>
-      <Text style={styles.titleText}>{title}</Text>
+      <Text style={styles.titleText}>{post.title}</Text>
       <View style={styles.contentBox}>
         <Text style={styles.contentText}>
-          {content.length < 50 ? content : content.slice(0, 50) + '...'}
+          {post.content.length < 50
+            ? post.content
+            : post.content.slice(0, 50) + '...'}
         </Text>
       </View>
       <View style={styles.footerBox}>
-        <StateButton state="recruit" />
+        <StateButton
+          state={post.isLightning === true ? 'thunder' : 'recruit'}
+        />
         <View style={styles.iconBox}>
           <View style={styles.iconLabel}>
             <Ionicons name="eye" color="#3C70FF99" size={14} />
-            <Text style={styles.iconText}>2,290</Text>
+            <Text style={styles.iconText}>{post.hits}</Text>
           </View>
           <View style={styles.iconLabel}>
             <FontAwesome name="user-alt" color="#3C70FF99" size={13} />
             <Text style={styles.iconText}>
-              {companions.length + 1}/{headCount}
+              {post.headCount + 1}/{post.preferHeadCount}
             </Text>
           </View>
         </View>
@@ -66,8 +67,8 @@ const styles = StyleSheet.create({
   postBlock: {
     backgroundColor: '#FFFFFF',
     padding: 20,
-    marginBottom: 10,
-    height: 160,
+    marginBottom: 15,
+    height: 165,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
@@ -83,7 +84,18 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     justifyContent: 'space-between',
   },
-  userText: {
+  writerBox: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  writerImage: {
+    width: 25,
+    height: 25,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  writerText: {
     fontSize: 12,
   },
   dateText: {
@@ -97,7 +109,7 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     marginTop: 5,
-    height: 38,
+    height: 36,
   },
   contentText: {
     color: '#808080',

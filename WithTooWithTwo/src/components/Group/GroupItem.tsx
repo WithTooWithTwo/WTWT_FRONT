@@ -8,34 +8,23 @@ import {
 } from 'react-native';
 import {Colors} from '../../constants/styles';
 import LinearGradient from 'react-native-linear-gradient';
-import {GroupType} from '../../util/group';
+import {GroupType, MyGroupType} from '../../util/group';
 import {useNavigation} from '@react-navigation/native';
 
-function GroupItem({
-  groupId,
-  groupImage,
-  groupName,
-  firstDay,
-  headCounts,
-  leader,
-  members,
-  notice,
-  places,
-  memos,
-  dday,
-}: GroupType) {
+function GroupItem(group: MyGroupType) {
   const navigation = useNavigation<any>();
   const groupMainPressHandler = () => {
     navigation.navigate('GroupDetail', {
       screen: 'GroupMain',
-      params: {groupId: groupId},
+      params: {groupId: group.id.toString()},
     });
+    //console.log(group.id.toString());
   };
 
   const groupChatPressHandler = () => {
     navigation.navigate('GroupDetail', {
       screen: 'GroupChat',
-      params: {groupId: groupId},
+      params: {groupId: group.id.toString()},
     });
   };
 
@@ -43,32 +32,34 @@ function GroupItem({
     <View style={styles.container}>
       <View style={styles.dateBox}>
         <View style={styles.dDay}>
-          <Text style={styles.dDayText}>D - {dday}</Text>
+          <Text style={styles.dDayText}>D - {group.dday}</Text>
         </View>
-        <Text style={styles.dDate}>{firstDay}</Text>
+        <Text style={styles.dDate}>{group.firstDay}</Text>
       </View>
       <View style={styles.mainBox}>
-        {groupImage && (
+        {group.image && (
           <Pressable onPress={groupMainPressHandler}>
             <ImageBackground
               source={require('../../assets/group_main.png')}
               resizeMode="cover"
               style={styles.image}>
               <View style={styles.imageBox}>
-                <Text style={[styles.title, {color: '#FFF'}]}>{groupName}</Text>
+                <Text style={[styles.title, {color: '#FFF'}]}>
+                  {group.name}
+                </Text>
                 <Text style={[styles.leader, {color: '#FFF'}]}>
-                  {leader.nickname}
+                  {group.leader.nickname}
                 </Text>
               </View>
             </ImageBackground>
           </Pressable>
         )}
-        {!groupImage && (
+        {!group.image && (
           <View>
-            <Pressable style={styles.titleBox}>
-              <Text style={[styles.title, {color: '#000'}]}>{groupName}</Text>
+            <Pressable style={styles.titleBox} onPress={groupMainPressHandler}>
+              <Text style={[styles.title, {color: '#000'}]}>{group.name}</Text>
               <Text style={[styles.leader, {color: '#000'}]}>
-                {leader.nickname}
+                {group.leader.nickname}
               </Text>
             </Pressable>
             <View style={styles.line} />

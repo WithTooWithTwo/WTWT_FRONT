@@ -13,9 +13,7 @@ function GroupOutput({groups}: {groups: GroupType[]}) {
         style={{paddingHorizontal: 30, paddingVertical: 30}}
         data={groups}
         renderItem={renderGroupItem}
-        keyExtractor={(item, index) =>
-          item?.groupId?.toString() || index.toString()
-        }
+        keyExtractor={(item, index) => item?.id?.toString() || index.toString()}
       />
     </>
   );

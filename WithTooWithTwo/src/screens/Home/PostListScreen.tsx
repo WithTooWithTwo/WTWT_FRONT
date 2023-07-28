@@ -5,7 +5,12 @@ import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {fetchPost} from '../../util/post';
 import {useDispatch, useSelector} from 'react-redux';
-import {addPosts, PostsType, setPosts} from '../../slices/postsSlice';
+import {
+  addPosts,
+  PostsType,
+  setNormalPosts,
+  setPosts,
+} from '../../slices/postsSlice';
 import PostOutput from '../../components/List/PostOutput';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {RootState} from '../../store/store';
@@ -16,13 +21,13 @@ function PostListScreen() {
   const [isFetching, setIsFetching] = useState(true);
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
-  const posts = useSelector((state: RootState) => state.post);
+  const posts = useSelector((state: RootState) => state.post.normalPosts);
   useEffect(() => {
     async function getPosts() {
       try {
         setIsFetching(true);
-        const posts = await fetchPost();
-        dispatch(setPosts(posts));
+        const posts = await fetchPost('?lightning=false');
+        dispatch(setNormalPosts(posts));
         // console.log(posts);
       } catch (error) {
         //setError('Could not fetch expense!');
@@ -38,7 +43,7 @@ function PostListScreen() {
   return (
     <>
       <SafeAreaView style={{backgroundColor: '#F8F8F9'}}>
-        <PostOutput posts={posts.posts} />
+        <PostOutput posts={posts} />
       </SafeAreaView>
     </>
   );

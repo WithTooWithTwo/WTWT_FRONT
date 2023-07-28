@@ -18,24 +18,42 @@ const testGroup = {
 };
 
 export type GroupType = {
-  groupId: string;
-  groupImage?: string;
-  groupName: string;
+  id: number;
+  dday: number;
+  image?: null;
+  name: string;
   firstDay: string;
-  headCounts: number;
+  lastDay: string;
   leader: {
     id: string;
     nickname: string;
     profile: string;
   };
-  members: Array<string>;
-  notice: Array<string>;
-  places: Array<string>;
-  memos: Array<string>;
-  dday: number;
+  members: Array<GroupMember>;
+  notices: Array<NoticeType>;
+  places: Array<PlaceType>;
+  memos: Array<NoticeType>;
 };
 
-const URL = 'https://wtwt-test-c77ec-default-rtdb.firebaseio.com';
+type NoticeType = {
+  id: number;
+  data: string;
+};
+
+type PlaceType = {
+  id: number;
+  link: URL;
+  name: string;
+};
+
+export type GroupMember = {
+  id: number;
+  nickname: string;
+  profile: null;
+};
+
+//const URL = 'https://wtwt-test-c77ec-default-rtdb.firebaseio.com';
+
 export async function storeGroup() {
   const response = await axios.post(URL + '/groups.json', testGroup);
   // const id = response.data.id;
@@ -43,21 +61,60 @@ export async function storeGroup() {
 }
 
 export async function fetchGroup() {
-  const response = await axios.get(URL + '/groups.json');
+  const URL = 'http://10.50.45.55:8080/groups';
+
+  const response = await axios.get(URL);
+  const groups = {
+    id: response.data.id,
+    dday: response.data.dday,
+    image: response.data.image,
+    name: response.data.name,
+    firstDay: response.data.firstDay,
+    lastDay: response.data.lastDay,
+    leader: response.data.leader,
+    members: response.data.members,
+    notices: response.data.notices,
+    places: response.data.places,
+    memos: response.data.memos,
+  };
+
+  // console.log(groups);
+  console.log(groups);
+  return groups;
+}
+
+export type MyGroupType = {
+  id: number;
+  dday: number;
+  image?: null;
+  name: string;
+  firstDay: string;
+  leader: {
+    id: string;
+    nickname: string;
+    profile: string;
+  };
+};
+
+//const URL = 'https://wtwt-test-c77ec-default-rtdb.firebaseio.com';
+
+export async function fetchGroupList() {
+  const URL = 'http://10.50.45.55:8080/groups';
+  const response = await axios.get(URL);
   const groups = new Array<GroupType>();
   for (const key in response.data) {
     const groupObj = {
-      groupId: response.data[key].groupId,
-      groupImage: response.data[key].groupImage,
-      groupName: response.data[key].groupName,
+      id: response.data[key].id,
+      dday: response.data[key].dday,
+      image: response.data[key].image,
+      name: response.data[key].name,
       firstDay: response.data[key].firstDay,
-      headCounts: response.data[key].headCounts,
+      lastDay: response.data[key].lastDay,
       leader: response.data[key].leader,
-      members: response.data[key].members,
-      notice: response.data[key].notice,
+      members: response.data.members,
+      notices: response.data[key].notices,
       places: response.data[key].places,
       memos: response.data[key].memos,
-      dday: response.data[key].dday,
     };
     groups.push(groupObj);
   }

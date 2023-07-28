@@ -1,4 +1,5 @@
 import {
+  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -14,8 +15,11 @@ import {RootState} from '../../store/store';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import MemberItem from '../../components/Member/MemberItem';
+import {fetchGroup, GroupType} from '../../util/group';
+import {fetchPost} from '../../util/post';
+import {setPosts} from '../../slices/postsSlice';
 
 type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -30,7 +34,9 @@ type GroupMainProps = {
 function GroupMainScreen({navigation, route}: GroupMainProps) {
   const id = route.params?.groupId;
   const groups = useSelector((state: RootState) => state.group).groups;
-  const selectedGroup = groups.find(group => group.groupId == id)!;
+  const selectedGroup = groups.find(group => group.id.toString() == id)!;
+
+  //const selectedGroup = await fetchGroup(id);
   return (
     <View>
       <SafeAreaView style={{backgroundColor: Colors.grey1}}>
@@ -45,11 +51,11 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             <View style={styles.dDayBox}>
               <Text style={styles.dDay}>D - {selectedGroup.dday}</Text>
             </View>
-            <Text style={styles.title}>{selectedGroup.groupName}</Text>
+            <Text style={styles.title}>{selectedGroup.name}</Text>
             <View style={styles.dateBox}>
               <Text style={styles.date}>{selectedGroup.firstDay}</Text>
               <FontAwesome name="user-alt" color="#3C70FF99" size={12} />
-              <Text style={styles.headCount}>{selectedGroup.headCounts}명</Text>
+              <Text style={styles.headCount}>{1}명</Text>
             </View>
             <View style={styles.keywordBox}>
               <Text style={styles.keyword}></Text>
@@ -57,7 +63,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             </View>
             <View style={styles.memberBox}>
               <MemberItem
-                groupId={selectedGroup.groupId}
+                groupId={selectedGroup.id}
                 leader={selectedGroup.leader.nickname}
                 members={selectedGroup.members}
               />
@@ -65,9 +71,9 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             <View style={styles.noticeBox}>
               <Text style={styles.noticeTitle}>NOTICE</Text>
               <View style={styles.noticeList}>
-                {selectedGroup.notice.map((el, i) => (
-                  <Text key={i} style={styles.noticeItem}>
-                    {el}
+                {selectedGroup!.notices.map((el, i) => (
+                  <Text key={el.id} style={styles.noticeItem}>
+                    {el.data}
                   </Text>
                 ))}
               </View>
@@ -79,12 +85,12 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             </View>
             <ScrollView horizontal={true} style={styles.placeContent}>
               {selectedGroup.places.map((el, i) => (
-                <View key={i} style={styles.placeItem}>
+                <View key={el.id} style={styles.placeItem}>
                   <Image
                     style={styles.placeImage}
                     source={require('../../assets/place1.png')}
                   />
-                  <Text style={styles.placeText}>{el}</Text>
+                  <Text style={styles.placeText}>{el.name}</Text>
                 </View>
               ))}
             </ScrollView>
@@ -95,8 +101,8 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             </View>
             <View style={styles.memoContent}>
               {selectedGroup.memos.map((el, i) => (
-                <Text key={i} style={styles.memoItem}>
-                  {el}
+                <Text key={el.id} style={styles.memoItem}>
+                  {el.data}
                 </Text>
               ))}
             </View>

@@ -9,7 +9,12 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
 import {fetchPost, storePosts} from '../../util/post';
-import {fetchGroup, GroupType, storeGroup} from '../../util/group';
+import {
+  fetchGroup,
+  fetchGroupList,
+  GroupType,
+  storeGroup,
+} from '../../util/group';
 import {AxiosError} from 'axios';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import GroupItem from '../../components/Group/GroupItem';
@@ -42,8 +47,8 @@ function GroupListScreen() {
   useEffect(() => {
     async function getGroups() {
       try {
-        const groups = await fetchGroup();
-        console.log(groups);
+        const groups = await fetchGroupList();
+        //console.log(groups);
         dispatch(setGroups(groups));
         // console.log(posts);
       } catch (error) {
@@ -53,7 +58,7 @@ function GroupListScreen() {
     getGroups();
   }, []);
 
-  console.log(groups.groups);
+  //console.log(groups.groups);
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <SafeAreaView style={{flex: 1}}>

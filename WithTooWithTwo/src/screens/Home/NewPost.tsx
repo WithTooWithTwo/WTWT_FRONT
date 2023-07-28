@@ -115,18 +115,18 @@ function NewPost({navigation}: NewPostScreenProps) {
 
   const postsData = {
     category_id: category,
-    writer_id: id,
+    image: 'temp',
     title: title,
     content: content,
     firstDay: firstDay.toString(),
     lastDay: lastDay.toString(),
-    headCount: +headCount,
-    companions: ['p1'],
+    preferHeadCount: +headCount,
+    lightning: thunder,
+    members: ['1'],
     preferGender: preferGender,
     preferMinAge: range[0],
     preferMaxAge: range[1],
   };
-  console.log(postsData);
 
   const onSubmit = useCallback(async () => {
     try {

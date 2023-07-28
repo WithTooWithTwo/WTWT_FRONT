@@ -9,7 +9,7 @@ const authSlice = createSlice({
   },
   reducers: {
     authenticate: (state, action) => {
-      state.token = action.payload;
+      state.token = action.payload.toString();
       state.isAuthenticated = true;
       AsyncStorage.setItem('token', state.token);
     }, // 인증에 성공하면 트리거

@@ -13,7 +13,7 @@ import HotItem from '../../components/List/HotItem';
 type InitialProps = MaterialTopTabScreenProps<MainTabParamList, 'Initial'>;
 function InitialScreen({navigation}: InitialProps) {
   // const [posts, setPosts] = useState(Array<PostsType>);
-  const posts = useSelector((state: RootState) => state.post);
+  const posts = useSelector((state: RootState) => state.post.posts);
   const dispatch = useDispatch();
   useEffect(() => {
     async function getPosts() {
@@ -28,8 +28,8 @@ function InitialScreen({navigation}: InitialProps) {
     getPosts();
   }, []);
 
-  const renderPosts = posts.posts.slice(0, 3);
-  const renderHots = posts.posts.slice(0, 5);
+  const renderPosts = posts.slice(0, 3);
+  const renderHots = posts.slice(0, 5);
 
   return (
     <>
@@ -49,7 +49,7 @@ function InitialScreen({navigation}: InitialProps) {
                 key={i}
                 id={post.id!}
                 title={post.title}
-                views={2293}
+                views={post.hits}
                 order={i}
               />
             ))}

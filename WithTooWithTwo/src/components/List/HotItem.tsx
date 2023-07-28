@@ -38,7 +38,7 @@ function HotItem({
         </View>
         <View style={styles.iconLabel}>
           <Ionicons name="eye" color="#3C70FF90" size={14} />
-          <Text style={styles.iconText}>2,290</Text>
+          <Text style={styles.iconText}>{views}</Text>
         </View>
       </View>
     </Pressable>
