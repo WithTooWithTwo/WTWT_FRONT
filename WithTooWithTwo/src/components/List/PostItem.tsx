@@ -12,10 +12,10 @@ import {PostsType} from '../../slices/postsSlice';
 import StateButton from './StateButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import {TotalPostType} from '../../util/post';
+import {PostListType} from '../../util/post';
 import {detailDate} from '../../util/date';
 
-function PostItem(post: TotalPostType) {
+function PostItem(post: PostListType) {
   const navigation = useNavigation<any>();
   const postPressHandler = () => {
     navigation.navigate('PostDetail', {postId: post.id.toString()});

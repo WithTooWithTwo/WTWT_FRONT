@@ -32,7 +32,7 @@ function GroupItem(group: MyGroupType) {
     <View style={styles.container}>
       <View style={styles.dateBox}>
         <View style={styles.dDay}>
-          <Text style={styles.dDayText}>D - {group.dday}</Text>
+          <Text style={styles.dDayText}>D - {group.dday * -1}</Text>
         </View>
         <Text style={styles.dDate}>{group.firstDay}</Text>
       </View>
@@ -59,7 +59,7 @@ function GroupItem(group: MyGroupType) {
             <Pressable style={styles.titleBox} onPress={groupMainPressHandler}>
               <Text style={[styles.title, {color: '#000'}]}>{group.name}</Text>
               <Text style={[styles.leader, {color: '#000'}]}>
-                {group.leader.nickname}
+                {/*{group.leader.nickname}*/}
               </Text>
             </Pressable>
             <View style={styles.line} />

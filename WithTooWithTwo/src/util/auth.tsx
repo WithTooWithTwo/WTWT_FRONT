@@ -1,20 +1,14 @@
 import axios from 'axios';
 
-const API_KEY = 'AIzaSyAuLUuSd-dJkZMKz0R9rT8_MmrgDvkdsAU';
-const url = 'http://10.50.45.55:8080/login?email=&password=';
-const joinURL = 'http://10.50.45.55:8080/users';
-async function authenticate(mode: string, email: string, password: string) {
-  //const url = `https://identitytoolkit.googleapis.com/v1/accounts:${mode}?key=${API_KEY}`;
+const API_KEY = 'http://3.39.87.78:8080';
 
-  const response = await axios.post(url, {
+async function authenticate(email: string, password: string) {
+  const response = await axios.post(API_KEY + '/login', {
     email: email,
     password: password,
-    // returnSecureToken: true,
   });
-  // console.log(response.data);
-  // const token = response.data.idToken;
+  // 현재 토큰 없이 아이디만 제공되는데 일단 아이디를 토큰으로 저장함
   const token = response.data.id;
-  // console.log(token);
   return token;
 }
 
@@ -44,29 +38,14 @@ export async function createUser(value: valueType) {
   formData.append('bMonth', value.bMonth);
   formData.append('bDay', value.bDay);
 
-  const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`;
-  // const response = await axios.post(joinURL, {
-  //   name: value.name,
-  //   phoneNumber: value.phoneNumber,
-  //   email: value.email,
-  //   password: value.password,
-  //   nickname: value.nickname,
-  //   statusMessage: value.statusMessage,
-  //   gender: value.gender,
-  //   bYear: value.bYear,
-  //   bMonth: value.bMonth,
-  //   bDay: value.bDay,
-  //   profileImage: 'test',
-  //   // returnSecureToken: true,
-  // });
-
-  const response = await axios.post(joinURL, formData);
-  // console.log(response.data);
-  // const token = response.data.idToken;
+  const response = await axios.post(
+    API_KEY + '/login?email=&password=',
+    formData,
+  );
+  // 현재 토큰 없이 아이디만 제공됨
   return response.data.id;
-  // return token;
 }
 
 export function login(email: string, password: string) {
-  return authenticate('signInWithPassword', email, password);
+  return authenticate(email, password);
 }

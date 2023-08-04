@@ -87,6 +87,8 @@ const Navigation = () => {
     fetchToken();
   }, []);
 
+  // dispatch(logout());
+
   return (
     <NavigationContainer>
       {!authState.isAuthenticated && <RootStackNavigator />}

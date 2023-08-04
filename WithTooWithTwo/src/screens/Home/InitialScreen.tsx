@@ -4,32 +4,50 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import Banner from '../../components/UI/Banner';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
-import PostsSlice, {PostsType, setPosts} from '../../slices/postsSlice';
+import PostsSlice, {
+  PostsType,
+  setLightningPosts,
+  setPopularPosts,
+  setPosts,
+} from '../../slices/postsSlice';
 import PostItem from '../../components/List/PostItem';
 import {useEffect, useState} from 'react';
-import {fetchPost} from '../../util/post';
+import {
+  fetchPopularPostList,
+  fetchPostList,
+  PostListType,
+} from '../../util/post';
 import HotItem from '../../components/List/HotItem';
 
 type InitialProps = MaterialTopTabScreenProps<MainTabParamList, 'Initial'>;
 function InitialScreen({navigation}: InitialProps) {
-  // const [posts, setPosts] = useState(Array<PostsType>);
   const posts = useSelector((state: RootState) => state.post.posts);
+  const popularPosts = useSelector(
+    (state: RootState) => state.post.popularPosts,
+  );
+  const lightningPosts = useSelector(
+    (state: RootState) => state.post.lightningPosts,
+  );
   const dispatch = useDispatch();
+
   useEffect(() => {
     async function getPosts() {
       try {
-        const posts = await fetchPost();
+        const posts = await fetchPostList();
         dispatch(setPosts(posts));
-        // console.log(posts);
-      } catch (error) {
-        //setError('Could not fetch expense!');
+        const popularPosts = await fetchPopularPostList();
+        dispatch(setPopularPosts(popularPosts));
+        const lightningPosts = await fetchPostList('?lightning=true');
+        dispatch(setLightningPosts(lightningPosts));
+      } catch (error: any) {
+        return new Error(error);
       }
     }
     getPosts();
   }, []);
 
   const renderPosts = posts.slice(0, 3);
-  const renderHots = posts.slice(0, 5);
+  const renderLightning = lightningPosts.slice(0, 3);
 
   return (
     <>
@@ -38,16 +56,16 @@ function InitialScreen({navigation}: InitialProps) {
         <View style={styles.container}>
           <View style={styles.box}>
             <Text style={styles.title}>번개 만남</Text>
-            {renderPosts.map((post, index) => (
+            {renderLightning.map((post, index) => (
               <PostItem key={index} {...post} />
             ))}
           </View>
           <View style={styles.box}>
             <Text style={styles.title}>실시간 HOT</Text>
-            {renderHots.map((post, i) => (
+            {popularPosts!.map((post, i) => (
               <HotItem
                 key={i}
-                id={post.id!}
+                id={post.id.toString()!}
                 title={post.title}
                 views={post.hits}
                 order={i}

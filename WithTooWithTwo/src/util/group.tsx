@@ -1,4 +1,7 @@
 import axios from 'axios';
+
+const API_KEY = 'http://3.39.87.78:8080';
+
 const testGroup = {
   groupId: Math.random().toString(),
   groupImage: 'hi.jpeg',
@@ -52,19 +55,9 @@ export type GroupMember = {
   profile: null;
 };
 
-//const URL = 'https://wtwt-test-c77ec-default-rtdb.firebaseio.com';
-
-export async function storeGroup() {
-  const response = await axios.post(URL + '/groups.json', testGroup);
-  // const id = response.data.id;
-  return response;
-}
-
-export async function fetchGroup() {
-  const URL = 'http://10.50.45.55:8080/groups';
-
-  const response = await axios.get(URL);
-  const groups = {
+export async function fetchGroup(api: string = '') {
+  const response = await axios.get(API_KEY + '/groups/' + api);
+  const groups: GroupType = {
     id: response.data.id,
     dday: response.data.dday,
     image: response.data.image,
@@ -77,9 +70,6 @@ export async function fetchGroup() {
     places: response.data.places,
     memos: response.data.memos,
   };
-
-  // console.log(groups);
-  console.log(groups);
   return groups;
 }
 
@@ -96,11 +86,8 @@ export type MyGroupType = {
   };
 };
 
-//const URL = 'https://wtwt-test-c77ec-default-rtdb.firebaseio.com';
-
 export async function fetchGroupList() {
-  const URL = 'http://10.50.45.55:8080/groups';
-  const response = await axios.get(URL);
+  const response = await axios.get(API_KEY + '/groups');
   const groups = new Array<GroupType>();
   for (const key in response.data) {
     const groupObj = {

@@ -3,6 +3,7 @@ import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import postItem from '../../components/List/PostItem';
 import {RouteProp} from '@react-navigation/native';
 import {
+  Alert,
   Image,
   Pressable,
   SafeAreaView,
@@ -19,8 +20,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
-import {fetchOnePost, fetchPost} from '../../util/post';
-import {PostsType, setNormalPosts} from '../../slices/postsSlice';
+import {fetchOnePost} from '../../util/post';
+import {ImageType, PostsType, setNormalPosts} from '../../slices/postsSlice';
+
+const URL = 'http://3.39.87.78:8080/';
 
 type PostDetailScreenNavigationProp = NativeStackNavigationProp<
   HomeStackParamList,
@@ -40,15 +43,14 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
   // const selectedPost = posts.find(
   //   post => post.id.toString() == selectedPostId,
   // )!;
-
+  const [imageUrl, setImageUrl] = useState<any>(null);
   const [selectedPost, setSelectedPost] = useState<PostsType | null>(null);
-
   useEffect(() => {
     async function getPosts() {
       try {
         const posts = await fetchOnePost(selectedPostId);
         setSelectedPost(posts);
-        console.log(posts);
+        setImageUrl(posts!.images![0].toString());
       } catch (error) {
         //setError('Could not fetch expense!');
       }
@@ -66,6 +68,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
       </View>
     );
   }
+
   return (
     <>
       <View style={styles.container}>
@@ -89,9 +92,11 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                 <Text style={styles.writerText}>{selectedPost.writer.id}</Text>
               </View>
             </View>
-
             <PostInfo postData={selectedPost} />
             <View style={styles.contentBox}>
+              <Image source={{uri: imageUrl}} style={{width: 100}} />
+              <Text>{imageUrl}</Text>
+
               <Text style={styles.contentText}>{selectedPost.content}</Text>
             </View>
           </ScrollView>

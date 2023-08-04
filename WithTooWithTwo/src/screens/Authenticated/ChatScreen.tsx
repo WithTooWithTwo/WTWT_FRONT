@@ -1,5 +1,6 @@
 import {SafeAreaView, View} from 'react-native';
 import ScreenHeader from '../../components/UI/ScreenHeader';
+import GroupReviewScreen from '../Group/GroupReviewScreen';
 
 function ChatScreen() {
   return (

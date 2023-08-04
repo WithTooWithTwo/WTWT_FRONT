@@ -1,6 +1,7 @@
 import {
   Alert,
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -17,9 +18,9 @@ import {Colors} from '../../constants/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import React, {useEffect, useState} from 'react';
 import MemberItem from '../../components/Member/MemberItem';
+import {fetchOnePost} from '../../util/post';
 import {fetchGroup, GroupType} from '../../util/group';
-import {fetchPost} from '../../util/post';
-import {setPosts} from '../../slices/postsSlice';
+import {PostsType} from '../../slices/postsSlice';
 
 type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -33,10 +34,37 @@ type GroupMainProps = {
 };
 function GroupMainScreen({navigation, route}: GroupMainProps) {
   const id = route.params?.groupId;
-  const groups = useSelector((state: RootState) => state.group).groups;
-  const selectedGroup = groups.find(group => group.id.toString() == id)!;
+  // const groups = useSelector((state: RootState) => state.group).groups;
+  // const selectedGroup = groups.find(group => group.id.toString() == id)!;
+  const [selectedGroup, setSelectedGroup] = useState<GroupType | null>(null);
 
-  //const selectedGroup = await fetchGroup(id);
+  const groupReviewPressHandler = () => {
+    navigation.navigate('GroupReview', {groupId: id});
+  };
+
+  useEffect(() => {
+    async function getGroup() {
+      try {
+        const group = await fetchGroup(id);
+        setSelectedGroup(group);
+      } catch (error) {
+        //setError('Could not fetch expense!');
+      }
+    }
+    getGroup();
+  }, [id]);
+
+  if (!selectedGroup) {
+    return (
+      <View style={styles.container}>
+        <SafeAreaView style={{flex: 1}}>
+          {/* 로딩 상태에 대한 UI */}
+          <Text>Loading...</Text>
+        </SafeAreaView>
+      </View>
+    );
+  }
+
   return (
     <View>
       <SafeAreaView style={{backgroundColor: Colors.grey1}}>
@@ -47,9 +75,12 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             resizeMode="cover"
             style={styles.image}
           />
+          <Pressable onPress={groupReviewPressHandler}>
+            <Text>리뷰 남기기</Text>
+          </Pressable>
           <View style={styles.mainBox}>
             <View style={styles.dDayBox}>
-              <Text style={styles.dDay}>D - {selectedGroup.dday}</Text>
+              <Text style={styles.dDay}>D - {selectedGroup.dday * -1}</Text>
             </View>
             <Text style={styles.title}>{selectedGroup.name}</Text>
             <View style={styles.dateBox}>

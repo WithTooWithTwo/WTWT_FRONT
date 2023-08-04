@@ -5,7 +5,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
-import {fetchPost} from '../../util/post';
+import {fetchPostList} from '../../util/post';
 import {PostsType, setLightningPosts, setPosts} from '../../slices/postsSlice';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import PostOutput from '../../components/List/PostOutput';
@@ -21,7 +21,7 @@ function FastMeetScreen() {
     async function getPosts() {
       setIsFetching(true);
       try {
-        const posts = await fetchPost('?lightning=true');
+        const posts = await fetchPostList('?lightning=true');
         dispatch(setLightningPosts(posts));
         // console.log(posts);
       } catch (error) {

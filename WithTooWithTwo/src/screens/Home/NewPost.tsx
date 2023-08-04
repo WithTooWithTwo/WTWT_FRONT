@@ -20,18 +20,20 @@ import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {useDispatch, useSelector} from 'react-redux';
 import {storePosts} from '../../util/post';
 import {addPosts} from '../../slices/postsSlice';
-import {RootState} from '../../store/store';
 import {RadioButton} from 'react-native-paper';
-import IconButton from '../../components/UI/IconButton';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import RadioButtonGroup from 'react-native-paper';
-import Slider from '@react-native-community/slider';
+import ImagePicker, {
+  launchImageLibrary,
+  ImagePickerResponse,
+  MediaType,
+  PhotoQuality,
+} from 'react-native-image-picker';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import {getFormattedDate} from '../../util/date';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
 function NewPost({navigation}: NewPostScreenProps) {
-  const [id, setId] = useState('1');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [firstDay, setFirstDay] = useState(new Date());
@@ -41,6 +43,7 @@ function NewPost({navigation}: NewPostScreenProps) {
   const [loading, setLoading] = useState(false);
   const [preferGender, setPreferGender] = useState('FEMALE');
   const [range, setRange] = useState([10, 20]);
+  const [image, setImage] = useState<ImagePickerResponse>();
 
   const [thunder, setThunder] = useState(false);
   const dispatch = useDispatch();
@@ -113,9 +116,57 @@ function NewPost({navigation}: NewPostScreenProps) {
     }
   };
 
+  const pickImage = () => {
+    const options = {
+      title: 'Select Image',
+      mediaType: 'photo' as MediaType,
+      quality: 1 as PhotoQuality,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('ImagePicker Error:', response.errorMessage);
+      } else {
+        setImage(response);
+      }
+    });
+  };
+
+  const formData = new FormData();
+  formData.append('category_id', category);
+  formData.append('title', title);
+  formData.append('content', content);
+  formData.append('firstDay', getFormattedDate(firstDay));
+  formData.append('lastDay', getFormattedDate(lastDay));
+  formData.append('preferHeadCount', +headCount);
+  formData.append('lightning', thunder);
+  formData.append('members', ['nickname2']);
+  formData.append('preferGender', preferGender);
+  formData.append('preferMinAge', range[0]);
+  formData.append('preferMaxAge', range[1]);
+
+  let uri;
+  if (image && image.assets && image.assets.length > 0) {
+    formData.append('images', {
+      uri: image.assets[0].uri,
+      name: image.assets[0].fileName,
+      type: image.assets[0].type,
+    });
+  }
+
   const postsData = {
     category_id: category,
-    image: 'temp',
+    image: {
+      uri: uri,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    },
     title: title,
     content: content,
     firstDay: firstDay.toString(),
@@ -131,9 +182,10 @@ function NewPost({navigation}: NewPostScreenProps) {
   const onSubmit = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await storePosts(postsData);
+      console.log(postsData);
+      const response = await storePosts(formData, 'multipart/form-data');
       dispatch(addPosts({...postsData, id: response.data.id}));
-      // console.log(response);
+
       Alert.alert('알림', '등록 되었습니다!');
       navigation.navigate('Main');
     } catch (error) {
@@ -141,6 +193,7 @@ function NewPost({navigation}: NewPostScreenProps) {
       if (errorResponse) {
         console.log((errorResponse.data as any).message);
         Alert.alert('알림', (errorResponse.data as any).message);
+        return;
       }
     } finally {
       setLoading(false);
@@ -172,6 +225,9 @@ function NewPost({navigation}: NewPostScreenProps) {
             </Pressable>
           </View>
           <View style={styles.writingZone}>
+            <Pressable onPress={pickImage}>
+              <Text>이미지 선택</Text>
+            </Pressable>
             <View style={styles.countryCategory}>
               <View style={styles.countryCategoryText}>
                 <RNPickerSelect
@@ -287,7 +343,7 @@ function NewPost({navigation}: NewPostScreenProps) {
                         <Text style={styles.preferGenderLabel}>남자</Text>
                       </View>
                       <View style={styles.preferGenderBox}>
-                        <RadioButton value="NOMATTER" color="#3C70FF" />
+                        <RadioButton value="NONE" color="#3C70FF" />
                         <Text style={styles.preferGenderLabel}>상관없음</Text>
                       </View>
                     </View>

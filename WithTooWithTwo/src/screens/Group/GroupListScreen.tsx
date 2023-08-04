@@ -8,13 +8,8 @@ import {
 } from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, {useCallback, useEffect, useState} from 'react';
-import {fetchPost, storePosts} from '../../util/post';
-import {
-  fetchGroup,
-  fetchGroupList,
-  GroupType,
-  storeGroup,
-} from '../../util/group';
+import {storePosts} from '../../util/post';
+import {fetchGroup, fetchGroupList, GroupType} from '../../util/group';
 import {AxiosError} from 'axios';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import GroupItem from '../../components/Group/GroupItem';
@@ -31,18 +26,6 @@ function GroupListScreen() {
   const [isFetching, setIsFetching] = useState(true);
   const dispatch = useDispatch();
   const groups = useSelector((state: RootState) => state.group);
-
-  const onPress = useCallback(async () => {
-    try {
-      const response = await storeGroup();
-    } catch (error) {
-      const errorResponse = (error as AxiosError).response;
-      if (errorResponse) {
-        console.log((errorResponse.data as any).message);
-        Alert.alert('알림', (errorResponse.data as any).message);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     async function getGroups() {

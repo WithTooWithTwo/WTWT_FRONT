@@ -3,7 +3,7 @@ import {MainTabParamList} from './MainScreen';
 import {SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {fetchPost} from '../../util/post';
+import {fetchPostList} from '../../util/post';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addPosts,
@@ -21,13 +21,13 @@ function PostListScreen() {
   const [isFetching, setIsFetching] = useState(true);
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
-  const posts = useSelector((state: RootState) => state.post.normalPosts);
+  const posts = useSelector((state: RootState) => state.post.posts);
   useEffect(() => {
     async function getPosts() {
       try {
         setIsFetching(true);
-        const posts = await fetchPost('?lightning=false');
-        dispatch(setNormalPosts(posts));
+        const posts = await fetchPostList();
+        dispatch(setPosts(posts));
         // console.log(posts);
       } catch (error) {
         //setError('Could not fetch expense!');
