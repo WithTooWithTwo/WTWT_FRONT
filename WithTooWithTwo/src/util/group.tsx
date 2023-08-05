@@ -52,7 +52,7 @@ type PlaceType = {
 export type GroupMember = {
   id: number;
   nickname: string;
-  profile: null;
+  profile: string | null;
 };
 
 export async function fetchGroup(api: string = '') {
@@ -98,7 +98,7 @@ export async function fetchGroupList() {
       firstDay: response.data[key].firstDay,
       lastDay: response.data[key].lastDay,
       leader: response.data[key].leader,
-      members: response.data.members,
+      members: response.data[key].members,
       notices: response.data[key].notices,
       places: response.data[key].places,
       memos: response.data[key].memos,
