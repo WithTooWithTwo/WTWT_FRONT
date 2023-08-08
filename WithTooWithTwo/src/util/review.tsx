@@ -8,14 +8,11 @@ export type OptionType = {
 };
 
 export async function fetchReviewOptions(api: string = '') {
-  const response = await axios.get(API_KEY + api);
-  const options = new Array<OptionType>();
+  const response = await axios.get(API_KEY + '/review-options' + api);
+  let options = null;
+
   for (const key in response.data) {
-    const obj = {
-      id: response.data[key].id,
-      name: response.data[key].name,
-    };
-    options.push(obj);
+    options = response.data[key];
   }
   return options;
 }

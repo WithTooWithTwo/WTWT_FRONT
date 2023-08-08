@@ -11,7 +11,6 @@ const ReviewMember = ({
   onSelectMember: (selectedIndex: number) => void;
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-
   const handleSelectMember = (index: number) => {
     setSelectedIndex(index); // 선택된 멤버의 인덱스를 상태에 업데이트
     onSelectMember(index); // onSelectMember 함수 호출하여 인덱스 전달

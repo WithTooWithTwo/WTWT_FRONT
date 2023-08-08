@@ -27,7 +27,7 @@ type GroupReviewProps = {
 
 export type ReviewType = {
   rate: number;
-  receiverId: string;
+  receiverId: number;
   personalities: number[];
   styles: number[];
   comment: string;
@@ -39,13 +39,29 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
   const group = useSelector((state: RootState) => state.group).groups;
   const selectedGroup = group.find((g: GroupType) => g.id.toString() === id)!;
   const members = selectedGroup.members;
+
+  const initialReviewState = {
+    rate: 0,
+    receiverId: members[0].id,
+    personalities: [],
+    styles: [],
+    comment: '',
+    images: [],
+  };
+
   const [currentMemberIndex, setCurrentMemberIndex] = useState(0);
-  const [reviews, setReviews] = useState<ReviewType[]>([]);
-  const [currentMember, setCurrentMember] = useState<ReviewType>(reviews[0]);
+  const [reviews, setReviews] = useState<ReviewType[]>(
+    new Array<ReviewType>(members.length).fill(initialReviewState),
+  );
+  const [currentMemberReview, setCurrentMemberReview] = useState<ReviewType>(
+    reviews[0],
+  );
 
   useEffect(() => {
-    setCurrentMember(prevState => {
+    console.log(currentMemberIndex);
+    setCurrentMemberReview(prevState => {
       const selectedMemberReview = reviews[currentMemberIndex];
+      selectedMemberReview.receiverId = members[currentMemberIndex].id;
       return selectedMemberReview;
     });
   }, [currentMemberIndex]);
@@ -53,10 +69,10 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
   useEffect(() => {
     setReviews(prevState => {
       const updatedReviews = [...prevState];
-      updatedReviews[currentMemberIndex] = currentMember;
+      updatedReviews[currentMemberIndex] = currentMemberReview;
       return updatedReviews;
     });
-  }, [currentMember]);
+  }, [currentMemberReview]);
 
   // console.log(selectedGroup);
 
@@ -65,7 +81,19 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
   };
 
   const handleSelectRating = (review: ReviewType) => {
-    setCurrentMember(review);
+    const updatedReview = {
+      ...reviews[currentMemberIndex], // 현재 멤버의 리뷰 정보 복사
+      rate: review.rate,
+      personalities: review.personalities,
+      styles: review.styles,
+      comment: review.comment,
+      images: review.images,
+    };
+    setReviews(prevReviews => {
+      const updatedReviews = [...prevReviews];
+      updatedReviews[currentMemberIndex] = updatedReview;
+      return updatedReviews;
+    });
   };
 
   return (
@@ -86,7 +114,7 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
               onSelectMember={handleSelectMember}
             />
             <ReviewContent
-              review={currentMember}
+              review={currentMemberReview}
               onChangeReview={handleSelectRating}
             />
           </View>

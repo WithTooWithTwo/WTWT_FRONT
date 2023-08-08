@@ -75,10 +75,13 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             resizeMode="cover"
             style={styles.image}
           />
-          <Pressable onPress={groupReviewPressHandler}>
-            <Text>리뷰 남기기</Text>
-          </Pressable>
+
           <View style={styles.mainBox}>
+            <Pressable
+              style={styles.reviewButton}
+              onPress={groupReviewPressHandler}>
+              <Text>리뷰 남기기</Text>
+            </Pressable>
             <View style={styles.dDayBox}>
               <Text style={styles.dDay}>D - {selectedGroup.dday * -1}</Text>
             </View>
@@ -268,6 +271,10 @@ const styles = StyleSheet.create({
   memoItem: {
     fontSize: 15,
     fontWeight: '400',
+  },
+  reviewButton: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
 });
 

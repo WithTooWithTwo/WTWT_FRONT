@@ -18,18 +18,30 @@ const ReviewContent = ({
   const [personalities, setPersonalities] = useState<number[]>([]);
   const [styles, setStyles] = useState<number[]>([]);
   const [comment, setComment] = useState('');
-  const [image, setImage] = useState<ImagePickerResponse>();
+  const [image, setImage] = useState<string[]>();
 
   const [personalList, setPersonalList] = useState<OptionType[]>([]);
   const [stylesList, setStylesList] = useState<OptionType[]>([]);
 
   useEffect(() => {
-    const updatedReview = {...review};
-    updatedReview.rate = rate;
-    updatedReview.personalities = personalities;
-    updatedReview.comment = comment;
-    updatedReview.styles = styles;
+    // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시합니다.
+    setRate(review.rate);
+    setPersonalities(review.personalities);
+    setStyles(review.styles);
+    setComment(review.comment);
+    setImage(review.images);
+  }, [review]);
 
+  useEffect(() => {
+    // console.log(review);
+    const updatedReview: ReviewType = {
+      ...review,
+      rate: rate,
+      personalities: personalities,
+      comment: comment,
+      styles: styles,
+    };
+    // console.log(updatedReview);
     onChangeReview(updatedReview);
   }, [rate, personalities, styles, comment, image]);
 
@@ -40,7 +52,9 @@ const ReviewContent = ({
         const styles = await fetchReviewOptions('/styles');
         setPersonalList(personalities);
         setStylesList(styles);
-      } catch (e) {}
+      } catch (e) {
+        console.log(e);
+      }
     };
     fetch();
   }, []);
@@ -57,26 +71,27 @@ const ReviewContent = ({
         <View style={style.image}></View>
         <Text style={style.nickname}></Text>
         <StarRating rating={rate} onChange={setRate} />
+        <Text>{rate}</Text>
       </View>
 
       <Text style={style.optionTitle}>동행자님의 성격</Text>
       <View style={style.optionBlock}>
-        {/*<View style={style.optionItem}>*/}
-        {/*  <Text style={style.optionText}>친절해요</Text>*/}
-        {/*</View>*/}
-        {/*<View style={style.optionItem}>*/}
-        {/*  <Text style={style.optionText}>친절해요</Text>*/}
-        {/*</View>*/}
+        {personalList.map(option => (
+          <Pressable key={option.id} style={style.optionItem}>
+            <Text style={style.optionText}>{option.name}</Text>
+          </Pressable>
+        ))}
       </View>
 
       <Text style={style.optionTitle}>동행자님의 여행스타일</Text>
       <View style={style.optionBlock}>
-        {/*<View style={style.optionItem}>*/}
-        {/*  <Text style={style.optionText}>약속을 잘지켜요</Text>*/}
-        {/*</View>*/}
-        {/*<View style={style.optionItem}>*/}
-        {/*  <Text style={style.optionText}>약속을 잘지켜요</Text>*/}
-        {/*</View>*/}
+        <View style={style.optionBlock}>
+          {stylesList.map(option => (
+            <Pressable key={option.id} style={style.optionItem}>
+              <Text style={style.optionText}>{option.name}</Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
 
       <Text style={style.optionTitle}>상세한 후기도 남겨보세요</Text>
@@ -116,9 +131,12 @@ const style = StyleSheet.create({
     backgroundColor: 'white',
   },
   optionBlock: {
+    width: '100%',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     borderRadius: 7,
     marginBottom: 30,
+    gap: 10,
   },
   optionTitle: {
     fontSize: 15,
@@ -127,9 +145,12 @@ const style = StyleSheet.create({
   },
   optionItem: {
     padding: 12,
+    borderRadius: 7,
     backgroundColor: Colors.primary500,
   },
+
   optionText: {
+    fontWeight: '600',
     color: 'white',
   },
   commentBlock: {},
