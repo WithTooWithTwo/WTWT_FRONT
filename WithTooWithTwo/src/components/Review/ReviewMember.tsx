@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
     color: Colors.grey4,
   },
   selectedBlock: {
-    backgroundColor: 'rgba(234,234,234,0.8)',
-    borderColor: Colors.sub2,
+    backgroundColor: Colors.grey6,
+    borderColor: Colors.sub5,
     borderWidth: 2,
   },
   selectedNickname: {

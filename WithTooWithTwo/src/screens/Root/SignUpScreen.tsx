@@ -3,6 +3,7 @@ import {
   Alert,
   Dimensions,
   KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -21,6 +22,8 @@ import DismissKeyboardView from '../../components/UI/DismissKeyboardView';
 import AuthInput from '../../components/Auth/AuthInput';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {RadioButton} from 'react-native-paper';
+import ImagePicker from '../../components/Image/ImagePicker';
+import {ImagePickerResponse} from 'react-native-image-picker';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -37,6 +40,7 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
   const [password, setPassword] = useState('');
   const [checkPwd, setCheckPwd] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [profileImage, setProfileImage] = useState<any>('');
 
   const nameRef = useRef<TextInput | null>(null);
   const nicknameRef = useRef<TextInput | null>(null);
@@ -51,7 +55,6 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
 
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const dispatch = useDispatch();
-
   const updateInputValueHandler = (inputType: string, enteredValue: string) => {
     switch (inputType) {
       case 'email':
@@ -111,7 +114,13 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
     onChangeBDay(selectedDate.getDate());
   };
 
+  const setImageHandler = (image: ImagePickerResponse[]) => {
+    setProfileImage(image[0]);
+    console.log(image[0]);
+  };
+
   const SignUpHandler = useCallback(async () => {
+    console.log(profileImage);
     if (!name || !name.trim()) {
       return Alert.alert('알림', '이름을 입력하세요');
     }
@@ -159,13 +168,13 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
       bYear: date.getFullYear(),
       bMonth: date.getMonth() + 1,
       bDay: date.getDay(),
-      profileImage: 'test',
+      profileImage: profileImage,
     };
 
     try {
       setIsAuthenticating(true);
       const token = await createUser(value);
-      dispatch(authenticate(token));
+      //dispatch(authenticate(token));
       Alert.alert('알림', '회원가입 되었습니다.');
       navigation.navigate('Login');
     } catch (error) {
@@ -263,6 +272,9 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
                 }}>
                 <View style={styles.imageCircle}>
                   <Icon name="user" color="#BDBDBD" size={70} />
+                  {!profileImage && (
+                    <ImagePicker onSetImages={setImageHandler} />
+                  )}
                 </View>
               </View>
 

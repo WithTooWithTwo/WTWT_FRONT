@@ -33,7 +33,9 @@ function HotItem({
           {order + 1}
         </Text>
         <View style={styles.titleBox}>
-          <Text>{title.length < 30 ? title : title.slice(0, 30)}</Text>
+          <Text style={styles.titleText}>
+            {title.length < 20 ? title : title.slice(0, 20) + '...'}
+          </Text>
           {/*<Text>{title}</Text>*/}
         </View>
         <View style={styles.iconLabel}>
@@ -67,6 +69,7 @@ const styles = StyleSheet.create({
   },
   orderBox: {width: 35},
   titleBox: {justifyContent: 'flex-start', flex: 1},
+  titleText: {fontSize: 13},
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   iconLabel: {
-    width: 50,
+    width: 37,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

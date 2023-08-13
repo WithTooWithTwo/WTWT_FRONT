@@ -44,7 +44,7 @@ function NewPost({navigation}: NewPostScreenProps) {
   const [loading, setLoading] = useState(false);
   const [preferGender, setPreferGender] = useState('FEMALE');
   const [range, setRange] = useState([10, 20]);
-  const [image, setImage] = useState<ImagePickerResponse>();
+  const [image, setImage] = useState<any>([]);
 
   const [thunder, setThunder] = useState(false);
   const dispatch = useDispatch();
@@ -162,6 +162,8 @@ function NewPost({navigation}: NewPostScreenProps) {
       name: image.assets[0].fileName,
       type: image.assets[0].type,
     });
+  } else {
+    formData.append('images', []);
   }
 
   const postsData = {
@@ -188,7 +190,7 @@ function NewPost({navigation}: NewPostScreenProps) {
       setLoading(true);
       console.log(postsData);
       const response = await storePosts(formData, 'multipart/form-data');
-      dispatch(addPosts({...postsData, id: response.data.id}));
+      // dispatch(addPosts({...postsData, id: response.data.id}));
 
       Alert.alert('알림', '등록 되었습니다!');
       navigation.navigate('Main');

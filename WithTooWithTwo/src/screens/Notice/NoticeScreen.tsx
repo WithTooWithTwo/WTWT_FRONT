@@ -4,6 +4,7 @@ import NewsScreen from './NewsScreen';
 import InvitationsScreen from './InvitationsScreen';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Colors} from '../../constants/styles';
 
 export type NoticeScreenParamList = {
   News: undefined;
@@ -16,7 +17,7 @@ function NoticeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-        <ScreenHeader title="알림" isGoBack={true} />
+        <ScreenHeader title="알림" isGoBack={true} color="white" />
         <Tab.Navigator
           style={{marginHorizontal: 25}}
           screenOptions={{
@@ -54,6 +55,7 @@ function NoticeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
 });
 export default NoticeScreen;

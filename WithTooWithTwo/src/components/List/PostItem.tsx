@@ -29,9 +29,8 @@ function PostItem(post: PostListType) {
             style={styles.writerImage}
             source={require('../../assets/group_main.png')}
           />
-          <Text style={styles.writerText}>{post.writer.id}</Text>
+          <Text style={styles.writerText}>{post.writer.nickname}</Text>
         </View>
-
         <Text style={styles.dateText}>{detailDate(post.createdAt)}</Text>
       </View>
       <Text style={styles.titleText}>{post.title}</Text>

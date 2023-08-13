@@ -1,11 +1,11 @@
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {TotalPostType} from '../../util/post';
+import {PostListType} from '../../util/post';
 import PostItem from './PostItem';
 import {PostsType} from '../../slices/postsSlice';
 
-function PostOutput({posts}: {posts: TotalPostType[]}) {
-  const renderPostItem = ({itemData}: {itemData: TotalPostType}) => {
+function PostOutput({posts}: {posts: PostListType[]}) {
+  const renderPostItem = ({itemData}: {itemData: PostListType}) => {
     return <PostItem {...itemData} />;
   };
   return (

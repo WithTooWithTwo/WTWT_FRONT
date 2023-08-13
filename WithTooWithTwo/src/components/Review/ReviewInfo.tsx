@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     height: 92,
     paddingVertical: 14,
     paddingHorizontal: 24,
-    backgroundColor: Colors.grey1,
+    backgroundColor: Colors.grey6,
   },
   imageBlock: {
     width: 60,
@@ -52,12 +52,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   titleText: {
-    fontSize: 15,
+    fontSize: 14,
     padding: 2,
   },
   dateText: {
     padding: 2,
-    fontSize: 13,
+    fontSize: 12,
   },
 });
 
