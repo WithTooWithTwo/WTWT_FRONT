@@ -3,16 +3,27 @@ import {GroupDetailStackParamList} from './GroupDetailScreen';
 import {RouteProp} from '@react-navigation/native';
 import {Colors} from '../../constants/styles';
 import ScreenHeader from '../../components/UI/ScreenHeader';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {PostsType} from '../../slices/postsSlice';
-import {fetchOnePost} from '../../util/post';
-import {GroupType} from '../../util/group';
+import {fetchOnePost, storePosts} from '../../util/post';
+import {fetchMemberList, GroupMember, GroupType} from '../../util/group';
 import ReviewInfo from '../../components/Review/ReviewInfo';
 import ReviewMember from '../../components/Review/ReviewMember';
 import ReviewContent from '../../components/Review/ReviewContent';
+import axios, {AxiosError} from 'axios/index';
+import {sendReview} from '../../util/review';
 
 type GroupReviewNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -31,18 +42,18 @@ export type ReviewType = {
   personalities: number[];
   styles: number[];
   comment: string;
-  images: string[];
+  images: any[];
 };
 
 function GroupReviewScreen({navigation, route}: GroupReviewProps) {
   const id = route.params?.groupId;
   const group = useSelector((state: RootState) => state.group).groups;
   const selectedGroup = group.find((g: GroupType) => g.id.toString() === id)!;
-  const members = selectedGroup.members;
+  const [members, setMembers] = useState<GroupMember[]>(selectedGroup.members);
 
   const initialReviewState = {
     rate: 0,
-    receiverId: members[0].id,
+    receiverId: 0,
     personalities: [],
     styles: [],
     comment: '',
@@ -53,12 +64,41 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
   const [reviews, setReviews] = useState<ReviewType[]>(
     new Array<ReviewType>(members.length).fill(initialReviewState),
   );
+
   const [currentMemberReview, setCurrentMemberReview] = useState<ReviewType>(
     reviews[0],
   );
 
   useEffect(() => {
-    console.log(currentMemberIndex);
+    const getMembers = async () => {
+      try {
+        let members = await fetchMemberList(id);
+        // members = members.filter(member => member.id.toString() !== userToken);
+        setMembers(members);
+
+        for (let i = 0; i < members.length; i++) {
+          const initialReview = {
+            rate: 0,
+            receiverId: members[i].id,
+            personalities: [],
+            styles: [],
+            comment: '',
+            images: [],
+          };
+          setReviews(prevState => {
+            const updatedReview = [...prevState];
+            updatedReview[i] = initialReview;
+            return updatedReview;
+          });
+        }
+      } catch (error: any) {
+        console.log('error', error.message);
+      }
+    };
+    getMembers();
+  }, []);
+
+  useEffect(() => {
     setCurrentMemberReview(prevState => {
       const selectedMemberReview = reviews[currentMemberIndex];
       selectedMemberReview.receiverId = members[currentMemberIndex].id;
@@ -74,15 +114,13 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
     });
   }, [currentMemberReview]);
 
-  // console.log(selectedGroup);
-
   const handleSelectMember = (index: number) => {
     setCurrentMemberIndex(index);
   };
 
   const handleSelectRating = (review: ReviewType) => {
     const updatedReview = {
-      ...reviews[currentMemberIndex], // 현재 멤버의 리뷰 정보 복사
+      ...reviews[currentMemberIndex],
       rate: review.rate,
       personalities: review.personalities,
       styles: review.styles,
@@ -96,11 +134,63 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
     });
   };
 
+  const submitHandler = useCallback(() => {
+    console.log(reviews);
+    const reviewData = new FormData();
+    reviewData.append('reviews', reviews);
+
+    // for (const review of reviews) {
+    //   const fmd = new FormData();
+    //   fmd.append('rate', review.rate);
+    //   fmd.append('receiverId', review.receiverId);
+    //   fmd.append('personalities', review.personalities);
+    //   fmd.append('styles', review.styles);
+    //
+    //   const imgFmd = new FormData();
+    //   if (review.images && review.images.length > 0) {
+    //     review.images[0].assets.forEach((asset: any, index: any) => {
+    //       imgFmd.append(`images[${index}].assets`, {
+    //         uri: asset.uri,
+    //         type: asset.type,
+    //         name: asset.fileName,
+    //       });
+    //     });
+    //     fmd.append('images', imgFmd);
+    //   } else {
+    //     fmd.append('images', []);
+    //   }
+    //
+    //   reviewData.append('');
+    // }
+
+    try {
+      const sendReview = async () => {
+        const response = await axios.post(
+          'http://3.39.87.78:8080' + '/reviews/' + id,
+          reviewData,
+          {
+            headers: {'content-type': 'multipart/form-data' || ''},
+          },
+        );
+      };
+      sendReview();
+
+      Alert.alert('알림', '등록 되었습니다!');
+    } catch (error) {
+      const errorResponse = (error as AxiosError).response;
+      if (errorResponse) {
+        console.log((errorResponse.data as any).message);
+        Alert.alert('알림', (errorResponse.data as any).message);
+        return;
+      }
+    }
+  }, [reviews]);
+
   return (
-    <View>
-      <SafeAreaView style={{backgroundColor: Colors.grey1}}>
+    <View style={{flex: 1}}>
+      <SafeAreaView style={{backgroundColor: Colors.grey1, flex: 1}}>
         <ScreenHeader title="그룹" color={Colors.grey1} isGoBack={true} />
-        <ScrollView>
+        <ScrollView style={styles.container}>
           <ReviewInfo group={selectedGroup} />
           <View style={styles.header}>
             <Text style={styles.headerTitle}>즐거운 여행이었나요?</Text>
@@ -119,6 +209,11 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
             />
           </View>
         </ScrollView>
+        <View style={styles.buttonBox}>
+          <Pressable style={styles.button} onPress={submitHandler}>
+            <Text style={styles.buttonText}>리뷰 제출하기</Text>
+          </Pressable>
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -142,6 +237,24 @@ const styles = StyleSheet.create({
   },
   body: {
     paddingHorizontal: 24,
+  },
+  buttonBox: {
+    height: 60,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.primary500,
+    borderRadius: 10,
+    height: 50,
+  },
+  buttonText: {
+    fontSize: 17,
+    color: 'white',
+    fontWeight: '600',
   },
 });
 

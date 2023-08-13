@@ -1,11 +1,21 @@
 import {GroupMember} from '../../util/group';
 import {ReviewType} from '../../screens/Group/GroupReviewScreen';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
-import {useEffect, useState} from 'react';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import StarRating from 'react-native-star-rating-widget';
 import {fetchReviewOptions, OptionType} from '../../util/review';
 import {Colors} from '../../constants/styles';
+import ImagePicker from '../Image/ImagePicker';
+import OneImagePicker from '../Image/OneImagePicker';
 
 const ReviewContent = ({
   review,
@@ -18,13 +28,14 @@ const ReviewContent = ({
   const [personalities, setPersonalities] = useState<number[]>([]);
   const [styles, setStyles] = useState<number[]>([]);
   const [comment, setComment] = useState('');
-  const [image, setImage] = useState<string[]>();
+  const [image, setImage] = useState<any>([]);
 
   const [personalList, setPersonalList] = useState<OptionType[]>([]);
   const [stylesList, setStylesList] = useState<OptionType[]>([]);
 
   useEffect(() => {
-    // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시합니다.
+    console.log(review.images, review.receiverId);
+    // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시
     setRate(review.rate);
     setPersonalities(review.personalities);
     setStyles(review.styles);
@@ -40,6 +51,7 @@ const ReviewContent = ({
       personalities: personalities,
       comment: comment,
       styles: styles,
+      images: image,
     };
     // console.log(updatedReview);
     onChangeReview(updatedReview);
@@ -59,26 +71,114 @@ const ReviewContent = ({
     fetch();
   }, []);
 
+  const selectPersonalHandler = (id: number) => {
+    setPersonalities(prevState => {
+      if (prevState.indexOf(id) > -1) {
+        let updated = [...prevState];
+        updated = updated.filter(p => p !== id);
+        return updated;
+      } else {
+        const updated = [...prevState];
+        updated.push(id);
+        return updated;
+      }
+    });
+  };
+
+  const selectStyleHandler = (id: number) => {
+    setStyles(prevState => {
+      if (prevState.indexOf(id) > -1) {
+        let updated = [...prevState];
+        updated = updated.filter(p => p !== id);
+        return updated;
+      } else {
+        const updated = [...prevState];
+        updated.push(id);
+        return updated;
+      }
+    });
+  };
+
+  const changeContentHandler = useCallback((text: string) => {
+    setComment(text);
+  }, []);
+
   const handleSelectRating = (rate: number) => {
     const updatedReview = {...review};
     updatedReview.rate = rate;
     onChangeReview(updatedReview);
   };
 
+  const setImageHandler = (images: ImagePickerResponse) => {
+    setImage((prevState: ImagePickerResponse[]) => {
+      const updated = [...prevState];
+      updated.push(images);
+      return updated;
+    });
+  };
+
+  const renderImages = () => {
+    const uris: string[] = [];
+
+    image.forEach((item: any) => {
+      if (item.assets && item.assets.length > 0) {
+        item.assets.forEach((img: any) => {
+          uris.push(img.uri);
+        });
+      }
+    });
+
+    if (image) {
+      return uris.map((img: any, i: any) => (
+        <Image
+          key={i}
+          source={{uri: `${img}`}}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 10,
+            overflow: 'hidden',
+          }}
+        />
+      ));
+    }
+    return null;
+  };
+
   return (
     <View style={style.container}>
       <View style={style.ratingBlock}>
         <View style={style.image}></View>
-        <Text style={style.nickname}></Text>
-        <StarRating rating={rate} onChange={setRate} />
-        <Text>{rate}</Text>
+        <Text style={style.nickname}>{review.receiverId}</Text>
+        <View style={style.star}>
+          <StarRating
+            rating={rate}
+            onChange={setRate}
+            color={Colors.primary500}
+            starSize={32}
+          />
+        </View>
       </View>
 
       <Text style={style.optionTitle}>동행자님의 성격</Text>
       <View style={style.optionBlock}>
         {personalList.map(option => (
-          <Pressable key={option.id} style={style.optionItem}>
-            <Text style={style.optionText}>{option.name}</Text>
+          <Pressable
+            key={option.id}
+            style={
+              personalities.find(p => p === option.id)
+                ? style.clickedOptionItem
+                : style.optionItem
+            }
+            onPress={() => selectPersonalHandler(option.id)}>
+            <Text
+              style={
+                personalities.find(p => p === option.id)
+                  ? style.clickedOptionText
+                  : style.optionText
+              }>
+              {option.name}
+            </Text>
           </Pressable>
         ))}
       </View>
@@ -87,33 +187,65 @@ const ReviewContent = ({
       <View style={style.optionBlock}>
         <View style={style.optionBlock}>
           {stylesList.map(option => (
-            <Pressable key={option.id} style={style.optionItem}>
-              <Text style={style.optionText}>{option.name}</Text>
+            <Pressable
+              key={option.id}
+              style={
+                styles.find(p => p === option.id)
+                  ? style.clickedOptionItem
+                  : style.optionItem
+              }
+              onPress={() => selectStyleHandler(option.id)}>
+              <Text
+                style={
+                  styles.find(p => p === option.id)
+                    ? style.clickedOptionText
+                    : style.optionText
+                }>
+                {option.name}
+              </Text>
             </Pressable>
           ))}
         </View>
       </View>
 
       <Text style={style.optionTitle}>상세한 후기도 남겨보세요</Text>
-      <View style={style.commentBlock}>
-        <View style={style.commentText}></View>
+      <View style={style.contentBlock}>
+        <TextInput
+          value={comment}
+          style={style.contentBox}
+          placeholder="내용을 작성해주세요"
+          multiline={true}
+          onChangeText={changeContentHandler}
+          blurOnSubmit={false}
+          clearButtonMode="while-editing"
+        />
       </View>
-      <View style={style.buttonBlock}>
-        <Pressable style={style.button}>
-          {/*<Text>리뷰 남기기</Text>*/}
-        </Pressable>
-      </View>
+      <ScrollView horizontal={true}>
+        <View style={style.imageBox}>
+          <View style={style.imagePicker}>
+            <OneImagePicker onSetImages={setImageHandler} />
+          </View>
+          {image !== undefined && image.length > 0 && renderImages()}
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const style = StyleSheet.create({
-  container: {},
+  container: {
+    marginBottom: 100,
+  },
   ratingBlock: {
     height: 210,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    marginTop: 10,
+    marginBottom: 30,
+    borderRadius: 10,
+    gap: 10,
+    backgroundColor: '#D9D9D940',
   },
   image: {
     height: 64,
@@ -126,10 +258,12 @@ const style = StyleSheet.create({
     fontSize: 14,
   },
   star: {
-    width: '100%',
-    padding: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 30,
+    borderRadius: 10,
     backgroundColor: 'white',
   },
+
   optionBlock: {
     width: '100%',
     flexDirection: 'row',
@@ -139,18 +273,41 @@ const style = StyleSheet.create({
     gap: 10,
   },
   optionTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: '500',
+    marginTop: 15,
+    marginBottom: 15,
   },
   optionItem: {
-    padding: 12,
+    paddingVertical: 15,
+    paddingHorizontal: 17,
+    borderRadius: 7,
+    backgroundColor: Colors.grey6,
+  },
+  clickedOptionItem: {
+    paddingVertical: 15,
+    paddingHorizontal: 17,
     borderRadius: 7,
     backgroundColor: Colors.primary500,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
 
   optionText: {
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.grey3,
+  },
+
+  clickedOptionText: {
+    fontSize: 14,
+    fontWeight: '500',
     color: 'white',
   },
   commentBlock: {},
@@ -158,6 +315,31 @@ const style = StyleSheet.create({
   commentText: {},
   buttonBlock: {},
   button: {},
+  contentBlock: {
+    marginTop: 10,
+    height: 230,
+    backgroundColor: '#D9D9D950',
+    borderRadius: 13,
+    padding: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  contentBox: {
+    flexShrink: 1,
+  },
+  imageBox: {
+    flexDirection: 'row',
+    marginTop: 20,
+    gap: 10,
+  },
+  imagePicker: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: Colors.grey5,
+  },
 });
 
 export default ReviewContent;

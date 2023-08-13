@@ -107,3 +107,18 @@ export async function fetchGroupList() {
   }
   return groups;
 }
+
+export const fetchMemberList = async (groupId: string) => {
+  const response = await axios.get(API_KEY + '/groups/' + groupId + '/members');
+  const members = new Array<GroupMember>();
+  for (const key in response.data) {
+    const memberObj = {
+      id: response.data[key].id,
+      nickname: response.data[key].nickname,
+      profile: response.data[key].profile,
+    };
+    members.push(memberObj);
+  }
+  console.log(members);
+  return members;
+};
