@@ -20,8 +20,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
-import {fetchOnePost} from '../../util/post';
+import {fetchImage, fetchOnePost} from '../../util/post';
 import {ImageType, PostsType, setNormalPosts} from '../../slices/postsSlice';
+import axios from 'axios/index';
 
 const URL = 'http://3.39.87.78:8080/';
 
@@ -38,22 +39,19 @@ type PostDetailScreenProps = {
 
 function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
-  // const posts = useSelector((state: RootState) => state.post).posts;
-  // console.log(posts);
-  // const selectedPost = posts.find(
-  //   post => post.id.toString() == selectedPostId,
-  // )!;
   const [imageUrl, setImageUrl] = useState<any>(null);
   const [selectedPost, setSelectedPost] = useState<PostsType | null>(null);
+
   useEffect(() => {
     async function getPosts() {
       try {
         const posts = await fetchOnePost(selectedPostId);
         setSelectedPost(posts);
-        setImageUrl(posts!.images![0].toString());
-      } catch (error) {
-        //setError('Could not fetch expense!');
-      }
+        const temp = posts.images![0];
+
+        setImageUrl(await fetchImage(temp.toString()));
+        console.log(await fetchImage(temp.toString()));
+      } catch (error) {}
     }
     getPosts();
   }, [selectedPostId]);
@@ -94,9 +92,13 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
             </View>
             <PostInfo postData={selectedPost} />
             <View style={styles.contentBox}>
-              <Image source={{uri: imageUrl}} style={{width: 100}} />
-              <Text>{imageUrl}</Text>
-
+              {imageUrl && (
+                <Image
+                  source={{uri: 'file://' + imageUrl}}
+                  style={{width: 200, height: 200}}
+                />
+              )}
+              <Text>{}</Text>
               <Text style={styles.contentText}>{selectedPost.content}</Text>
             </View>
           </ScrollView>

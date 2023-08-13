@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {
   Alert,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -154,7 +155,10 @@ function NewPost({navigation}: NewPostScreenProps) {
   let uri;
   if (image && image.assets && image.assets.length > 0) {
     formData.append('images', {
-      uri: image.assets[0].uri,
+      uri:
+        Platform.OS === 'android'
+          ? image.assets[0].uri
+          : image.assets[0].uri!.replace('file://', ''),
       name: image.assets[0].fileName,
       type: image.assets[0].type,
     });

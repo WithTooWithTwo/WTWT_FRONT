@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {PostsType} from '../slices/postsSlice';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const URL = 'http://3.39.87.78:8080';
 export async function storePosts(posts: any, contentType: string) {
@@ -96,3 +97,43 @@ export async function fetchPostList(api: string = '') {
   }
   return posts;
 }
+
+export const fetchImage = async (uri: string) => {
+  // axios
+  //   .get(URL + '/images/' + uri, {
+  //     // responseType: 'blob',
+  //     responseType: 'arraybuffer',
+  //   })
+  //   .then(res => {
+  //     const imageData = new Uint8Array(res.data);
+  //     const base64Data = imageData.reduce(
+  //       (data, byte) => data + String.fromCharCode(byte),
+  //       '',
+  //     );
+  //
+  //     const dataUri = `data:image/jpeg;base64,${btoa(base64Data)}`;
+  //     return dataUri;
+  //   });
+
+  const response = await RNFetchBlob.fetch('GET', URL + '/images/' + uri);
+  //
+
+  // const response = await axios.get(URL + '/images/' + uri);
+
+  const imagePath = RNFetchBlob.fs.dirs.CacheDir + '/' + uri; // 로컬 경로 설정
+  await RNFetchBlob.fs.writeFile(imagePath, response.data, 'base64'); // 이미지를 로컬 파일로 저장
+  // console.log('1!!' + imagePath);
+  return imagePath;
+
+  // const imagePath = RNFetchBlob.fs.dirs.CacheDir + '/' + uri;
+  // await RNFetchBlob.fs.writeFile(imagePath, response.data, 'base64');
+  //
+  // return 'file://' + imagePath; // 로컬 파일의 URI로 반환
+  //
+  // const imageData = await response.base64();
+  // // // console.log(imageData);
+  // return imageData;
+  // const dataUri = `data:image/jpg;base64,${imageData}`;
+  // // console.log(dataUri);
+  // return dataUri;
+};
