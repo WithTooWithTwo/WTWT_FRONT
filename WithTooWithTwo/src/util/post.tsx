@@ -135,5 +135,5 @@ export const fetchImage = async (uri: string) => {
   // return imageData;
   // const dataUri = `data:image/jpg;base64,${imageData}`;
   // // console.log(dataUri);
-  // return dataUri;
+  // return dataUri;리
 };

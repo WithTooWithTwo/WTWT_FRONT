@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {Platform} from 'react-native';
+import {ImagePickerResponse} from 'react-native-image-picker';
 
 const API_KEY = 'http://3.39.87.78:8080';
 
@@ -23,6 +25,7 @@ type valueType = {
   bYear: number;
   bMonth: number;
   bDay: number;
+  profileImage?: ImagePickerResponse;
 };
 
 export async function createUser(value: valueType) {
@@ -38,10 +41,27 @@ export async function createUser(value: valueType) {
   formData.append('bMonth', value.bMonth);
   formData.append('bDay', value.bDay);
 
-  const response = await axios.post(
-    API_KEY + '/login?email=&password=',
-    formData,
-  );
+  let uri;
+  if (
+    value.profileImage &&
+    value.profileImage.assets &&
+    value.profileImage.assets.length > 0
+  ) {
+    formData.append('profileImage', {
+      uri:
+        Platform.OS === 'android'
+          ? value.profileImage.assets[0].uri
+          : value.profileImage.assets[0].uri!.replace('file://', ''),
+      name: value.profileImage.assets[0].fileName,
+      type: value.profileImage.assets[0].type,
+    });
+  }
+
+  // const response = await axios.post(
+  //   API_KEY + '/login?email=&password=',
+  //   formData,
+  // );
+  const response = await axios.post(API_KEY + '/users', formData);
   // 현재 토큰 없이 아이디만 제공됨
   return response.data.id;
 }
