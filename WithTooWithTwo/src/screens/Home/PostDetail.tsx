@@ -1,28 +1,23 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../Authenticated/HomeScreen';
-import postItem from '../../components/List/PostItem';
 import {RouteProp} from '@react-navigation/native';
 import {
-  Alert,
   Image,
   Pressable,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
+
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
 import {fetchImage, fetchOnePost} from '../../util/post';
 import {ImageType, PostsType, setNormalPosts} from '../../slices/postsSlice';
-import axios from 'axios/index';
 
 const URL = 'http://3.39.87.78:8080/';
 
@@ -39,7 +34,7 @@ type PostDetailScreenProps = {
 
 function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
-  const [imageUrl, setImageUrl] = useState<any>(null);
+  const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [selectedPost, setSelectedPost] = useState<PostsType | null>(null);
 
   useEffect(() => {
@@ -47,11 +42,23 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
       try {
         const posts = await fetchOnePost(selectedPostId);
         setSelectedPost(posts);
-        const temp = posts.images![0];
 
-        setImageUrl(await fetchImage(temp.toString()));
-        console.log(await fetchImage(temp.toString()));
-      } catch (error) {}
+        for (let i = 0; i < posts.images!.length; i++) {
+          const temp = posts.images![i];
+          const newImage = await fetchImage(temp.toString());
+          setImageUrl(prevState => {
+            const updatedImages = [...prevState];
+            updatedImages.push(newImage);
+            return updatedImages;
+          });
+        }
+        //const temp = posts.images![0];
+        //
+        // setImageUrl(await fetchImage(temp.toString()));
+        //console.log(await fetchImage(temp.toString()));
+      } catch (error: any) {
+        console.log(error.message);
+      }
     }
     getPosts();
   }, [selectedPostId]);
@@ -66,6 +73,16 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
       </View>
     );
   }
+
+  const renderImages = () => {
+    return imageUrl.map((image, i) => (
+      <Image
+        key={i}
+        source={{uri: 'file://' + image}}
+        style={{width: 200, height: 200}}
+      />
+    ));
+  };
 
   return (
     <>
@@ -87,19 +104,15 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                   source={require('../../assets/group_main.png')}
                   style={styles.writerImage}
                 />
-                <Text style={styles.writerText}>{selectedPost.writer.id}</Text>
+                <Text style={styles.writerText}>
+                  {selectedPost.writer.nickname}
+                </Text>
               </View>
             </View>
             <PostInfo postData={selectedPost} />
             <View style={styles.contentBox}>
-              {imageUrl && (
-                <Image
-                  source={{uri: 'file://' + imageUrl}}
-                  style={{width: 200, height: 200}}
-                />
-              )}
-              <Text>{}</Text>
               <Text style={styles.contentText}>{selectedPost.content}</Text>
+              <View style={styles.imageBox}>{imageUrl && renderImages()}</View>
             </View>
           </ScrollView>
           <View style={styles.chatBox}>
@@ -182,6 +195,9 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'white',
     fontWeight: '600',
+  },
+  imageBox: {
+    marginTop: 20,
   },
 });
 
