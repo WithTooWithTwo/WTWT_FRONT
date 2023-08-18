@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {PostsType} from '../slices/postsSlice';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const URL = 'http://3.39.87.78:8080';
@@ -32,7 +31,7 @@ export type PostListType = {
 
 export async function fetchOnePost(api: string = '') {
   const response = await axios.get(URL + '/posts/' + api);
-  const posts: PostsType = {
+  const posts: OnePostsType = {
     post_id: response.data.post_id,
     category: response.data.category,
     writer: response.data.writer,
@@ -75,6 +74,37 @@ export async function fetchPopularPostList() {
   }
   return posts;
 }
+
+export type OnePostsType = {
+  post_id: string;
+  category: {id: number; name: string};
+  writer: {
+    id: number;
+    nickname: string;
+    profile: null;
+  };
+  title: string;
+  content: string;
+  postDate: string;
+  lightning: boolean;
+  firstDay: string;
+  lastDay: string;
+  headCount: number;
+  members: {
+    id: number;
+    nickname: string;
+    profile: string | null;
+  };
+  preference: {
+    gender: string | null;
+    minAge: number;
+    maxAge: number;
+    preferHeadCount: number;
+  };
+  images: string[] | null;
+  tags: string[] | null;
+  hits: number;
+};
 
 export async function fetchPostList(api: string = '') {
   const response = await axios.get(URL + '/posts' + api);

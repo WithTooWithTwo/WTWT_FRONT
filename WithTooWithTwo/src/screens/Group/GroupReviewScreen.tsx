@@ -16,14 +16,11 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
-import {PostsType} from '../../slices/postsSlice';
-import {fetchOnePost, storePosts} from '../../util/post';
 import {fetchMemberList, GroupMember, GroupType} from '../../util/group';
 import ReviewInfo from '../../components/Review/ReviewInfo';
 import ReviewMember from '../../components/Review/ReviewMember';
 import ReviewContent from '../../components/Review/ReviewContent';
-import axios, {AxiosError} from 'axios/index';
-import {sendReview} from '../../util/review';
+import {AxiosError} from 'axios/index';
 
 type GroupReviewNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -165,13 +162,14 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
 
     try {
       const sendReview = async () => {
-        const response = await axios.post(
-          'http://3.39.87.78:8080' + '/reviews/' + id,
-          reviewData,
-          {
-            headers: {'content-type': 'multipart/form-data' || ''},
-          },
-        );
+        // const response = await axios.post(
+        //   'http://3.39.87.78:8080' + '/reviews/' + id,
+        //   reviewData,
+        //   {
+        //     headers: {'content-type': 'multipart/form-data' || ''},
+        //   },
+        // );
+        console.log(reviews);
       };
       sendReview();
 

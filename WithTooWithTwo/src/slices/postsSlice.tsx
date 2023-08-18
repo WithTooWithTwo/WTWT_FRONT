@@ -27,7 +27,7 @@ export type PostsType = {
     maxAge: number;
     preferHeadCount: number;
   };
-  images: ImageType[] | null;
+  images: ImageType[] | string[] | null;
   tags: string[] | null;
   hits: number;
 };

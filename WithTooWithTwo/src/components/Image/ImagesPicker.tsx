@@ -1,14 +1,20 @@
-import {useCallback, useEffect, useState} from 'react';
 import {
   launchImageLibrary,
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
+import {useCallback, useEffect, useState} from 'react';
 import {Platform, Pressable, Text} from 'react-native';
 import {ImageType} from '../../slices/postsSlice';
 
-const OneImagePicker = ({onSetImages}: {onSetImages: any}) => {
-  const [image, setImage] = useState<ImageType>();
+const ImagesPicker = ({
+  onSetImages,
+  text = ' ',
+}: {
+  onSetImages: any;
+  text: string;
+}) => {
+  const [images, setImages] = useState<ImageType[]>([]);
 
   const pickImage = useCallback(() => {
     const options = {
@@ -21,39 +27,39 @@ const OneImagePicker = ({onSetImages}: {onSetImages: any}) => {
       },
     };
 
-    launchImageLibrary(options, async response => {
+    launchImageLibrary(options, response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {
         console.log('ImagePicker Error:', response.errorMessage);
       } else {
         if (response.assets && response.assets[0] && response.assets[0].uri) {
-          try {
-            setImage({
+          setImages(prevState => {
+            const updatedImages = [...prevState];
+            updatedImages.push({
               uri:
                 Platform.OS === 'android'
-                  ? response.assets[0].uri
-                  : response.assets[0].uri!.replace('file://', ''),
-              name: response.assets[0].fileName!,
-              type: response.assets[0].type!.includes('png') ? 'PNG' : 'JPEG',
+                  ? response.assets![0].uri!
+                  : response.assets![0].uri!.replace('file://', ''),
+              name: response.assets![0].fileName!,
+              type: response.assets![0].type!.includes('png') ? 'PNG' : 'JPEG',
             });
-          } catch (error: any) {
-            console.log('ImageResizer Error:', error.message);
-          }
+            return updatedImages;
+          });
         }
       }
     });
   }, []);
 
   useEffect(() => {
-    onSetImages(image);
-  }, [image]);
+    onSetImages(images);
+  }, [images]);
 
   return (
     <Pressable onPress={pickImage}>
-      <Text>이미지 선택</Text>
+      <Text>{text}</Text>
     </Pressable>
   );
 };
 
-export default OneImagePicker;
+export default ImagesPicker;

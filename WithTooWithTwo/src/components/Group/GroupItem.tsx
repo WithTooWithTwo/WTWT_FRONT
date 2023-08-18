@@ -7,8 +7,7 @@ import {
   View,
 } from 'react-native';
 import {Colors} from '../../constants/styles';
-import LinearGradient from 'react-native-linear-gradient';
-import {GroupType, MyGroupType} from '../../util/group';
+import {MyGroupType} from '../../util/group';
 import {useNavigation} from '@react-navigation/native';
 
 function GroupItem(group: MyGroupType) {
@@ -40,7 +39,11 @@ function GroupItem(group: MyGroupType) {
         {group.image && (
           <Pressable onPress={groupMainPressHandler}>
             <ImageBackground
-              source={require('../../assets/group_main.png')}
+              source={
+                group.image
+                  ? {uri: group.image}
+                  : require('../../assets/group_main.png')
+              }
               resizeMode="cover"
               style={styles.image}>
               <View style={styles.imageBox}>

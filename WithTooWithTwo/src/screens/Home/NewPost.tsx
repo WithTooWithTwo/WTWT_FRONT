@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {
   Alert,
-  Platform,
+  Image,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -18,19 +18,15 @@ import axios, {AxiosError} from 'axios';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {storePosts} from '../../util/post';
-import {addPosts} from '../../slices/postsSlice';
 import {RadioButton} from 'react-native-paper';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import ImagePicker, {
-  launchImageLibrary,
-  ImagePickerResponse,
-  MediaType,
-  PhotoQuality,
-} from 'react-native-image-picker';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import {getFormattedDate} from '../../util/date';
+import ImagesPicker from '../../components/Image/ImagesPicker';
+import {Colors} from '../../constants/styles';
+import RenderImages from '../../components/Image/RenderImages';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
@@ -117,78 +113,107 @@ function NewPost({navigation}: NewPostScreenProps) {
     }
   };
 
-  const pickImage = () => {
-    const options = {
-      title: 'Select Image',
-      mediaType: 'photo' as MediaType,
-      quality: 1 as PhotoQuality,
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
+  // const pickImage = () => {
+  //   const options = {
+  //     title: 'Select Image',
+  //     mediaType: 'photo' as MediaType,
+  //     quality: 1 as PhotoQuality,
+  //     storageOptions: {
+  //       skipBackup: true,
+  //       path: 'images',
+  //     },
+  //   };
+  //
+  //   launchImageLibrary(options, response => {
+  //     if (response.didCancel) {
+  //       console.log('User cancelled image picker');
+  //     } else if (response.errorMessage) {
+  //       console.log('ImagePicker Error:', response.errorMessage);
+  //     } else {
+  //       setImage(response);
+  //     }
+  //   });
+  // };
 
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.errorMessage) {
-        console.log('ImagePicker Error:', response.errorMessage);
-      } else {
-        setImage(response);
+  // const appendData = useCallback(() => {
+  //
+  //
+  //   return formData;
+  // }, []);
+
+  // const postsData = {
+  //   category_id: category,
+  //   image: {
+  //     uri: uri,
+  //     name: 'image.jpg',
+  //     type: 'image/jpeg',
+  //   },
+  //   title: title,
+  //   content: content,
+  //   firstDay: firstDay.toString(),
+  //   lastDay: lastDay.toString(),
+  //   preferHeadCount: +headCount,
+  //   lightning: thunder,
+  //   members: ['1'],
+  //   preferGender: preferGender,
+  //   preferMinAge: range[0],
+  //   preferMaxAge: range[1],
+  // };
+
+  const renderImages = () => {
+    const uris: string[] = [];
+
+    image.forEach((item: any) => {
+      if (item.assets && item.assets.length > 0) {
+        item.assets.forEach((img: any) => {
+          uris.push(img.uri);
+        });
       }
     });
-  };
 
-  const formData = new FormData();
-  formData.append('category_id', category);
-  formData.append('title', title);
-  formData.append('content', content);
-  formData.append('firstDay', getFormattedDate(firstDay));
-  formData.append('lastDay', getFormattedDate(lastDay));
-  formData.append('preferHeadCount', +headCount);
-  formData.append('lightning', thunder);
-  formData.append('members', ['nickname2']);
-  formData.append('preferGender', preferGender);
-  formData.append('preferMinAge', range[0]);
-  formData.append('preferMaxAge', range[1]);
-
-  let uri;
-  if (image && image.assets && image.assets.length > 0) {
-    formData.append('images', {
-      uri:
-        Platform.OS === 'android'
-          ? image.assets[0].uri
-          : image.assets[0].uri!.replace('file://', ''),
-      name: image.assets[0].fileName,
-      type: image.assets[0].type,
-    });
-  } else {
-    formData.append('images', []);
-  }
-
-  const postsData = {
-    category_id: category,
-    image: {
-      uri: uri,
-      name: 'image.jpg',
-      type: 'image/jpeg',
-    },
-    title: title,
-    content: content,
-    firstDay: firstDay.toString(),
-    lastDay: lastDay.toString(),
-    preferHeadCount: +headCount,
-    lightning: thunder,
-    members: ['1'],
-    preferGender: preferGender,
-    preferMinAge: range[0],
-    preferMaxAge: range[1],
+    if (image) {
+      return uris.map((img: any, i: any) => (
+        <Image
+          key={i}
+          source={{uri: `${img}`}}
+          style={{
+            width: 100,
+            height: 100,
+            borderRadius: 10,
+            overflow: 'hidden',
+          }}
+        />
+      ));
+    }
+    return null;
   };
 
   const onSubmit = useCallback(async () => {
     try {
       setLoading(true);
-      console.log(postsData);
+      const formData = new FormData();
+      formData.append('category_id', category);
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('firstDay', getFormattedDate(firstDay));
+      formData.append('lastDay', getFormattedDate(lastDay));
+      formData.append('preferHeadCount', +headCount);
+      formData.append('lightning', thunder);
+      formData.append('members', ['nickname2', 'nickname3', 'nickname4']);
+      formData.append('preferGender', preferGender);
+      formData.append('preferMinAge', range[0]);
+      formData.append('preferMaxAge', range[1]);
+      // formData.append('images', image[0]);
+      console.log(image);
+
+      if (image) {
+        Array.from(image).forEach(img => {
+          formData.append('images', img);
+        });
+      } else {
+        formData.append('images', []);
+      }
+
       const response = await storePosts(formData, 'multipart/form-data');
       // dispatch(addPosts({...postsData, id: response.data.id}));
 
@@ -214,6 +239,7 @@ function NewPost({navigation}: NewPostScreenProps) {
     headCount,
     preferGender,
     range,
+    image,
   ]);
 
   if (loading) {
@@ -231,9 +257,6 @@ function NewPost({navigation}: NewPostScreenProps) {
             </Pressable>
           </View>
           <View style={styles.writingZone}>
-            <Pressable onPress={pickImage}>
-              <Text>이미지 선택</Text>
-            </Pressable>
             <View style={styles.countryCategory}>
               <View style={styles.countryCategoryText}>
                 <RNPickerSelect
@@ -282,6 +305,16 @@ function NewPost({navigation}: NewPostScreenProps) {
                 clearButtonMode="while-editing"
               />
             </View>
+
+            <ScrollView horizontal={true}>
+              <View style={styles.imageBox}>
+                <View style={styles.imagePicker}>
+                  <ImagesPicker onSetImages={setImage} text="이미지 선택" />
+                </View>
+                <RenderImages images={image} size={100} />
+              </View>
+            </ScrollView>
+
             <View style={styles.infoZone}>
               <Text style={styles.infoTitleText}>동행 정보</Text>
               <View style={styles.date}>
@@ -571,6 +604,19 @@ const styles = StyleSheet.create({
   submitText: {
     fontSize: 18,
     color: 'white',
+  },
+  imageBox: {
+    flexDirection: 'row',
+    marginTop: 20,
+    gap: 10,
+  },
+  imagePicker: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: Colors.grey5,
   },
 });
 

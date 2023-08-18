@@ -1,24 +1,10 @@
-import {
-  Alert,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {useCallback, useEffect, useState} from 'react';
-import {storePosts} from '../../util/post';
-import {fetchGroup, fetchGroupList, GroupType} from '../../util/group';
-import {AxiosError} from 'axios';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {fetchGroupList} from '../../util/group';
 import ScreenHeader from '../../components/UI/ScreenHeader';
-import GroupItem from '../../components/Group/GroupItem';
-import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
-import {setPosts} from '../../slices/postsSlice';
 import GroupOutput from '../../components/Group/GroupOutput';
-import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {setGroups} from '../../slices/groupSlice';
 import {Colors} from '../../constants/styles';
 
@@ -31,9 +17,7 @@ function GroupListScreen() {
     async function getGroups() {
       try {
         const groups = await fetchGroupList();
-        //console.log(groups);
         dispatch(setGroups(groups));
-        // console.log(posts);
       } catch (error) {
         //setError('Could not fetch expense!');
       }
@@ -41,14 +25,10 @@ function GroupListScreen() {
     getGroups();
   }, []);
 
-  //console.log(groups.groups);
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <SafeAreaView style={{flex: 1}}>
         <ScreenHeader title="그룹" color="#FFFFFF" isGoBack={false} />
-        {/*<Pressable onPress={onPress}>*/}
-        {/*  <Text>Press!</Text>*/}
-        {/*</Pressable>*/}
         <View style={styles.container}>
           <GroupOutput groups={groups.groups} />
         </View>

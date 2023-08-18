@@ -3,7 +3,6 @@ import {
   Alert,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,16 +13,15 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../App';
 import {useCallback, useRef, useState} from 'react';
-import {createUser, login} from '../../util/auth';
-import {authenticate} from '../../slices/authSlice';
+import {createUser} from '../../util/auth';
 import {useDispatch} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DismissKeyboardView from '../../components/UI/DismissKeyboardView';
 import AuthInput from '../../components/Auth/AuthInput';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {RadioButton} from 'react-native-paper';
-import ImagePicker from '../../components/Image/ImagePicker';
-import {ImagePickerResponse} from 'react-native-image-picker';
+import OneImagePicker from '../../components/Image/OneImagePicker';
+import {ImageType} from '../../slices/postsSlice';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -114,9 +112,9 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
     onChangeBDay(selectedDate.getDate());
   };
 
-  const setImageHandler = (image: ImagePickerResponse[]) => {
-    setProfileImage(image[0]);
-    console.log(image[0]);
+  const setImageHandler = (image: ImageType) => {
+    setProfileImage(image);
+    console.log(image);
   };
 
   const SignUpHandler = useCallback(async () => {
@@ -273,7 +271,7 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
                 <View style={styles.imageCircle}>
                   <Icon name="user" color="#BDBDBD" size={70} />
                   {!profileImage && (
-                    <ImagePicker onSetImages={setImageHandler} />
+                    <OneImagePicker onSetImages={setImageHandler} />
                   )}
                 </View>
               </View>

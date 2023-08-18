@@ -1,5 +1,4 @@
 import {
-  Alert,
   Image,
   Pressable,
   SafeAreaView,
@@ -11,16 +10,12 @@ import {
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {GroupDetailStackParamList} from './GroupDetailScreen';
 import {RouteProp} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import React, {useEffect, useState} from 'react';
 import MemberItem from '../../components/Member/MemberItem';
-import {fetchOnePost} from '../../util/post';
 import {fetchGroup, GroupType} from '../../util/group';
-import {PostsType} from '../../slices/postsSlice';
 
 type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -71,7 +66,11 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
         <ScreenHeader title="그룹" color={Colors.grey1} isGoBack={true} />
         <ScrollView>
           <Image
-            source={require('../../assets/group_main.png')}
+            source={
+              selectedGroup.image
+                ? {uri: selectedGroup.image}
+                : require('../../assets/group_main.png')
+            }
             resizeMode="cover"
             style={styles.image}
           />
@@ -105,7 +104,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
             <View style={styles.noticeBox}>
               <Text style={styles.noticeTitle}>NOTICE</Text>
               <View style={styles.noticeList}>
-                {selectedGroup!.notices.map((el, i) => (
+                {selectedGroup!.notices.map(el => (
                   <Text key={el.id} style={styles.noticeItem}>
                     {el.data}
                   </Text>

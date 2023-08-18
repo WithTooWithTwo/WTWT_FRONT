@@ -13,11 +13,10 @@ import {
 
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
-import {fetchImage, fetchOnePost} from '../../util/post';
-import {ImageType, PostsType, setNormalPosts} from '../../slices/postsSlice';
+import {fetchOnePost, OnePostsType} from '../../util/post';
 
 const URL = 'http://3.39.87.78:8080/';
 
@@ -35,27 +34,13 @@ type PostDetailScreenProps = {
 function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
   const [imageUrl, setImageUrl] = useState<string[]>([]);
-  const [selectedPost, setSelectedPost] = useState<PostsType | null>(null);
+  const [selectedPost, setSelectedPost] = useState<OnePostsType | null>(null);
 
   useEffect(() => {
     async function getPosts() {
       try {
         const posts = await fetchOnePost(selectedPostId);
         setSelectedPost(posts);
-
-        for (let i = 0; i < posts.images!.length; i++) {
-          const temp = posts.images![i];
-          const newImage = await fetchImage(temp.toString());
-          setImageUrl(prevState => {
-            const updatedImages = [...prevState];
-            updatedImages.push(newImage);
-            return updatedImages;
-          });
-        }
-        //const temp = posts.images![0];
-        //
-        // setImageUrl(await fetchImage(temp.toString()));
-        //console.log(await fetchImage(temp.toString()));
       } catch (error: any) {
         console.log(error.message);
       }
@@ -112,7 +97,22 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
             <PostInfo postData={selectedPost} />
             <View style={styles.contentBox}>
               <Text style={styles.contentText}>{selectedPost.content}</Text>
-              <View style={styles.imageBox}>{imageUrl && renderImages()}</View>
+              <View style={styles.imageBox}>
+                <ScrollView horizontal={true}>
+                  <View style={styles.imageList}>
+                    {selectedPost.images &&
+                      selectedPost.images.map(image => {
+                        return (
+                          <Image
+                            key={image}
+                            source={{uri: image}}
+                            style={{width: 130, height: 130, borderRadius: 10}}
+                          />
+                        );
+                      })}
+                  </View>
+                </ScrollView>
+              </View>
             </View>
           </ScrollView>
           <View style={styles.chatBox}>
@@ -198,6 +198,10 @@ const styles = StyleSheet.create({
   },
   imageBox: {
     marginTop: 20,
+  },
+  imageList: {
+    flexDirection: 'row',
+    gap: 10,
   },
 });
 

@@ -23,7 +23,7 @@ const testGroup = {
 export type GroupType = {
   id: number;
   dday: number;
-  image?: null;
+  image: string;
   name: string;
   firstDay: string;
   lastDay: string;
@@ -76,7 +76,7 @@ export async function fetchGroup(api: string = '') {
 export type MyGroupType = {
   id: number;
   dday: number;
-  image?: null;
+  image?: string[] | null;
   name: string;
   firstDay: string;
   leader: {

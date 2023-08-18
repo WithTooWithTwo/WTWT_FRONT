@@ -1,4 +1,3 @@
-import {GroupMember} from '../../util/group';
 import {ReviewType} from '../../screens/Group/GroupReviewScreen';
 import {
   Image,
@@ -10,12 +9,11 @@ import {
   View,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {ImagePickerResponse} from 'react-native-image-picker';
 import StarRating from 'react-native-star-rating-widget';
 import {fetchReviewOptions, OptionType} from '../../util/review';
 import {Colors} from '../../constants/styles';
-import ImagePicker from '../Image/ImagePicker';
 import OneImagePicker from '../Image/OneImagePicker';
+import RenderImages from '../Image/RenderImages';
 
 const ReviewContent = ({
   review,
@@ -109,8 +107,8 @@ const ReviewContent = ({
     onChangeReview(updatedReview);
   };
 
-  const setImageHandler = (images: ImagePickerResponse) => {
-    setImage((prevState: ImagePickerResponse[]) => {
+  const setImageHandler = (images: any) => {
+    setImage((prevState: any) => {
       const updated = [...prevState];
       updated.push(images);
       return updated;
@@ -225,7 +223,9 @@ const ReviewContent = ({
           <View style={style.imagePicker}>
             <OneImagePicker onSetImages={setImageHandler} />
           </View>
-          {image !== undefined && image.length > 0 && renderImages()}
+          {image !== undefined && image.length > 0 && (
+            <RenderImages images={image} size={100} />
+          )}
         </View>
       </ScrollView>
     </View>

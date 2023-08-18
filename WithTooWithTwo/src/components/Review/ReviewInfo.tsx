@@ -6,7 +6,13 @@ const ReviewInfo = ({group}: {group: GroupType}) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageBlock}>
-        <Image source={require('../../assets/place1.png')} resizeMode="cover" />
+        {group.image && (
+          <Image
+            source={{uri: group.image}}
+            resizeMode={'cover'}
+            style={{width: 60, height: 60}}
+          />
+        )}
       </View>
       <View style={styles.contentBlock}>
         <View style={styles.travelBlock}>
@@ -34,6 +40,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     overflow: 'hidden',
+    backgroundColor: Colors.grey1,
   },
   contentBlock: {
     flexDirection: 'column',
