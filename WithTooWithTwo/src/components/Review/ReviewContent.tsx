@@ -14,6 +14,7 @@ import {fetchReviewOptions, OptionType} from '../../util/review';
 import {Colors} from '../../constants/styles';
 import OneImagePicker from '../Image/OneImagePicker';
 import RenderImages from '../Image/RenderImages';
+import {fetchUser, UserType} from '../../util/user';
 
 const ReviewContent = ({
   review,
@@ -32,6 +33,12 @@ const ReviewContent = ({
   const [stylesList, setStylesList] = useState<OptionType[]>([]);
 
   useEffect(() => {
+    fetchUser().then(r => {
+      console.log(r.nickname);
+    });
+  }, []);
+
+  useEffect(() => {
     console.log(review.images, review.receiverId);
     // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시
     setRate(review.rate);
@@ -42,7 +49,6 @@ const ReviewContent = ({
   }, [review]);
 
   useEffect(() => {
-    // console.log(review);
     const updatedReview: ReviewType = {
       ...review,
       rate: rate,
@@ -51,7 +57,6 @@ const ReviewContent = ({
       styles: styles,
       images: image,
     };
-    // console.log(updatedReview);
     onChangeReview(updatedReview);
   }, [rate, personalities, styles, comment, image]);
 
@@ -113,34 +118,6 @@ const ReviewContent = ({
       updated.push(images);
       return updated;
     });
-  };
-
-  const renderImages = () => {
-    const uris: string[] = [];
-
-    image.forEach((item: any) => {
-      if (item.assets && item.assets.length > 0) {
-        item.assets.forEach((img: any) => {
-          uris.push(img.uri);
-        });
-      }
-    });
-
-    if (image) {
-      return uris.map((img: any, i: any) => (
-        <Image
-          key={i}
-          source={{uri: `${img}`}}
-          style={{
-            width: 100,
-            height: 100,
-            borderRadius: 10,
-            overflow: 'hidden',
-          }}
-        />
-      ));
-    }
-    return null;
   };
 
   return (

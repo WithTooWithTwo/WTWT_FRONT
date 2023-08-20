@@ -105,6 +105,7 @@ export async function fetchGroupList() {
     };
     groups.push(groupObj);
   }
+
   return groups;
 }
 
@@ -121,4 +122,16 @@ export const fetchMemberList = async (groupId: string) => {
   }
   console.log(members);
   return members;
+};
+
+export const storeNotice = async (groupId: string, notice: string) => {
+  const response = await axios.post(
+    API_KEY + '/groups/' + groupId + '/notice' + '?contents=' + notice,
+  );
+};
+
+export const storeMemo = async (groupId: string, memo: string) => {
+  const response = await axios.post(
+    API_KEY + '/groups/' + groupId + '/memo' + '?contents=' + memo,
+  );
 };

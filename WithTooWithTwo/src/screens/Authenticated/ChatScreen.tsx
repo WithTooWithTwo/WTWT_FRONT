@@ -1,11 +1,10 @@
 import {SafeAreaView, View} from 'react-native';
 import ScreenHeader from '../../components/UI/ScreenHeader';
-import GroupReviewScreen from '../Group/GroupReviewScreen';
 
 function ChatScreen() {
   return (
-    <SafeAreaView>
-      <ScreenHeader title="채팅" color="#D9D9D930" isGoBack={false} />
+    <SafeAreaView style={{backgroundColor: 'white'}}>
+      <ScreenHeader title="채팅" color="white" isGoBack={false} />
     </SafeAreaView>
   );
 }

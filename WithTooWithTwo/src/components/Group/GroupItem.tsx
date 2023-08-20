@@ -31,7 +31,9 @@ function GroupItem(group: MyGroupType) {
     <View style={styles.container}>
       <View style={styles.dateBox}>
         <View style={styles.dDay}>
-          <Text style={styles.dDayText}>D - {group.dday * -1}</Text>
+          <Text style={styles.dDayText}>
+            D {group.dday < 0 ? `+ ${group.dday * -1}` : `- ${group.dday}`}
+          </Text>
         </View>
         <Text style={styles.dDate}>{group.firstDay}</Text>
       </View>
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
   },
   imageBox: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     justifyContent: 'flex-end',
     padding: 15,
   },

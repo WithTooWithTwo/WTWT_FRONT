@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -13,9 +14,9 @@ import {RouteProp} from '@react-navigation/native';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import MemberItem from '../../components/Member/MemberItem';
-import {fetchGroup, GroupType} from '../../util/group';
+import {fetchGroup, GroupType, storeMemo, storeNotice} from '../../util/group';
 
 type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -32,7 +33,8 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
   // const groups = useSelector((state: RootState) => state.group).groups;
   // const selectedGroup = groups.find(group => group.id.toString() == id)!;
   const [selectedGroup, setSelectedGroup] = useState<GroupType | null>(null);
-
+  const [newNotice, setNewNotice] = useState<string>('');
+  const [newMemo, setNewMemo] = useState<string>('');
   const groupReviewPressHandler = () => {
     navigation.navigate('GroupReview', {groupId: id});
   };
@@ -60,6 +62,32 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
     );
   }
 
+  const changeNoticeHandler = (text: string) => {
+    setNewNotice(text);
+  };
+
+  const changeMemoHandler = (text: string) => {
+    setNewMemo(text);
+  };
+
+  const submitNoticeHandler = async () => {
+    try {
+      const response = await storeNotice(id, newNotice);
+    } catch (e) {
+      console.log(e);
+    }
+    setNewNotice('');
+  };
+
+  const submitMemoHandler = async () => {
+    try {
+      const response = await storeMemo(id, newMemo);
+    } catch (e) {
+      console.log(e);
+    }
+    setNewMemo('');
+  };
+
   return (
     <View>
       <SafeAreaView style={{backgroundColor: Colors.grey1}}>
@@ -82,13 +110,23 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
               <Text>리뷰 남기기</Text>
             </Pressable>
             <View style={styles.dDayBox}>
-              <Text style={styles.dDay}>D - {selectedGroup.dday * -1}</Text>
+              <Text style={styles.dDay}>
+                D{' '}
+                {selectedGroup.dday < 0
+                  ? `+ ${selectedGroup.dday * -1}`
+                  : `- ${selectedGroup.dday}`}
+              </Text>
             </View>
             <Text style={styles.title}>{selectedGroup.name}</Text>
             <View style={styles.dateBox}>
               <Text style={styles.date}>{selectedGroup.firstDay}</Text>
               <FontAwesome name="user-alt" color="#3C70FF99" size={12} />
-              <Text style={styles.headCount}>{1}명</Text>
+              <Text style={styles.headCount}>
+                {selectedGroup.members.length
+                  ? selectedGroup.members.length + 1
+                  : 1}
+                명
+              </Text>
             </View>
             <View style={styles.keywordBox}>
               <Text style={styles.keyword}></Text>
@@ -101,6 +139,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
                 members={selectedGroup.members}
               />
             </View>
+
             <View style={styles.noticeBox}>
               <Text style={styles.noticeTitle}>NOTICE</Text>
               <View style={styles.noticeList}>
@@ -109,6 +148,14 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
                     {el.data}
                   </Text>
                 ))}
+                <TextInput
+                  value={newNotice}
+                  placeholder="더 추가하기"
+                  onChangeText={changeNoticeHandler}
+                  onBlur={submitNoticeHandler}
+                  blurOnSubmit={true}
+                  clearButtonMode="while-editing"
+                />
               </View>
             </View>
           </View>
@@ -138,7 +185,16 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
                   {el.data}
                 </Text>
               ))}
+              <TextInput
+                value={newMemo}
+                placeholder="더 추가하기"
+                onChangeText={changeMemoHandler}
+                onBlur={submitMemoHandler}
+                blurOnSubmit={true}
+                clearButtonMode="while-editing"
+              />
             </View>
+            <View style={{paddingBottom: 50}} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -215,6 +271,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 10,
   },
+  noticeInput: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
 
   placeBox: {
     paddingTop: 30,
@@ -270,6 +330,7 @@ const styles = StyleSheet.create({
   memoItem: {
     fontSize: 15,
     fontWeight: '400',
+    marginBottom: 7,
   },
   reviewButton: {
     justifyContent: 'flex-end',

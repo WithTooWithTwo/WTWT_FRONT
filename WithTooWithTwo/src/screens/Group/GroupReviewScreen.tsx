@@ -170,6 +170,7 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
         //   },
         // );
         console.log(reviews);
+        navigation.goBack();
       };
       sendReview();
 
