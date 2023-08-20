@@ -17,6 +17,7 @@ import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
 import {fetchOnePost, OnePostsType} from '../../util/post';
+import LoadingOverlay from '../../components/UI/LoadingOverlay';
 
 const URL = 'http://3.39.87.78:8080/';
 
@@ -49,25 +50,8 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
   }, [selectedPostId]);
 
   if (!selectedPost) {
-    return (
-      <View style={styles.container}>
-        <SafeAreaView style={{flex: 1}}>
-          {/* 로딩 상태에 대한 UI */}
-          <Text>Loading...</Text>
-        </SafeAreaView>
-      </View>
-    );
+    return <LoadingOverlay />;
   }
-
-  const renderImages = () => {
-    return imageUrl.map((image, i) => (
-      <Image
-        key={i}
-        source={{uri: 'file://' + image}}
-        style={{width: 200, height: 200}}
-      />
-    ));
-  };
 
   return (
     <>

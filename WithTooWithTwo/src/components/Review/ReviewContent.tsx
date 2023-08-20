@@ -27,7 +27,6 @@ const ReviewContent = ({
   const [personalities, setPersonalities] = useState<number[]>([]);
   const [styles, setStyles] = useState<number[]>([]);
   const [comment, setComment] = useState('');
-  const [image, setImage] = useState<any>([]);
 
   const [personalList, setPersonalList] = useState<OptionType[]>([]);
   const [stylesList, setStylesList] = useState<OptionType[]>([]);
@@ -39,13 +38,12 @@ const ReviewContent = ({
   }, []);
 
   useEffect(() => {
-    console.log(review.images, review.receiverId);
+    console.log(review.receiverId);
     // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시
     setRate(review.rate);
     setPersonalities(review.personalities);
     setStyles(review.styles);
     setComment(review.comment);
-    setImage(review.images);
   }, [review]);
 
   useEffect(() => {
@@ -55,10 +53,9 @@ const ReviewContent = ({
       personalities: personalities,
       comment: comment,
       styles: styles,
-      images: image,
     };
     onChangeReview(updatedReview);
-  }, [rate, personalities, styles, comment, image]);
+  }, [rate, personalities, styles, comment]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -112,13 +109,13 @@ const ReviewContent = ({
     onChangeReview(updatedReview);
   };
 
-  const setImageHandler = (images: any) => {
-    setImage((prevState: any) => {
-      const updated = [...prevState];
-      updated.push(images);
-      return updated;
-    });
-  };
+  // const setImageHandler = (images: any) => {
+  //   setImage((prevState: any) => {
+  //     const updated = [...prevState];
+  //     updated.push(images);
+  //     return updated;
+  //   });
+  // };
 
   return (
     <View style={style.container}>
@@ -195,16 +192,16 @@ const ReviewContent = ({
           clearButtonMode="while-editing"
         />
       </View>
-      <ScrollView horizontal={true}>
-        <View style={style.imageBox}>
-          <View style={style.imagePicker}>
-            <OneImagePicker onSetImages={setImageHandler} />
-          </View>
-          {image !== undefined && image.length > 0 && (
-            <RenderImages images={image} size={100} />
-          )}
-        </View>
-      </ScrollView>
+      {/*<ScrollView horizontal={true}>*/}
+      {/*  <View style={style.imageBox}>*/}
+      {/*    <View style={style.imagePicker}>*/}
+      {/*      <OneImagePicker onSetImages={setImageHandler} />*/}
+      {/*    </View>*/}
+      {/*    {image !== undefined && image.length > 0 && (*/}
+      {/*      <RenderImages images={image} size={100} />*/}
+      {/*    )}*/}
+      {/*  </View>*/}
+      {/*</ScrollView>*/}
     </View>
   );
 };

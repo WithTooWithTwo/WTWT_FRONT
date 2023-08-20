@@ -21,6 +21,7 @@ import ReviewInfo from '../../components/Review/ReviewInfo';
 import ReviewMember from '../../components/Review/ReviewMember';
 import ReviewContent from '../../components/Review/ReviewContent';
 import {AxiosError} from 'axios/index';
+import axios from 'axios';
 
 type GroupReviewNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -39,7 +40,6 @@ export type ReviewType = {
   personalities: number[];
   styles: number[];
   comment: string;
-  images: any[];
 };
 
 function GroupReviewScreen({navigation, route}: GroupReviewProps) {
@@ -54,7 +54,6 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
     personalities: [],
     styles: [],
     comment: '',
-    images: [],
   };
 
   const [currentMemberIndex, setCurrentMemberIndex] = useState(0);
@@ -70,7 +69,6 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
     const getMembers = async () => {
       try {
         let members = await fetchMemberList(id);
-        // members = members.filter(member => member.id.toString() !== userToken);
         setMembers(members);
 
         for (let i = 0; i < members.length; i++) {
@@ -80,7 +78,6 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
             personalities: [],
             styles: [],
             comment: '',
-            images: [],
           };
           setReviews(prevState => {
             const updatedReview = [...prevState];
@@ -122,8 +119,8 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
       personalities: review.personalities,
       styles: review.styles,
       comment: review.comment,
-      images: review.images,
     };
+
     setReviews(prevReviews => {
       const updatedReviews = [...prevReviews];
       updatedReviews[currentMemberIndex] = updatedReview;
@@ -133,44 +130,13 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
 
   const submitHandler = useCallback(() => {
     console.log(reviews);
-    const reviewData = new FormData();
-    reviewData.append('reviews', reviews);
-
-    // for (const review of reviews) {
-    //   const fmd = new FormData();
-    //   fmd.append('rate', review.rate);
-    //   fmd.append('receiverId', review.receiverId);
-    //   fmd.append('personalities', review.personalities);
-    //   fmd.append('styles', review.styles);
-    //
-    //   const imgFmd = new FormData();
-    //   if (review.images && review.images.length > 0) {
-    //     review.images[0].assets.forEach((asset: any, index: any) => {
-    //       imgFmd.append(`images[${index}].assets`, {
-    //         uri: asset.uri,
-    //         type: asset.type,
-    //         name: asset.fileName,
-    //       });
-    //     });
-    //     fmd.append('images', imgFmd);
-    //   } else {
-    //     fmd.append('images', []);
-    //   }
-    //
-    //   reviewData.append('');
-    // }
 
     try {
       const sendReview = async () => {
-        // const response = await axios.post(
-        //   'http://3.39.87.78:8080' + '/reviews/' + id,
-        //   reviewData,
-        //   {
-        //     headers: {'content-type': 'multipart/form-data' || ''},
-        //   },
-        // );
-        console.log(reviews);
-        navigation.goBack();
+        const response = await axios.post(
+          'http://3.39.87.78:8080' + '/reviews/' + id,
+          reviews,
+        );
       };
       sendReview();
 

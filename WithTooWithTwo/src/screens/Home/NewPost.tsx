@@ -128,20 +128,19 @@ function NewPost({navigation}: NewPostScreenProps) {
       formData.append('preferGender', preferGender);
       formData.append('preferMinAge', range[0]);
       formData.append('preferMaxAge', range[1]);
-      // formData.append('images', image[0]);
       console.log(image);
 
-      if (image) {
+      if (image && image.length > 0) {
         Array.from(image).forEach(img => {
           formData.append('images', img);
         });
-      } else {
-        formData.append('images', []);
       }
 
+      console.log(formData);
       const response = await storePosts(formData, 'multipart/form-data');
       // dispatch(addPosts({...postsData, id: response.data.id}));
 
+      console.log(response.data);
       Alert.alert('알림', '등록 되었습니다!');
       navigation.navigate('Main');
     } catch (error) {
