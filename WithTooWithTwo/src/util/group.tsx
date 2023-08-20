@@ -128,10 +128,12 @@ export const storeNotice = async (groupId: string, notice: string) => {
   const response = await axios.post(
     API_KEY + '/groups/' + groupId + '/notice' + '?contents=' + notice,
   );
+  return response.data;
 };
 
 export const storeMemo = async (groupId: string, memo: string) => {
   const response = await axios.post(
     API_KEY + '/groups/' + groupId + '/memo' + '?contents=' + memo,
   );
+  return response.data;
 };

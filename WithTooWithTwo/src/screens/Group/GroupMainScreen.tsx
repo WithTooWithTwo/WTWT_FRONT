@@ -14,7 +14,7 @@ import {RouteProp} from '@react-navigation/native';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import MemberItem from '../../components/Member/MemberItem';
 import {fetchGroup, GroupType, storeMemo, storeNotice} from '../../util/group';
 
@@ -73,6 +73,9 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
   const submitNoticeHandler = async () => {
     try {
       const response = await storeNotice(id, newNotice);
+      fetchGroup(response.result).then(res => {
+        setSelectedGroup(res);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -82,6 +85,9 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
   const submitMemoHandler = async () => {
     try {
       const response = await storeMemo(id, newMemo);
+      fetchGroup(response.result).then(res => {
+        setSelectedGroup(res);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -164,7 +170,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
               <Text style={styles.placeTitleText}>꼭 들릴 맛집</Text>
             </View>
             <ScrollView horizontal={true} style={styles.placeContent}>
-              {selectedGroup.places.map((el, i) => (
+              {selectedGroup.places.map(el => (
                 <View key={el.id} style={styles.placeItem}>
                   <Image
                     style={styles.placeImage}
