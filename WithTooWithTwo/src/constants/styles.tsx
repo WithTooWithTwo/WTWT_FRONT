@@ -1,4 +1,5 @@
 export const Colors = {
+  primary400: '#3C70FF70',
   primary500: '#3C70FF',
   screenHeader: '#D9D9D930',
   grey4: '#868B94',
