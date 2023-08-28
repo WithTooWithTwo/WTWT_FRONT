@@ -24,3 +24,9 @@ export const fetchUser = async () => {
   const user: UserType = await response.data;
   return user;
 };
+
+export const fetchAnotherUser = async (id: string) => {
+  const response = await axios.get(API_KEY + '/users/' + id);
+  const user: UserType = await response.data;
+  return user;
+};

@@ -12,15 +12,15 @@ import React, {useCallback, useEffect, useState} from 'react';
 import StarRating from 'react-native-star-rating-widget';
 import {fetchReviewOptions, OptionType} from '../../util/review';
 import {Colors} from '../../constants/styles';
-import OneImagePicker from '../Image/OneImagePicker';
-import RenderImages from '../Image/RenderImages';
-import {fetchUser, UserType} from '../../util/user';
+import {fetchAnotherUser} from '../../util/user';
 
 const ReviewContent = ({
   review,
+  nickname,
   onChangeReview,
 }: {
   review: ReviewType;
+  nickname: string;
   onChangeReview: (review: ReviewType) => void;
 }) => {
   const [rate, setRate] = useState(0);
@@ -32,13 +32,10 @@ const ReviewContent = ({
   const [stylesList, setStylesList] = useState<OptionType[]>([]);
 
   useEffect(() => {
-    fetchUser().then(r => {
-      console.log(r.nickname);
-    });
-  }, []);
+    // fetchAnotherUser(review.receiverId.toString()).then(r => {
+    //   setNickname(r.nickname);
+    // });
 
-  useEffect(() => {
-    console.log(review.receiverId);
     // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시
     setRate(review.rate);
     setPersonalities(review.personalities);
@@ -103,25 +100,11 @@ const ReviewContent = ({
     setComment(text);
   }, []);
 
-  const handleSelectRating = (rate: number) => {
-    const updatedReview = {...review};
-    updatedReview.rate = rate;
-    onChangeReview(updatedReview);
-  };
-
-  // const setImageHandler = (images: any) => {
-  //   setImage((prevState: any) => {
-  //     const updated = [...prevState];
-  //     updated.push(images);
-  //     return updated;
-  //   });
-  // };
-
   return (
     <View style={style.container}>
       <View style={style.ratingBlock}>
         <View style={style.image}></View>
-        <Text style={style.nickname}>{review.receiverId}</Text>
+        <Text style={style.nickname}>{nickname}</Text>
         <View style={style.star}>
           <StarRating
             rating={rate}
