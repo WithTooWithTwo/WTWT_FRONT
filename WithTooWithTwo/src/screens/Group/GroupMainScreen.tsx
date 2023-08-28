@@ -15,7 +15,7 @@ import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import React, {useEffect, useState} from 'react';
-import MemberItem from '../../components/Member/MemberItem';
+import LeaderMemberItem from '../../components/Member/LeaderMemberItem';
 import {fetchGroup, GroupType, storeMemo, storeNotice} from '../../util/group';
 
 type GroupMainNavigationProp = NativeStackNavigationProp<
@@ -139,9 +139,9 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
               <Text style={styles.keyword}></Text>
             </View>
             <View style={styles.memberBox}>
-              <MemberItem
+              <LeaderMemberItem
                 groupId={selectedGroup.id}
-                leader={selectedGroup.leader.nickname}
+                leader={selectedGroup.leader}
                 members={selectedGroup.members}
               />
             </View>

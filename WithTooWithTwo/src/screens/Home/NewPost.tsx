@@ -14,7 +14,7 @@ import {
 import RNPickerSelect from 'react-native-picker-select';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import axios, {AxiosError} from 'axios';
+import {AxiosError} from 'axios';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
@@ -136,7 +136,7 @@ function NewPost({navigation}: NewPostScreenProps) {
         });
       }
 
-      console.log(formData);
+      // console.log(formData);
       const response = await storePosts(formData, 'multipart/form-data');
       // dispatch(addPosts({...postsData, id: response.data.id}));
 

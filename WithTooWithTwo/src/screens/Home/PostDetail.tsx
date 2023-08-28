@@ -16,7 +16,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
-import {fetchOnePost, OnePostsType} from '../../util/post';
+import {fetchOnePost, OnePostType} from '../../util/post';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 
 const URL = 'http://3.39.87.78:8080/';
@@ -35,7 +35,7 @@ type PostDetailScreenProps = {
 function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
   const [imageUrl, setImageUrl] = useState<string[]>([]);
-  const [selectedPost, setSelectedPost] = useState<OnePostsType | null>(null);
+  const [selectedPost, setSelectedPost] = useState<OnePostType | null>(null);
 
   useEffect(() => {
     async function getPosts() {

@@ -169,6 +169,7 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
               onSelectMember={handleSelectMember}
             />
             <ReviewContent
+              nickname={members[currentMemberIndex].nickname}
               review={currentMemberReview}
               onChangeReview={handleSelectRating}
             />

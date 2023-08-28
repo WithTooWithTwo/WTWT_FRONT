@@ -42,7 +42,7 @@ function PostListScreen() {
   }
   return (
     <>
-      <SafeAreaView style={{backgroundColor: '#F8F8F9'}}>
+      <SafeAreaView style={{backgroundColor: '#F8F8F9', paddingBottom: 30}}>
         <PostOutput posts={posts} />
       </SafeAreaView>
     </>

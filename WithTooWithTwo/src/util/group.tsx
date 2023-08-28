@@ -27,11 +27,7 @@ export type GroupType = {
   name: string;
   firstDay: string;
   lastDay: string;
-  leader: {
-    id: string;
-    nickname: string;
-    profile: string;
-  };
+  leader: GroupMember;
   members: Array<GroupMember>;
   notices: Array<NoticeType>;
   places: Array<PlaceType>;

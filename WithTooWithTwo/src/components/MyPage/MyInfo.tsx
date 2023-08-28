@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {Colors} from '../../constants/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,10 +7,10 @@ import {useEffect, useState} from 'react';
 import {fetchUser, UserType} from '../../util/user';
 import LoadingOverlay from '../UI/LoadingOverlay';
 import LinearGradient from 'react-native-linear-gradient';
-import {white} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import {MyPageStackParamList} from '../../screens/Authenticated/MyPageScreen';
 
 const MyInfo = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [user, setUser] = useState<UserType>();
 
   useEffect(() => {
@@ -18,6 +18,10 @@ const MyInfo = () => {
       setUser(r);
     });
   }, []);
+
+  const groupPressHandler = () => {
+    navigation.navigate('Group');
+  };
 
   return (
     <View style={styles.container}>
@@ -51,13 +55,13 @@ const MyInfo = () => {
         </View>
       </View>
       <View style={styles.dataBox}>
-        <View style={styles.dataBlock}>
+        <Pressable style={styles.dataBlock} onPress={groupPressHandler}>
           <Text style={styles.dataTitle}>동행 수</Text>
           <View style={styles.dataItemBlock}>
             <Icon name={'users'} color={Colors.primary500} size={21} />
             <Text style={styles.dataItemText}>{user?.countsOfGroups}</Text>
           </View>
-        </View>
+        </Pressable>
         <View style={styles.dataBlock}>
           <Text style={styles.dataTitle}>나의 글</Text>
           <View style={styles.dataItemBlock}>

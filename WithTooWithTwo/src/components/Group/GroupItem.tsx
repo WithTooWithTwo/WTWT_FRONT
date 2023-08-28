@@ -7,10 +7,10 @@ import {
   View,
 } from 'react-native';
 import {Colors} from '../../constants/styles';
-import {MyGroupType} from '../../util/group';
+import {GroupType} from '../../util/group';
 import {useNavigation} from '@react-navigation/native';
 
-function GroupItem(group: MyGroupType) {
+function GroupItem(group: GroupType) {
   const navigation = useNavigation<any>();
   const groupMainPressHandler = () => {
     navigation.navigate('GroupDetail', {
@@ -64,7 +64,7 @@ function GroupItem(group: MyGroupType) {
             <Pressable style={styles.titleBox} onPress={groupMainPressHandler}>
               <Text style={[styles.title, {color: '#000'}]}>{group.name}</Text>
               <Text style={[styles.leader, {color: '#000'}]}>
-                {/*{group.leader.nickname}*/}
+                {group.leader.nickname}
               </Text>
             </Pressable>
             <View style={styles.line} />
@@ -76,9 +76,9 @@ function GroupItem(group: MyGroupType) {
             style={styles.chatImage}
           />
           <View style={styles.chatRightBox}>
-            <Text style={styles.chatNickname}>닉네임</Text>
+            <Text style={styles.chatNickname}>준비중</Text>
             <Text style={styles.chatContent}>
-              안녕하세요! 글 보고 연락드려요!
+              단체 채팅은 준비중에 있습니다!
             </Text>
           </View>
         </Pressable>

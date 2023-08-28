@@ -1,14 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {PostListType} from '../util/post';
+import {GroupMember} from '../util/group';
 
 export type PostsType = {
   post_id: string;
   category: {id: number; name: string};
-  writer: {
-    id: number;
-    nickname: string;
-    profile: null;
-  };
+  writer: GroupMember;
   title: string;
   content: string;
   postDate: string;
@@ -16,11 +13,7 @@ export type PostsType = {
   firstDay: string;
   lastDay: string;
   headCount: number;
-  members: {
-    id: number;
-    nickname: string;
-    profile: string | null;
-  };
+  members: GroupMember[];
   preference: {
     gender: string | null;
     minAge: number;

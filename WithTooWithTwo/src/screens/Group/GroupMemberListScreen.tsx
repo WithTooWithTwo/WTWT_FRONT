@@ -25,26 +25,51 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
   const members = selectedGroup.members;
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: Colors.grey1, flex: 1}}>
       <ScreenHeader title="그룹" color={Colors.grey1} isGoBack={true} />
-      <View style={styles.itemBox}>
-        {members.map((el, i) => (
-          <Text style={styles.item} key={i}>
-            {el.nickname}
-          </Text>
-        ))}
+      <View style={styles.container}>
+        {members.map((el, i) => {
+          return (
+            <View style={styles.itemBox}>
+              <View
+                style={[
+                  styles.image,
+                  {
+                    backgroundColor: Colors.memberColor[i % 9],
+                  },
+                ]}></View>
+              <Text style={styles.item} key={i}>
+                {el.nickname}
+              </Text>
+            </View>
+          );
+        })}
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    height: '100%',
+    backgroundColor: Colors.grey0,
+    paddingHorizontal: 32,
+    paddingTop: 20,
+  },
   itemBox: {
-    padding: 30,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    paddingVertical: 15,
+    gap: 20,
   },
-  item: {
-    padding: 20,
+  image: {
+    width: 38,
+    height: 38,
+    borderRadius: 38,
   },
+  item: {},
 });
 
 export default GroupMemberListScreen;

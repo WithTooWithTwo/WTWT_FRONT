@@ -1,15 +1,13 @@
-import {PostsType} from '../../slices/postsSlice';
 import {StyleSheet, Text, View} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Octicons from 'react-native-vector-icons/Octicons';
 
-import MemberItem from '../Member/MemberItem';
-import {getFormattedDate} from '../../util/date';
 import {Colors} from '../../constants/styles';
+import {OnePostType} from '../../util/post';
+import MemberList from '../Member/MemberList';
 
-function PostInfo({postData}: {postData: PostsType}) {
+function PostInfo({postData}: {postData: OnePostType}) {
   const changeGenderToKorean = (gender: string) => {
     if (gender === 'FEMALE') return '여성';
     if (gender === 'MALE') return '남성';
@@ -30,16 +28,10 @@ function PostInfo({postData}: {postData: PostsType}) {
         </View>
         <View style={styles.itemBox}>
           <View style={styles.item}>
-            <Text style={styles.itemText}>
-              {/*{getFormattedDate(new Date(postData.firstDay))}*/}
-              {postData.firstDay}
-            </Text>
+            <Text style={styles.itemText}>{postData.firstDay}</Text>
           </View>
           <View style={styles.item}>
-            <Text style={styles.itemText}>
-              {/*{getFormattedDate(new Date(postData.lastDay))}*/}
-              {postData.lastDay}
-            </Text>
+            <Text style={styles.itemText}>{postData.lastDay}</Text>
           </View>
         </View>
       </View>
@@ -73,13 +65,7 @@ function PostInfo({postData}: {postData: PostsType}) {
           <Text style={styles.label}>사람들</Text>
         </View>
         <View style={styles.itemBox}>
-          <View style={styles.item}>
-            <Text style={styles.itemText}>테스트 중</Text>
-            {/*<MemberItem*/}
-            {/*  leader={postData.writer_id}*/}
-            {/*  members={postData.companions}*/}
-            {/*/>*/}
-          </View>
+          <MemberList members={postData.members} />
         </View>
       </View>
       <View style={styles.dataBox}>
@@ -100,7 +86,7 @@ function PostInfo({postData}: {postData: PostsType}) {
           </View>
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {postData.preference.minAge} - {postData.preference.maxAge}
+              {postData.preference.minAge} - {postData.preference.maxAge}대
             </Text>
           </View>
         </View>

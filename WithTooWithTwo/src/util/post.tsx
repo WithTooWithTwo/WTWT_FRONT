@@ -1,5 +1,6 @@
 import axios from 'axios';
 import RNFetchBlob from 'rn-fetch-blob';
+import {GroupMember} from './group';
 
 const URL = 'http://3.39.87.78:8080';
 export async function storePosts(posts: any, contentType: string) {
@@ -31,7 +32,7 @@ export type PostListType = {
 
 export async function fetchOnePost(api: string = '') {
   const response = await axios.get(URL + '/posts/' + api);
-  const posts: OnePostsType = {
+  const posts: OnePostType = {
     post_id: response.data.post_id,
     category: response.data.category,
     writer: response.data.writer,
@@ -75,14 +76,10 @@ export async function fetchPopularPostList() {
   return posts;
 }
 
-export type OnePostsType = {
+export type OnePostType = {
   post_id: string;
   category: {id: number; name: string};
-  writer: {
-    id: number;
-    nickname: string;
-    profile: null;
-  };
+  writer: GroupMember;
   title: string;
   content: string;
   postDate: string;
@@ -90,18 +87,14 @@ export type OnePostsType = {
   firstDay: string;
   lastDay: string;
   headCount: number;
-  members: {
-    id: number;
-    nickname: string;
-    profile: string | null;
-  };
+  members: GroupMember[];
   preference: {
     gender: string | null;
     minAge: number;
     maxAge: number;
     preferHeadCount: number;
   };
-  images: string[] | null;
+  images: string[] | null; // 받아오는 이미지는 string 맞음!
   tags: string[] | null;
   hits: number;
 };
