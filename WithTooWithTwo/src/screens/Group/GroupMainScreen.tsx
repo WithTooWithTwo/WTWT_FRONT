@@ -17,6 +17,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import React, {useEffect, useState} from 'react';
 import LeaderMemberItem from '../../components/Member/LeaderMemberItem';
 import {fetchGroup, GroupType, storeMemo, storeNotice} from '../../util/group';
+import GroupNotice from '../../components/Group/GroupNotice';
+import GroupMemo from '../../components/Group/GroupMemo';
+import GroupPlace from '../../components/Group/GroupPlace';
 
 type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -30,11 +33,8 @@ type GroupMainProps = {
 };
 function GroupMainScreen({navigation, route}: GroupMainProps) {
   const id = route.params?.groupId;
-  // const groups = useSelector((state: RootState) => state.group).groups;
-  // const selectedGroup = groups.find(group => group.id.toString() == id)!;
   const [selectedGroup, setSelectedGroup] = useState<GroupType | null>(null);
-  const [newNotice, setNewNotice] = useState<string>('');
-  const [newMemo, setNewMemo] = useState<string>('');
+
   const groupReviewPressHandler = () => {
     navigation.navigate('GroupReview', {groupId: id});
   };
@@ -61,38 +61,6 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
       </View>
     );
   }
-
-  const changeNoticeHandler = (text: string) => {
-    setNewNotice(text);
-  };
-
-  const changeMemoHandler = (text: string) => {
-    setNewMemo(text);
-  };
-
-  const submitNoticeHandler = async () => {
-    try {
-      const response = await storeNotice(id, newNotice);
-      fetchGroup(response.result).then(res => {
-        setSelectedGroup(res);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    setNewNotice('');
-  };
-
-  const submitMemoHandler = async () => {
-    try {
-      const response = await storeMemo(id, newMemo);
-      fetchGroup(response.result).then(res => {
-        setSelectedGroup(res);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    setNewMemo('');
-  };
 
   return (
     <View>
@@ -145,63 +113,22 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
                 members={selectedGroup.members}
               />
             </View>
-
-            <View style={styles.noticeBox}>
-              <Text style={styles.noticeTitle}>NOTICE</Text>
-              <View style={styles.noticeList}>
-                {selectedGroup!.notices.map(el => (
-                  <Text key={el.id} style={styles.noticeItem}>
-                    {el.data}
-                  </Text>
-                ))}
-                <TextInput
-                  value={newNotice}
-                  placeholder="더 추가하기"
-                  onChangeText={changeNoticeHandler}
-                  onBlur={submitNoticeHandler}
-                  blurOnSubmit={true}
-                  clearButtonMode="while-editing"
-                />
-              </View>
-            </View>
+            <GroupNotice
+              groupId={id}
+              notices={selectedGroup.notices}
+              setGroup={setSelectedGroup}
+            />
           </View>
-          <View style={styles.placeBox}>
-            <View style={styles.placeTitle}>
-              <Text style={styles.placeTitleText}>꼭 들릴 맛집</Text>
-            </View>
-            <ScrollView horizontal={true} style={styles.placeContent}>
-              {selectedGroup.places.map(el => (
-                <View key={el.id} style={styles.placeItem}>
-                  <Image
-                    style={styles.placeImage}
-                    source={require('../../assets/place1.png')}
-                  />
-                  <Text style={styles.placeText}>{el.name}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-          <View style={styles.placeBox}>
-            <View style={styles.placeTitle}>
-              <Text style={styles.placeTitleText}>가고싶은 여행지</Text>
-            </View>
-            <View style={styles.memoContent}>
-              {selectedGroup.memos.map((el, i) => (
-                <Text key={el.id} style={styles.memoItem}>
-                  {el.data}
-                </Text>
-              ))}
-              <TextInput
-                value={newMemo}
-                placeholder="더 추가하기"
-                onChangeText={changeMemoHandler}
-                onBlur={submitMemoHandler}
-                blurOnSubmit={true}
-                clearButtonMode="while-editing"
-              />
-            </View>
-            <View style={{paddingBottom: 50}} />
-          </View>
+          <GroupPlace
+            groupId={id}
+            places={selectedGroup.places}
+            setGroup={setSelectedGroup}
+          />
+          <GroupMemo
+            groupId={id}
+            memos={selectedGroup.memos}
+            setGroup={setSelectedGroup}
+          />
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -257,29 +184,6 @@ const styles = StyleSheet.create({
   keyword: {},
   memberBox: {
     flexDirection: 'row',
-  },
-  noticeBox: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: Colors.grey1,
-    borderRadius: 5,
-  },
-  noticeTitle: {
-    color: Colors.primary500,
-    fontSize: 14,
-    marginBottom: 10,
-  },
-  noticeList: {
-    paddingHorizontal: 25,
-    marginBottom: 10,
-  },
-  noticeItem: {
-    fontSize: 15,
-    marginBottom: 10,
-  },
-  noticeInput: {
-    backgroundColor: 'white',
-    borderRadius: 5,
   },
 
   placeBox: {

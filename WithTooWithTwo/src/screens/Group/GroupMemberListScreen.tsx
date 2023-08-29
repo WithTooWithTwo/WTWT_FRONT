@@ -30,7 +30,7 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
       <View style={styles.container}>
         {members.map((el, i) => {
           return (
-            <View style={styles.itemBox}>
+            <View style={styles.itemBox} key={i}>
               <View
                 style={[
                   styles.image,
@@ -38,9 +38,7 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
                     backgroundColor: Colors.memberColor[i % 9],
                   },
                 ]}></View>
-              <Text style={styles.item} key={i}>
-                {el.nickname}
-              </Text>
+              <Text style={styles.item}>{el.nickname}</Text>
             </View>
           );
         })}

@@ -34,12 +34,12 @@ export type GroupType = {
   memos: Array<NoticeType>;
 };
 
-type NoticeType = {
+export type NoticeType = {
   id: number;
   data: string;
 };
 
-type PlaceType = {
+export type PlaceType = {
   id: number;
   link: URL;
   name: string;
@@ -130,6 +130,24 @@ export const storeNotice = async (groupId: string, notice: string) => {
 export const storeMemo = async (groupId: string, memo: string) => {
   const response = await axios.post(
     API_KEY + '/groups/' + groupId + '/memo' + '?contents=' + memo,
+  );
+  return response.data;
+};
+
+export const storePlace = async (
+  groupId: string,
+  name: string,
+  link: string,
+) => {
+  const response = await axios.post(
+    API_KEY +
+      '/groups/' +
+      groupId +
+      '/link' +
+      '?link=' +
+      link +
+      '&description=' +
+      name,
   );
   return response.data;
 };
