@@ -10,7 +10,10 @@ export const Colors = {
   grey4: '#868B94',
   grey5: '#e8e8e8',
   grey6: '#efefef',
+  grey7: '#AAAAAA',
+  grey8: '#D2D2D2',
   grey9: '#494949',
+  grey10: '#1e1e1e',
   sub2: '#E0E8FE',
   sub5: '#A2BAFB',
   memberColor: [

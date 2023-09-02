@@ -2,6 +2,8 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {GroupType} from '../../util/group';
 import {Colors} from '../../constants/styles';
 import {useNavigation} from '@react-navigation/native';
+import MemberList from '../Member/MemberList';
+import OverlappedMemberList from '../Member/OverlappedMemberList';
 
 const MyGroupItem = ({group}: {group: GroupType}) => {
   const navigation = useNavigation<any>();
@@ -15,7 +17,9 @@ const MyGroupItem = ({group}: {group: GroupType}) => {
         {group.name.length > 13 ? group.name.slice(0, 13) + '...' : group.name}
       </Text>
       <Text style={styles.date}>{group.firstDay}</Text>
-      <View style={styles.member}></View>
+      <View style={styles.member}>
+        <OverlappedMemberList members={group.members} />
+      </View>
       <Text style={styles.detail}>자세히 보기 &gt; </Text>
     </Pressable>
   );
@@ -48,7 +52,9 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   member: {
+    justifyContent: 'flex-end',
     height: 50,
+    paddingBottom: 10,
   },
   detail: {
     fontSize: 10,

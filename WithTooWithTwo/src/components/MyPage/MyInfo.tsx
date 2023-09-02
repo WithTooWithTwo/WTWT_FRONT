@@ -34,7 +34,12 @@ const MyInfo = () => {
           </View>
           <View style={styles.gaugeBox}>
             <LinearGradient
-              colors={[Colors.primary500, Colors.primary500, Colors.grey6]}
+              colors={[
+                Colors.primary500,
+                Colors.primary500,
+                Colors.primary500,
+                Colors.grey6,
+              ]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               style={[
@@ -42,7 +47,7 @@ const MyInfo = () => {
                   width: user ? user?.rate! * 40 : 0,
                   height: 10,
                   overflow: 'hidden',
-                  borderRadius: 10,
+                  borderRadius: 5,
                 },
                 styles.gaugeBar,
               ]}
