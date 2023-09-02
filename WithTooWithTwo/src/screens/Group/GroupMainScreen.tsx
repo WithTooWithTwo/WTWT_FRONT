@@ -96,7 +96,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
               <Text style={styles.date}>{selectedGroup.firstDay}</Text>
               <FontAwesome name="user-alt" color="#3C70FF99" size={12} />
               <Text style={styles.headCount}>
-                {selectedGroup.members.length
+                {selectedGroup.members?.length
                   ? selectedGroup.members.length + 1
                   : 1}
                 명

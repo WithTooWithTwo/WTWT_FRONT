@@ -32,6 +32,7 @@ export type GroupType = {
   notices: Array<NoticeType>;
   places: Array<PlaceType>;
   memos: Array<NoticeType>;
+  tags: string[];
 };
 
 export type NoticeType = {
@@ -65,6 +66,7 @@ export async function fetchGroup(api: string = '') {
     notices: response.data.notices,
     places: response.data.places,
     memos: response.data.memos,
+    tags: response.data.tags,
   };
   return groups;
 }
@@ -98,6 +100,7 @@ export async function fetchGroupList() {
       notices: response.data[key].notices,
       places: response.data[key].places,
       memos: response.data[key].memos,
+      tags: response.data[key].tags,
     };
     groups.push(groupObj);
   }
@@ -123,6 +126,25 @@ export const fetchMemberList = async (groupId: string) => {
 export const storeNotice = async (groupId: string, notice: string) => {
   const response = await axios.post(
     API_KEY + '/groups/' + groupId + '/notice' + '?contents=' + notice,
+  );
+  return response.data;
+};
+
+export const patchList = async (
+  type: string,
+  groupId: string,
+  id: number,
+  notice: string,
+) => {
+  const response = await axios.patch(
+    API_KEY + '/groups/' + groupId + `/${type}/` + id + '?contents=' + notice,
+  );
+  return response.data;
+};
+
+export const deleteList = async (type: string, groupId: string, id: number) => {
+  const response = await axios.delete(
+    API_KEY + '/groups/' + groupId + `/${type}/` + id,
   );
   return response.data;
 };

@@ -1,6 +1,7 @@
 import {ImageType} from '../slices/postsSlice';
 import {OptionType} from './review';
 import axios from 'axios';
+import {GroupMember} from './group';
 
 const API_KEY = 'http://3.39.87.78:8080';
 
@@ -14,10 +15,22 @@ export interface UserType {
   countsOfPosts: number;
   countsOfReviews: number;
   myGroups: any[] | null;
-  styles: OptionType[] | null;
-  personalities: OptionType[] | null;
-  comments: string[];
+  styles: MyPageOptionType[] | null;
+  personalities: MyPageOptionType[] | null;
+  reviews: MyPageReviewType[] | null;
 }
+
+export type MyPageOptionType = {
+  count: number;
+  type: string;
+};
+
+export type MyPageReviewType = {
+  rate: number;
+  comment: string;
+  writer: GroupMember;
+  writeAt: string;
+};
 
 export const fetchUser = async () => {
   const response = await axios.get(API_KEY + '/users');

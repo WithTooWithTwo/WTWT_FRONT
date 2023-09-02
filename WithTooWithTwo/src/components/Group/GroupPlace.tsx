@@ -75,13 +75,13 @@ const GroupPlace = ({
               {/*  {el.name.length > 20 ? el.name.slice(0, 20) + '...' : el.name}*/}
               {/*</Text>*/}
               <Text style={styles.placeText}>{el.name}</Text>
-              <LinkPreview
-                text={el.link + ''}
-                textContainerStyle={styles.metadata}
-                containerStyle={styles.placeImage}
-                metadataTextContainerStyle={styles.metadata}
-                enableAnimation
-              />
+              {/*<LinkPreview*/}
+              {/*  text={el.link + ''}*/}
+              {/*  textContainerStyle={styles.metadata}*/}
+              {/*  containerStyle={styles.placeImage}*/}
+              {/*  metadataTextContainerStyle={styles.metadata}*/}
+              {/*  enableAnimation*/}
+              {/*/>*/}
             </View>
           ))}
         </ScrollView>

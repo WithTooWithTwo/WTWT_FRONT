@@ -2,6 +2,7 @@ import {fetchGroup, GroupType, NoticeType, storeMemo} from '../../util/group';
 import {StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from '../../constants/styles';
+import RenderGroupItem from './RenderGroupItem';
 
 const GroupMemo = ({
   groupId,
@@ -35,11 +36,14 @@ const GroupMemo = ({
         <Text style={styles.placeTitleText}>가고싶은 여행지</Text>
       </View>
       <View style={styles.memoContent}>
-        {memos.map((el, i) => (
-          <Text key={el.id} style={styles.memoItem}>
-            {el.data}
-          </Text>
-        ))}
+        {
+          <RenderGroupItem
+            type="memo"
+            groupId={groupId}
+            lists={memos}
+            setGroup={setGroup}
+          />
+        }
         <TextInput
           value={newMemo}
           style={styles.memoInput}
