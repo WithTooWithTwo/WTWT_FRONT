@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import Swiper from 'react-native-swiper';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 function Banner() {
@@ -18,15 +18,24 @@ function Banner() {
         width={windowWidth}
         height={140}
         showsPagination={false}
-        autoplayTimeout={2.5}>
+        autoplayTimeout={5}>
         <View style={styles.banner}>
-          <Text>slides1</Text>
+          <Image
+            source={require('../../assets/main_banner.png')}
+            style={styles.banner}
+          />
         </View>
         <View style={styles.banner}>
-          <Text>slides2</Text>
+          <Image
+            source={require('../../assets/review_banner.png')}
+            style={styles.banner}
+          />
         </View>
         <View style={styles.banner}>
-          <Text>slides3</Text>
+          <Image
+            source={require('../../assets/post_banner.png')}
+            style={styles.banner}
+          />
         </View>
       </Swiper>
     </>
@@ -35,9 +44,8 @@ function Banner() {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#C5C7CD50',
     width: windowWidth,
-    height: 145,
+    height: 150,
     justifyContent: 'center',
     alignItems: 'center',
   },
