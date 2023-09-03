@@ -5,29 +5,26 @@ import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import InitialScreen from './InitialScreen';
-import FastMeetScreen from './FastMeetScreen';
+import ThunderScreen from './ThunderScreen';
 import PostListScreen from './PostListScreen';
 import MainHeader from '../../components/UI/MainHeader';
 
 export type MainTabParamList = {
   Initial: undefined;
   PostList: undefined;
-  FastMeet: undefined;
+  Thunder: undefined;
 };
 
 type MainScreenProps = NativeStackScreenProps<HomeStackParamList, 'Main'>;
 const Tab = createMaterialTopTabNavigator<MainTabParamList>();
 
-function CustomTabBar() {
-  return null;
-}
 function MainScreen({navigation}: MainScreenProps) {
   const toNewPost = useCallback(() => {
     navigation.navigate('NewPost');
   }, [navigation]);
   return (
     <>
-      <MainHeader title="전체" />
+      <MainHeader />
       <Tab.Navigator
         initialRouteName="Initial"
         screenOptions={{
@@ -53,8 +50,8 @@ function MainScreen({navigation}: MainScreenProps) {
           options={{tabBarLabel: '홈'}}
         />
         <Tab.Screen
-          name="FastMeet"
-          component={FastMeetScreen}
+          name="Thunder"
+          component={ThunderScreen}
           options={{tabBarLabel: '번개만남'}}
         />
         <Tab.Screen

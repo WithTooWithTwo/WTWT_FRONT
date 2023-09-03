@@ -20,6 +20,6 @@ function PostOutput({posts}: {posts: PostListType[]}) {
   );
 }
 const styles = StyleSheet.create({
-  container: {padding: 30},
+  container: {paddingHorizontal: 30, paddingTop: 5, paddingBottom: 50},
 });
 export default PostOutput;

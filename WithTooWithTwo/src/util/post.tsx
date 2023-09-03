@@ -53,6 +53,36 @@ export async function fetchOnePost(api: string = '') {
   return posts;
 }
 
+export type FilteringType = {
+  order?: string;
+  category?: string;
+  gender?: string;
+  minAge?: number;
+  maxAge?: number;
+  lightning?: boolean;
+  date?: string;
+  minHeadCount?: number;
+  maxHeadCount?: number;
+  keyword?: string;
+};
+
+const filteringList = (filtering: FilteringType) => {
+  let filteringText = '/posts?';
+  for (const key in filtering) {
+    if (filtering[key as keyof FilteringType] === undefined) continue;
+    filteringText += `${key}=${filtering[key as keyof FilteringType]}&`;
+  }
+  return filteringText.slice(0, filteringText.length - 1);
+};
+
+export async function fetchFilteredPosts(filtering: FilteringType) {
+  const filteringText = filteringList(filtering);
+  const response = await axios.get(URL + filteringText);
+  let posts: PostListType[] = response.data;
+
+  return posts;
+}
+
 export async function fetchPopularPostList() {
   const response = await axios.get(URL + '/posts?order=POPULAR');
   const posts = new Array<PostListType>();
@@ -122,41 +152,26 @@ export async function fetchPostList(api: string = '') {
 }
 
 export const fetchImage = async (uri: string) => {
-  // axios
-  //   .get(URL + '/images/' + uri, {
-  //     // responseType: 'blob',
-  //     responseType: 'arraybuffer',
-  //   })
-  //   .then(res => {
-  //     const imageData = new Uint8Array(res.data);
-  //     const base64Data = imageData.reduce(
-  //       (data, byte) => data + String.fromCharCode(byte),
-  //       '',
-  //     );
-  //
-  //     const dataUri = `data:image/jpeg;base64,${btoa(base64Data)}`;
-  //     return dataUri;
-  //   });
-
   const response = await RNFetchBlob.fetch('GET', URL + '/images/' + uri);
-  //
-
-  // const response = await axios.get(URL + '/images/' + uri);
-
   const imagePath = RNFetchBlob.fs.dirs.CacheDir + '/' + uri; // 로컬 경로 설정
   await RNFetchBlob.fs.writeFile(imagePath, response.data, 'base64'); // 이미지를 로컬 파일로 저장
-  // console.log('1!!' + imagePath);
   return imagePath;
+};
 
-  // const imagePath = RNFetchBlob.fs.dirs.CacheDir + '/' + uri;
-  // await RNFetchBlob.fs.writeFile(imagePath, response.data, 'base64');
-  //
-  // return 'file://' + imagePath; // 로컬 파일의 URI로 반환
-  //
-  // const imageData = await response.base64();
-  // // // console.log(imageData);
-  // return imageData;
-  // const dataUri = `data:image/jpg;base64,${imageData}`;
-  // // console.log(dataUri);
-  // return dataUri;리
+export type CategoryType = {
+  value: number;
+  label: string;
+};
+
+export const fetchCategoryList = async () => {
+  const response = await axios.get(URL + '/categories');
+  const categories = [];
+  for (const key in response.data.categories) {
+    const categoryObj: CategoryType = {
+      value: response.data.categories[key].id,
+      label: response.data.categories[key].name,
+    };
+    categories.push(categoryObj);
+  }
+  return categories;
 };

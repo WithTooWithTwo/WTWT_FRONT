@@ -18,6 +18,7 @@ import {
   PostListType,
 } from '../../util/post';
 import HotItem from '../../components/List/HotItem';
+import MainHeader from '../../components/UI/MainHeader';
 
 type InitialProps = MaterialTopTabScreenProps<MainTabParamList, 'Initial'>;
 function InitialScreen({navigation}: InitialProps) {
