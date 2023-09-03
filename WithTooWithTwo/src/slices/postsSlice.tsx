@@ -58,18 +58,18 @@ const postsSlice = createSlice({
       state.posts = [action.payload, ...state.posts];
     },
     setPosts: (state, action) => {
-      const inverted = action.payload.reverse();
+      const inverted = action.payload;
       state.posts = inverted;
     },
     setPopularPosts: (state, action) => {
       state.popularPosts = action.payload;
     },
     setLightningPosts: (state, action) => {
-      const inverted = action.payload.reverse();
+      const inverted = action.payload;
       state.lightningPosts = inverted;
     },
     setNormalPosts: (state, action) => {
-      const inverted = action.payload.reverse();
+      const inverted = action.payload;
       state.normalPosts = inverted;
     },
   },

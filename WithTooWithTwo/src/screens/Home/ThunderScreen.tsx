@@ -23,24 +23,48 @@ function ThunderScreen() {
   const dispatch = useDispatch();
   const posts = useSelector((state: RootState) => state.post.lightningPosts);
   const category = useSelector((state: RootState) => state.filtering.category);
-  const [filtering, setFiltering] = useState<FilteringType>({
-    lightning: true,
-  });
+
+  const [filtering, setFiltering] = useState<FilteringType>({});
+  const [order, setOrder] = useState<string>('');
+  const [date, setDate] = useState<string>('');
+  const [maxHeadCount, setMaxHeadCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    console.log(filtering);
+    async function getPosts() {
+      try {
+        setIsFetching(true);
+        const posts = await fetchPostList('?lightning=true');
+        dispatch(setLightningPosts(posts));
+      } catch (error) {}
+      setIsFetching(false);
+    }
+    getPosts();
+  }, []);
+
+  useEffect(() => {
+    const test: FilteringType = {
+      lightning: true,
+    };
+    date && (test.date = date);
+    maxHeadCount && (test.maxHeadCount = maxHeadCount);
+    order && (test.order = order);
+    category && (test.category = category);
+    setFiltering(test);
+  }, [order, date, maxHeadCount, category]);
 
   useEffect(() => {
     async function getPosts() {
       try {
+        console.log(filtering);
         setIsFetching(true);
-        // console.log('1');
-        // const posts = await fetchFilteredPosts(filtering);
-        // dispatch(setLightningPosts(posts));
-      } catch (error) {
-        console.log(error);
-      }
+        const fetchedPosts = await fetchFilteredPosts(filtering);
+        dispatch(setLightningPosts(fetchedPosts));
+      } catch (error) {}
       setIsFetching(false);
     }
     getPosts();
-  }, [category, filtering]);
+  }, [filtering]);
 
   if (isFetching) {
     return <LoadingOverlay />;
@@ -48,7 +72,12 @@ function ThunderScreen() {
   return (
     <>
       <SafeAreaView style={{backgroundColor: '#F8F8F9', paddingBottom: 30}}>
-        <FilterPosts filtering={filtering} setFiltering={setFiltering} />
+        <FilterPosts
+          filtering={filtering}
+          setDate={setDate}
+          setOrder={setOrder}
+          setMaxHeadCount={setMaxHeadCount}
+        />
         <PostOutput posts={posts} />
       </SafeAreaView>
     </>
