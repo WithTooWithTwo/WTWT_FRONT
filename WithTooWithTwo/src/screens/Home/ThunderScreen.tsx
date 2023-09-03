@@ -71,7 +71,8 @@ function ThunderScreen() {
   }
   return (
     <>
-      <SafeAreaView style={{backgroundColor: '#F8F8F9', paddingBottom: 30}}>
+      <SafeAreaView
+        style={{backgroundColor: '#F8F8F9', paddingBottom: 30, flex: 1}}>
         <FilterPosts
           filtering={filtering}
           setDate={setDate}

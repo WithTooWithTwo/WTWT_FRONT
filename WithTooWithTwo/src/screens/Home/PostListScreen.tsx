@@ -73,7 +73,8 @@ function PostListScreen() {
   }
   return (
     <>
-      <SafeAreaView style={{backgroundColor: '#F8F8F9', paddingBottom: 50}}>
+      <SafeAreaView
+        style={{backgroundColor: '#F8F8F9', paddingBottom: 50, flex: 1}}>
         <FilterPosts
           filtering={filtering}
           setDate={setDate}

@@ -1,6 +1,6 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../Authenticated/HomeScreen';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {
   Image,
   Pressable,
@@ -18,6 +18,7 @@ import {Colors} from '../../constants/styles';
 import PostInfo from '../../components/List/PostInfo';
 import {fetchOnePost, OnePostType} from '../../util/post';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
+import {requestChatRoom} from '../../util/chat';
 
 const URL = 'http://3.39.87.78:8080/';
 
@@ -36,6 +37,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [selectedPost, setSelectedPost] = useState<OnePostType | null>(null);
+  const navigations = useNavigation<any>();
 
   useEffect(() => {
     async function getPosts() {
@@ -48,6 +50,14 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
     }
     getPosts();
   }, [selectedPostId]);
+
+  const makeChatRoom = () => {
+    if (selectedPost?.post_id) {
+      requestChatRoom(selectedPost?.post_id).then(res =>
+        navigations.navigate('ChatRoom', {roomId: res}),
+      );
+    }
+  };
 
   if (!selectedPost) {
     return <LoadingOverlay />;
@@ -100,7 +110,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
             </View>
           </ScrollView>
           <View style={styles.chatBox}>
-            <Pressable style={styles.chatButton}>
+            <Pressable style={styles.chatButton} onPress={makeChatRoom}>
               <Text style={styles.chatText}> 1:1 채팅하기</Text>
             </Pressable>
           </View>

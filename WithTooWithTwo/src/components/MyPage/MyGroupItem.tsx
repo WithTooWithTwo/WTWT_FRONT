@@ -18,7 +18,7 @@ const MyGroupItem = ({group}: {group: GroupType}) => {
       </Text>
       <Text style={styles.date}>{group.firstDay}</Text>
       <View style={styles.member}>
-        <OverlappedMemberList members={group.members} />
+        <OverlappedMemberList leader={group.leader} members={group.members} />
       </View>
       <Text style={styles.detail}>자세히 보기 &gt; </Text>
     </Pressable>

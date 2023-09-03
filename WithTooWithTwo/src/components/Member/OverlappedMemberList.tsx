@@ -2,9 +2,29 @@ import {GroupMember} from '../../util/group';
 import {Image, StyleSheet, View} from 'react-native';
 import {Colors} from '../../constants/styles';
 
-const MemberList = ({members}: {members: GroupMember[]}) => {
+const MemberList = ({
+  leader,
+  members,
+}: {
+  leader: GroupMember;
+  members: GroupMember[];
+}) => {
   return (
     <View style={styles.container}>
+      {leader.profile ? (
+        <View key={leader.id} style={[styles.memberItem]}>
+          <Image source={{uri: leader.profile}} />
+        </View>
+      ) : (
+        <View
+          key={leader.id}
+          style={[
+            styles.memberItem,
+            {
+              backgroundColor: Colors.grey2,
+            },
+          ]}></View>
+      )}
       {members.map((member, index) =>
         member.profile ? (
           <View key={member.id} style={[styles.memberItem]}>
@@ -17,7 +37,7 @@ const MemberList = ({members}: {members: GroupMember[]}) => {
               styles.memberItem,
               {
                 backgroundColor: Colors.memberColor[index % 9],
-                left: index * -7,
+                left: index * -7 + -7,
               },
             ]}></View>
         ),

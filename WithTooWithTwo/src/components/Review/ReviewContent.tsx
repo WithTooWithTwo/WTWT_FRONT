@@ -32,10 +32,6 @@ const ReviewContent = ({
   const [stylesList, setStylesList] = useState<OptionType[]>([]);
 
   useEffect(() => {
-    // fetchAnotherUser(review.receiverId.toString()).then(r => {
-    //   setNickname(r.nickname);
-    // });
-
     // 상위 컴포넌트로부터 받은 review prop을 이용하여 리뷰 정보를 표시
     setRate(review.rate);
     setPersonalities(review.personalities);
