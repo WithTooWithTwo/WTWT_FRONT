@@ -1,11 +1,13 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {GroupDetailStackParamList} from './GroupDetailScreen';
 import {RouteProp} from '@react-navigation/native';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
+import UserInfoModal from '../../components/Member/UserInfoModal';
+import {useState} from 'react';
 
 type GroupMemberNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -23,6 +25,8 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
   const groups = useSelector((state: RootState) => state.group).groups;
   const selectedGroup = groups.find(group => group.id.toString() == id)!;
   const members = selectedGroup.members;
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const clickUser = {};
 
   return (
     <SafeAreaView style={{backgroundColor: Colors.grey1, flex: 1}}>
@@ -30,7 +34,10 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
       <View style={styles.container}>
         {members.map((el, i) => {
           return (
-            <View style={styles.itemBox} key={i}>
+            <Pressable
+              style={styles.itemBox}
+              key={i}
+              onPress={() => setIsVisible(!isVisible)}>
               <View
                 style={[
                   styles.image,
@@ -39,7 +46,12 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
                   },
                 ]}></View>
               <Text style={styles.item}>{el.nickname}</Text>
-            </View>
+              <UserInfoModal
+                userId={el.id.toString()}
+                isVisible={isVisible}
+                setIsVisible={setIsVisible}
+              />
+            </Pressable>
           );
         })}
       </View>

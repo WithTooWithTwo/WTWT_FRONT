@@ -14,7 +14,7 @@ const MyGroupItem = ({group}: {group: GroupType}) => {
   return (
     <Pressable style={styles.container} onPress={groupPressHandler}>
       <Text style={styles.title}>
-        {group.name.length > 13 ? group.name.slice(0, 13) + '...' : group.name}
+        {group.name.length > 11 ? group.name.slice(0, 11) + '...' : group.name}
       </Text>
       <Text style={styles.date}>{group.firstDay}</Text>
       <View style={styles.member}>
