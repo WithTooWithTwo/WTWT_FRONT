@@ -46,12 +46,12 @@ function PostInfo({postData}: {postData: OnePostType}) {
           <Text style={styles.label}>선호 지역</Text>
         </View>
         <View style={styles.itemBox}>
-          <View style={styles.item}>
-            <Text style={styles.itemText}>독일</Text>
-          </View>
-          <View style={styles.item}>
-            <Text style={styles.itemText}>파리</Text>
-          </View>
+          {postData.tags &&
+            postData.tags.slice(0, 3).map(tag => (
+              <View key={tag} style={styles.item}>
+                <Text style={styles.itemText}>{tag}</Text>
+              </View>
+            ))}
         </View>
       </View>
       <View style={styles.dataBox}>

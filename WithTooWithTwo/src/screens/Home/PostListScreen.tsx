@@ -61,7 +61,9 @@ function PostListScreen() {
         console.log(filtering);
         setIsFetching(true);
         const fetchedPosts = await fetchFilteredPosts(filtering);
-        dispatch(setPosts(fetchedPosts));
+        if (filtering.order === 'RECENT' || !filtering.order)
+          dispatch(setPosts(fetchedPosts.reverse()));
+        else dispatch(setPosts(fetchedPosts));
       } catch (error) {}
       setIsFetching(false);
     }

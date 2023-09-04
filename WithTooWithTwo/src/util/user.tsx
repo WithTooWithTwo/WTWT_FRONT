@@ -43,3 +43,16 @@ export const fetchAnotherUser = async (id: string) => {
   const user: UserType = await response.data;
   return user;
 };
+
+export type SearchUserType = {
+  isExist: boolean;
+  user?: GroupMember;
+};
+
+export const checkIsUser = async (nickname: string) => {
+  const response = await axios.get(
+    API_KEY + '/users/check?nickname=' + nickname,
+  );
+  const data: SearchUserType = response.data;
+  return data;
+};

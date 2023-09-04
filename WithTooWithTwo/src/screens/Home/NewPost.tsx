@@ -2,6 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {
   Alert,
   Image,
+  Modal,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -27,6 +28,11 @@ import {getFormattedDate} from '../../util/date';
 import ImagesPicker from '../../components/Image/ImagesPicker';
 import {Colors} from '../../constants/styles';
 import RenderImages from '../../components/Image/RenderImages';
+import {white} from 'react-native-paper/lib/typescript/src/styles/themes/v2/colors';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import SelectMembers from '../../components/List/SelectMembers';
+import {GroupMember} from '../../util/group';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
@@ -40,9 +46,13 @@ function NewPost({navigation}: NewPostScreenProps) {
   const [loading, setLoading] = useState(false);
   const [preferGender, setPreferGender] = useState('FEMALE');
   const [range, setRange] = useState([10, 20]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState<string>('');
   const [image, setImage] = useState<any>([]);
-
   const [thunder, setThunder] = useState(false);
+  const [members, setMembers] = useState<string[]>([]);
+
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const [isFirstDatePickerVisible, setFirstDatePickerVisibility] =
@@ -103,6 +113,43 @@ function NewPost({navigation}: NewPostScreenProps) {
     setRange(value);
   }, []);
 
+  const onChangeNewTag = useCallback((value: string) => {
+    setNewTag(value);
+  }, []);
+
+  const onChangeMembers = useCallback((value: string) => {
+    setMembers(prevState => {
+      const updated = [...prevState];
+      updated.push(value);
+      return updated;
+    });
+  }, []);
+
+  const deleteMembers = useCallback((value: string) => {
+    setMembers(prevState => {
+      let updated = [...prevState];
+      updated = updated.filter(item => item !== value);
+      return updated;
+    });
+  }, []);
+
+  const plusTags = useCallback(() => {
+    setTags(prevState => {
+      const updated = [...prevState];
+      updated.push(newTag);
+      return updated;
+    });
+    setNewTag('');
+  }, [newTag]);
+
+  const deleteTags = useCallback((value: string) => {
+    setTags(prevState => {
+      let updated = [...prevState];
+      updated = updated.filter(item => item !== value);
+      return updated;
+    });
+  }, []);
+
   const plusHeadCount = () => {
     setHeadCount((+headCount + 1).toString());
   };
@@ -111,6 +158,10 @@ function NewPost({navigation}: NewPostScreenProps) {
     if (+headCount > 0) {
       setHeadCount((+headCount - 1).toString());
     }
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
   };
 
   const onSubmit = useCallback(async () => {
@@ -124,11 +175,11 @@ function NewPost({navigation}: NewPostScreenProps) {
       formData.append('lastDay', getFormattedDate(lastDay));
       formData.append('preferHeadCount', +headCount);
       formData.append('lightning', thunder);
-      formData.append('members', ['nickname2', 'nickname3', 'nickname4']);
+      formData.append('members', members);
       formData.append('preferGender', preferGender);
       formData.append('preferMinAge', range[0]);
       formData.append('preferMaxAge', range[1]);
-      console.log(image);
+      formData.append('tags', tags);
 
       if (image && image.length > 0) {
         Array.from(image).forEach(img => {
@@ -274,18 +325,72 @@ function NewPost({navigation}: NewPostScreenProps) {
                 </Text>
                 <View style={styles.headCountButtons}>
                   <TouchableOpacity onPress={minusHeadCount}>
-                    <Text style={styles.headCountButtonText}> -</Text>
+                    <FontAwesome5 name="chevron-left" color={Colors.grey4} />
                   </TouchableOpacity>
                   <Text>{headCount}</Text>
-
                   <TouchableOpacity onPress={plusHeadCount}>
-                    <Text style={styles.headCountButtonText}> + </Text>
+                    <FontAwesome5 name="chevron-right" color={Colors.grey4} />
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={styles.groupPeople}>
+              <Modal
+                style={styles.modalView}
+                animationType={'fade'}
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={() => {
+                  setIsModalVisible(!isModalVisible);
+                }}>
+                <SelectMembers
+                  onClose={closeModal}
+                  members={members}
+                  addMember={onChangeMembers}
+                  deleteMember={deleteMembers}
+                />
+              </Modal>
+              <Pressable
+                style={styles.groupPeople}
+                onPress={() => setIsModalVisible(!isModalVisible)}>
                 <Text style={styles.groupPeopleLabel}>그룹 인원 추가하기</Text>
-                <FeatherIcon name="plus" color="#3C70FF" size={25} />
+                <View
+                  style={{gap: 10, flexDirection: 'row', alignItems: 'center'}}>
+                  {members && members.length != 0 && (
+                    <Text style={styles.groupPeopleCount}>
+                      {members.length}명
+                    </Text>
+                  )}
+                  <FeatherIcon
+                    name="plus"
+                    color={members.length ? Colors.grey4 : Colors.primary500}
+                    size={25}
+                  />
+                </View>
+              </Pressable>
+            </View>
+            <View style={styles.infoZone}>
+              <Text style={styles.infoTitleText}>지역 설정</Text>
+              <View style={styles.tagBox}>
+                <View style={styles.groupPeople}>
+                  <TextInput
+                    value={newTag}
+                    onChangeText={onChangeNewTag}
+                    style={styles.groupPeopleLabel}
+                    placeholder="선호지역 추가하기"
+                    onBlur={plusTags}
+                  />
+                </View>
+                <View style={styles.tagListBox}>
+                  {tags.map(tag => (
+                    <View key={tag} style={styles.tags}>
+                      <Text>{tag}</Text>
+                      <AntDesign
+                        name="close"
+                        color={Colors.primary500}
+                        onPress={() => deleteTags(tag)}
+                      />
+                    </View>
+                  ))}
+                </View>
               </View>
             </View>
             <View style={styles.infoZone}>
@@ -478,6 +583,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#8F8F8F',
   },
+  groupPeopleCount: {
+    fontSize: 15,
+    color: Colors.primary500,
+  },
   preferBox: {
     marginBottom: 20,
   },
@@ -542,6 +651,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: Colors.grey5,
   },
+  tagBox: {
+    marginTop: 20,
+  },
+  tagListBox: {
+    marginVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    gap: 10,
+  },
+  tags: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    padding: 10,
+    backgroundColor: Colors.grey1,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.grey5,
+  },
+  modalView: {},
 });
 
 export default NewPost;
