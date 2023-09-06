@@ -9,15 +9,8 @@ import LoadingOverlay from '../UI/LoadingOverlay';
 import LinearGradient from 'react-native-linear-gradient';
 import {MyPageStackParamList} from '../../screens/Authenticated/MyPageScreen';
 
-const MyInfo = () => {
+const MyInfo = ({user}: {user: UserType}) => {
   const navigation = useNavigation<any>();
-  const [user, setUser] = useState<UserType>();
-
-  useEffect(() => {
-    fetchUser().then(r => {
-      setUser(r);
-    });
-  }, []);
 
   const groupPressHandler = () => {
     navigation.navigate('Group');

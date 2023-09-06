@@ -32,6 +32,25 @@ export type MyPageReviewType = {
   writeAt: string;
 };
 
+export const defaultUser: UserType = {
+  id: 0,
+  profileImage: {
+    uri: '',
+    name: '',
+    type: '',
+  },
+  nickname: '',
+  rate: null,
+  statusMessage: null,
+  countsOfGroups: 0,
+  countsOfPosts: 0,
+  countsOfReviews: 0,
+  myGroups: null,
+  styles: null,
+  personalities: null,
+  reviews: null,
+};
+
 export const fetchUser = async () => {
   const response = await axios.get(API_KEY + '/users');
   const user: UserType = await response.data;

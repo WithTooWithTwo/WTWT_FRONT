@@ -5,12 +5,12 @@ import MyInfo from '../../components/MyPage/MyInfo';
 import MyGroup from '../../components/MyPage/MyGroup';
 import MyPersonality from '../../components/MyPage/MyPersonality';
 import {useEffect, useState} from 'react';
-import {fetchUser, UserType} from '../../util/user';
+import {defaultUser, fetchUser, UserType} from '../../util/user';
 import MyStyle from '../../components/MyPage/MyStyle';
 import MyReview from '../../components/MyPage/MyReview';
 
 const MyPageMainScreen = () => {
-  const [user, setUser] = useState<UserType>();
+  const [user, setUser] = useState<UserType>(defaultUser);
 
   useEffect(() => {
     fetchUser().then(r => {
@@ -22,7 +22,7 @@ const MyPageMainScreen = () => {
     <SafeAreaView style={{backgroundColor: 'white'}}>
       <ScreenHeader title="마이페이지" color={'white'} isGoBack={false} />
       <ScrollView style={styles.container}>
-        <MyInfo />
+        <MyInfo user={user} />
         <MyGroup />
         <MyPersonality personalities={user?.personalities} />
         <MyStyle styleList={user?.styles} />
