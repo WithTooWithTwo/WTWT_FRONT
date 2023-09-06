@@ -5,6 +5,7 @@ import {AuthenticatedTabParamList} from '../../../App';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatListScreen from '../Chat/ChatListScreen';
 import ChatRoomScreen from '../Chat/ChatRoomScreen';
+import {GroupMember} from '../../util/group';
 
 type ChatStackScreenProps = BottomTabScreenProps<
   AuthenticatedTabParamList,
@@ -13,7 +14,7 @@ type ChatStackScreenProps = BottomTabScreenProps<
 
 export type ChatStackParamList = {
   ChatList: undefined;
-  ChatRoom: {roomId: string; userId: string};
+  ChatRoom: {roomId: string; userId: string; opponent: GroupMember};
 };
 
 const ChatStack = createNativeStackNavigator<ChatStackParamList>();

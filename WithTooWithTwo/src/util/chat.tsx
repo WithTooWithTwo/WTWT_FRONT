@@ -42,5 +42,17 @@ export const fetchChatMessage = async (api: string = '') => {
     messages.push(messageObj);
   }
 
-  return messages.reverse();
+  return {
+    messages: messages.reverse(),
+    post: response.data.post,
+    userProfile: response.data.userProfil,
+  };
+};
+
+export type ChatPostType = {
+  id: string;
+  title: string;
+  firstDay: string;
+  lastDay: string;
+  image: string | null;
 };

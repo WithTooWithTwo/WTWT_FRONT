@@ -11,6 +11,7 @@ async function authenticate(email: string, password: string) {
   });
   // 현재 토큰 없이 아이디만 제공되는데 일단 아이디를 토큰으로 저장함
   const token = response.data.id;
+  console.log(token);
   return token;
 }
 

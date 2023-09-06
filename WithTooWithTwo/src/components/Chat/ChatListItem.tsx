@@ -19,6 +19,7 @@ const ChatListItem = ({chat}: {chat: ChatListType}) => {
     navigation.navigate('ChatRoom', {
       roomId: chat.roomId,
       userId: user?.id.toString(),
+      opponent: chat.user,
     });
   };
 

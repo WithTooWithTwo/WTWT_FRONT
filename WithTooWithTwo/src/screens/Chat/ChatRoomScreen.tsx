@@ -1,21 +1,22 @@
-import {SafeAreaView, StyleProp, Text, View, ViewStyle} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleProp,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import {RouteProp} from '@react-navigation/native';
 import {ChatStackParamList} from '../Authenticated/ChatScreen';
-import React, {
-  CSSProperties,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useEffect, useState} from 'react';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
-import io, {Socket} from 'socket.io-client';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../store/store';
-import useSocket from '../../util/useSocket';
-import {fetchChatMessage} from '../../util/chat';
+
+import {ChatPostType, fetchChatMessage} from '../../util/chat';
+import {Colors} from '../../constants/styles';
+import ScreenHeader from '../../components/UI/ScreenHeader';
+import {fetchGroup} from '../../util/group';
 
 type ChatRoomScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
@@ -40,7 +41,9 @@ const SOCKET_URL = 'ws://3.39.87.78:8080/ws/chat';
 const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
   const roomId = route.params.roomId;
   const userId = route.params.userId;
+  const opponent = route.params.opponent;
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [post, setPost] = useState<ChatPostType>();
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -67,15 +70,11 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
         createdAt: new Date(message.sendAt),
         user: {
           _id: message.sender,
-          name: 'You',
+          name: `sender${message.sender}`,
         },
       };
       console.log(chatMessage, 'chatMessage');
-
-      // Add the chat message to the messages state
-      //setMessages(prevMessages => [...prevMessages, chatMessage]);
-
-      //setMessages(prevMessages => [...prevMessages, message]);
+      setMessages(prevMessages => [chatMessage, ...prevMessages]);
     };
 
     newSocket.onclose = event => {
@@ -93,12 +92,15 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
   }, []);
 
   useEffect(() => {
-    fetchChatMessage(roomId).then(res => setMessages(res));
+    fetchChatMessage(roomId).then(res => {
+      setMessages(res.messages);
+      setPost(res.post);
+    });
   }, [userId]);
 
-  useEffect(() => {
-    console.log(messages);
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log(messages);
+  // }, [messages]);
 
   const onSend = (newMessages: IMessage[] = []) => {
     if (socket && newMessages.length > 0) {
@@ -108,153 +110,54 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
         message: newMessages[0].text,
       };
       socket.send(JSON.stringify(message));
-      setMessages(previousMessages =>
-        GiftedChat.append(previousMessages, newMessages),
-      );
+      // setMessages(previousMessages =>
+      //   GiftedChat.append(previousMessages, newMessages),
+      // );
     }
   };
 
+  const renderMessageBubble = (props: any) => {
+    const {currentMessage, user} = props;
+    //console.log(currentMessage);
+    const position =
+      currentMessage.user._id.toString() === userId ? 'right' : 'left';
+    const messageStyle: StyleProp<ViewStyle> = {
+      backgroundColor: position === 'right' ? Colors.chat : Colors.primary500, // Adjust the colors as needed
+      borderRadius: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      marginLeft: position === 'left' ? 10 : 50, // Add spacing for right-side messages
+      marginRight: position === 'right' ? 10 : 50, // Add spacing for left-side messages
+      alignSelf: position === 'right' ? 'flex-end' : 'flex-start', // Align to right or left
+      margin: 3,
+    };
+
+    const textStyle: StyleProp<TextStyle> = {
+      color: position === 'left' ? 'white' : Colors.grey10,
+    };
+
+    return (
+      <View>
+        <View style={messageStyle}>
+          <Text style={textStyle}>{currentMessage.text}</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <ScreenHeader color={'white'} isGoBack={true} title={opponent.nickname} />
       <GiftedChat
         messages={messages}
         onSend={newMessages => onSend(newMessages)}
         user={{_id: userId, name: 'You'}}
         scrollToBottom={true}
         alwaysShowSend={true}
-        // renderMessage={props => {
-        //   const {currentMessage} = props;
-        //   const isMyMessage = currentMessage!.user._id === userId;
-        //
-        //   return (
-        //     <MessageBubble
-        //       {...props}
-        //       currentMessage={currentMessage}
-        //       position={isMyMessage ? 'right' : 'left'} // Adjust position based on the user
-        //     />
-        //   );
-        // }}
+        renderMessage={renderMessageBubble}
       />
     </SafeAreaView>
   );
 };
 
-const MessageBubble = ({
-  currentMessage,
-  position,
-}: {
-  currentMessage: any;
-  position: any;
-}) => {
-  const messageStyle: StyleProp<ViewStyle> = {
-    backgroundColor: position === 'right' ? '#007AFF' : '#ECECEC', // Adjust the colors as needed
-    borderRadius: 20,
-    padding: 10,
-    marginLeft: position === 'left' ? 0 : 50, // Add spacing for right-side messages
-    marginRight: position === 'right' ? 0 : 50, // Add spacing for left-side messages
-    alignSelf: position === 'right' ? 'flex-end' : 'flex-start', // Align to right or left
-  };
-
-  return (
-    <View style={messageStyle}>
-      <Text>{currentMessage.text}</Text>
-    </View>
-  );
-};
-
 export default ChatRoomScreen;
-
-// const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
-//   const roomId = route.params.roomId;
-//   const userId = route.params.userId;
-//   const [messages, setMessages] = useState<IMessage[]>([]);
-//   const webSocket = useRef<WebSocket | null>();
-//   const [socket, disconnect] = useSocket();
-//
-//   useEffect(() => {
-//     let message: MessageType = {
-//       roomId: roomId,
-//       sender: userId,
-//       message: 'ENTER-CHAT',
-//     };
-//     // if (socket) {
-//     //   socket.emit('message', message);
-//     // }
-//
-//     webSocket.current = new WebSocket('ws://3.39.87.78:8080/ws/chat');
-//     console.log(webSocket);
-//
-//     webSocket.current.onopen = () => {
-//       let message: MessageType = {
-//         roomId: roomId,
-//         sender: userId,
-//         message: 'ENTER-CHAT',
-//       };
-//
-//       webSocket.current?.send(JSON.stringify(message));
-//       console.log('connected');
-//       // send a message
-//     };
-//     webSocket.current.onmessage = e => {
-//       setMessages(previousMessages =>
-//         GiftedChat.append(previousMessages, e.data),
-//       );
-//       console.log(e.data, 1);
-//     };
-//
-//     webSocket.current.onerror = e => {
-//       // an error occurred
-//       console.log(e.message);
-//     };
-//
-//     webSocket.current.onclose = e => {
-//       // connection closed
-//       console.log(e.code, e.reason);
-//     };
-//
-//     return () => {
-//       webSocket.current!.close();
-//     };
-//
-//     // const socket = io('ws://3.39.87.78:8080/ws/chat');
-//     // console.log(socket);
-//     // webSocket.current.on('message', () => {
-//     //   let message: MessageType = {
-//     //     roomId: roomId,
-//     //     sender: userId,
-//     //     message: 'ENTER-CHAT',
-//     //   };
-//     //   webSocket.current!.emit('message', message);
-//     //   console.log('Connected Server');
-//     // });
-//     //
-//     // webSocket.current.on('message', message => {
-//     //   setMessages(previousMessages =>
-//     //     GiftedChat.append(previousMessages, {
-//     //       ...message,
-//     //       createdAt: new Date(message.createdAt),
-//     //     }),
-//     //   );
-//     // });
-//
-//     return () => {
-//       webSocket.current!.close();
-//     };
-//   }, []);
-//
-//   const onSend = useCallback((newMessages: IMessage[]) => {
-//     webSocket.current!.send(
-//       JSON.stringify({
-//         roomId: roomId,
-//         sender: userId,
-//         messages: newMessages[0].text,
-//       }),
-//     );
-//   }, []);
-//
-//   return (
-//     <GiftedChat messages={messages} onSend={onSend} user={{_id: userId}} />
-//   );
-// };
-
-// export default ChatRoomScreen;
