@@ -2,7 +2,7 @@ import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {MainTabParamList} from './MainScreen';
 import {SafeAreaView, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {
@@ -21,6 +21,7 @@ function ThunderScreen() {
   const [isFetching, setIsFetching] = useState(true);
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const posts = useSelector((state: RootState) => state.post.lightningPosts);
   const category = useSelector((state: RootState) => state.filtering.category);
 
@@ -28,19 +29,6 @@ function ThunderScreen() {
   const [order, setOrder] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [maxHeadCount, setMaxHeadCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    console.log(filtering);
-    async function getPosts() {
-      try {
-        setIsFetching(true);
-        const posts = await fetchPostList('?lightning=true');
-        dispatch(setLightningPosts(posts));
-      } catch (error) {}
-      setIsFetching(false);
-    }
-    getPosts();
-  }, []);
 
   useEffect(() => {
     const test: FilteringType = {
@@ -56,19 +44,17 @@ function ThunderScreen() {
   useEffect(() => {
     async function getPosts() {
       try {
-        console.log(filtering);
-        setIsFetching(true);
         const fetchedPosts = await fetchFilteredPosts(filtering);
-        dispatch(setLightningPosts(fetchedPosts));
-      } catch (error) {}
-      setIsFetching(false);
+
+        if (filtering.order === 'RECENT' || !filtering.order)
+          dispatch(setLightningPosts(fetchedPosts.reverse()));
+        else dispatch(setLightningPosts(fetchedPosts));
+      } catch (error) {
+        console.log(error);
+      }
     }
     getPosts();
-  }, [filtering]);
-
-  if (isFetching) {
-    return <LoadingOverlay />;
-  }
+  }, [filtering, isFocused]);
   return (
     <>
       <SafeAreaView

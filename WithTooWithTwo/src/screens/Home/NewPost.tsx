@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Image,
@@ -20,7 +20,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {HomeStackParamList} from '../Authenticated/HomeScreen';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {useDispatch} from 'react-redux';
-import {storePosts} from '../../util/post';
+import {CategoryType, fetchCategoryList, storePosts} from '../../util/post';
 import {RadioButton} from 'react-native-paper';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
@@ -37,6 +37,8 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
 function NewPost({navigation}: NewPostScreenProps) {
+  const [categoryList, setCategoryList] = useState<CategoryType[]>([]);
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [firstDay, setFirstDay] = useState(new Date());
@@ -217,6 +219,13 @@ function NewPost({navigation}: NewPostScreenProps) {
     image,
   ]);
 
+  useEffect(() => {
+    fetchCategoryList().then(r => {
+      r.shift();
+      setCategoryList(r);
+    });
+  }, []);
+
   if (loading) {
     return <LoadingOverlay />;
   }
@@ -239,13 +248,7 @@ function NewPost({navigation}: NewPostScreenProps) {
                   onValueChange={onChangeCategory}
                   fixAndroidTouchableBug={true}
                   useNativeAndroidPickerStyle={false}
-                  items={[
-                    {label: '프랑스', value: 1},
-                    {label: '영국', value: 2},
-                    {label: '스페인', value: 3},
-                    {label: '이탈리아', value: 4},
-                    {label: '독일', value: 5},
-                  ]}
+                  items={categoryList}
                 />
               </View>
             </View>

@@ -13,6 +13,8 @@ import {Provider, useDispatch, useSelector} from 'react-redux';
 import {authenticate, logout} from './src/slices/authSlice';
 import {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -52,22 +54,28 @@ const AuthenticatedTabNavigator = () => {
       <AuthenticatedTab.Screen
         name="Home"
         component={HomeScreen}
-        options={{headerShown: false}}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({size, focused}) => {
+            return <Ionicons name="home-sharp" size={15} color={'#3C70FF'} />;
+          },
+          unmountOnBlur: true,
+        }}
       />
       <AuthenticatedTab.Screen
         name="Chat"
         component={ChatScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
       <AuthenticatedTab.Screen
         name="Group"
         component={GroupScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
       <AuthenticatedTab.Screen
         name="MyPage"
         component={MyPageScreen}
-        options={{headerShown: false}}
+        options={{headerShown: false, unmountOnBlur: true}}
       />
     </AuthenticatedTab.Navigator>
   );

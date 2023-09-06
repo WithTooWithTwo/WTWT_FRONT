@@ -2,7 +2,7 @@ import {MaterialTopTabScreenProps} from '@react-navigation/material-top-tabs';
 import {MainTabParamList} from './MainScreen';
 import {SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {
   fetchFilteredPosts,
   fetchPostList,
@@ -24,6 +24,7 @@ type PostListProps = MaterialTopTabScreenProps<MainTabParamList, 'PostList'>;
 function PostListScreen() {
   //const [posts, setPosts] = useState(Array<PostsType>);
   const [isFetching, setIsFetching] = useState(true);
+  const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
   const posts = useSelector((state: RootState) => state.post.posts);
@@ -33,18 +34,6 @@ function PostListScreen() {
   const [order, setOrder] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const [maxHeadCount, setMaxHeadCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    async function getPosts() {
-      try {
-        setIsFetching(true);
-        const posts = await fetchPostList();
-        dispatch(setPosts(posts));
-      } catch (error) {}
-      setIsFetching(false);
-    }
-    getPosts();
-  }, []);
 
   useEffect(() => {
     const test: FilteringType = {};
@@ -58,21 +47,18 @@ function PostListScreen() {
   useEffect(() => {
     async function getPosts() {
       try {
-        console.log(filtering);
-        setIsFetching(true);
         const fetchedPosts = await fetchFilteredPosts(filtering);
         if (filtering.order === 'RECENT' || !filtering.order)
           dispatch(setPosts(fetchedPosts.reverse()));
         else dispatch(setPosts(fetchedPosts));
-      } catch (error) {}
-      setIsFetching(false);
+      } catch (error) {
+        console.log(error);
+      }
     }
-    getPosts();
-  }, [filtering]);
 
-  if (isFetching) {
-    return <LoadingOverlay />;
-  }
+    getPosts();
+  }, [filtering, isFocused]);
+
   return (
     <>
       <SafeAreaView
