@@ -17,6 +17,7 @@ export const Colors = {
   grey11: '#f6f6f8',
   sub2: '#E0E8FE',
   sub5: '#A2BAFB',
+  chat: '#f0f0f1',
   memberColor: [
     '#F0F8FF',
     '#E0FFFF',

@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flexWrap: 'nowrap',
+    flexWrap: 'wrap',
     height: '100%',
     padding: 24,
   },

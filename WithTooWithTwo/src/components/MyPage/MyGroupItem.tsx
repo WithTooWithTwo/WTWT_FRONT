@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2.22,
     elevation: 3,
+    marginBottom: 15,
   },
   title: {
     fontSize: 13,
