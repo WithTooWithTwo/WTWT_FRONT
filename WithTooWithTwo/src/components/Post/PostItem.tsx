@@ -36,9 +36,9 @@ function PostItem(post: PostListType) {
       <Text style={styles.titleText}>{post.title}</Text>
       <View style={styles.contentBox}>
         <Text style={styles.contentText}>
-          {post.content.length < 50
+          {post.content.length < 60
             ? post.content
-            : post.content.slice(0, 50) + '...'}
+            : post.content.slice(0, 60) + '...'}
         </Text>
       </View>
       <View style={styles.footerBox}>
@@ -108,11 +108,11 @@ const styles = StyleSheet.create({
   },
   contentBox: {
     marginTop: 5,
-    height: 36,
+    height: 34,
   },
   contentText: {
     color: '#808080',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '300',
   },
   footerBox: {

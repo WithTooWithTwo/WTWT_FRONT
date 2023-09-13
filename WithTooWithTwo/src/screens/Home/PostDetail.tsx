@@ -19,6 +19,7 @@ import PostInfo from '../../components/Post/PostInfo';
 import {fetchOnePost, OnePostType} from '../../util/post';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {requestChatRoom} from '../../util/chat';
+import UserInfoModal from '../../components/Member/UserInfoModal';
 
 const URL = 'http://3.39.87.78:8080/';
 
@@ -38,6 +39,13 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
   const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [selectedPost, setSelectedPost] = useState<OnePostType | null>(null);
   const navigations = useNavigation<any>();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [modalUserId, setModalUserId] = useState<string>('0');
+
+  const pressMemberHandler = (id: number) => {
+    setModalUserId(id.toString());
+    setIsVisible(true);
+  };
 
   useEffect(() => {
     async function getPosts() {
@@ -78,7 +86,9 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                   <Text style={styles.viewsText}>{selectedPost.hits}</Text>
                 </View>
               </View>
-              <View style={styles.writerBox}>
+              <Pressable
+                style={styles.writerBox}
+                onPress={() => pressMemberHandler(selectedPost.writer.id)}>
                 <Image
                   source={require('../../assets/group_main.png')}
                   style={styles.writerImage}
@@ -86,7 +96,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                 <Text style={styles.writerText}>
                   {selectedPost.writer.nickname}
                 </Text>
-              </View>
+              </Pressable>
             </View>
             <PostInfo postData={selectedPost} />
             <View style={styles.contentBox}>
@@ -108,6 +118,11 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
                 </ScrollView>
               </View>
             </View>
+            <UserInfoModal
+              userId={modalUserId}
+              isVisible={isVisible}
+              setIsVisible={setIsVisible}
+            />
           </ScrollView>
           <View style={styles.chatBox}>
             <Pressable style={styles.chatButton} onPress={makeChatRoom}>

@@ -12,7 +12,7 @@ import {
 } from '../../util/post';
 import {PostsType, setLightningPosts, setPosts} from '../../slices/postsSlice';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
-import PostOutput from '../../components/List/PostOutput';
+import PostOutput from '../../components/Post/PostOutput';
 import FilterPosts from '../../components/Filtering/FilterPosts';
 
 type FastMeetProps = MaterialTopTabScreenProps<MainTabParamList, 'Thunder'>;
@@ -45,10 +45,7 @@ function ThunderScreen() {
     async function getPosts() {
       try {
         const fetchedPosts = await fetchFilteredPosts(filtering);
-
-        if (filtering.order === 'RECENT' || !filtering.order)
-          dispatch(setLightningPosts(fetchedPosts.reverse()));
-        else dispatch(setLightningPosts(fetchedPosts));
+        dispatch(setLightningPosts(fetchedPosts));
       } catch (error) {
         console.log(error);
       }

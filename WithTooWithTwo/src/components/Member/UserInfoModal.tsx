@@ -28,7 +28,7 @@ const UserInfoModal = ({
 
   useEffect(() => {
     fetchAnotherUser(userId).then(res => setUserData(res));
-  }, []);
+  }, [userId]);
 
   return (
     <SafeAreaView>
@@ -56,9 +56,9 @@ const UserInfoModal = ({
                 <Pressable style={styles.button}>
                   <Text style={styles.buttonText}>정보 보기</Text>
                 </Pressable>
-                <Pressable style={styles.button} disabled={true}>
-                  <Text style={styles.buttonText}>채팅 하기</Text>
-                </Pressable>
+                {/*<Pressable style={styles.button} disabled={true}>*/}
+                {/*  <Text style={styles.buttonText}>채팅 하기</Text>*/}
+                {/*</Pressable>*/}
               </View>
             </View>
           </TouchableWithoutFeedback>
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 12,
+    fontWeight: '600',
     color: 'white',
   },
 });

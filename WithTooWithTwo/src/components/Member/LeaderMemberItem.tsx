@@ -2,6 +2,8 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Colors, MemberColors} from '../../constants/styles';
 import {useNavigation} from '@react-navigation/native';
 import {GroupMember} from '../../util/group';
+import UserInfoModal from './UserInfoModal';
+import {useEffect, useState} from 'react';
 
 function LeaderMemberItem({
   groupId,
@@ -12,8 +14,14 @@ function LeaderMemberItem({
   leader: GroupMember;
   members: GroupMember[];
 }) {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [modalUserId, setModalUserId] = useState<string>('0');
   const navigation = useNavigation<any>();
-  const pressMemberHandler = () => {};
+  const pressMemberHandler = (id: number) => {
+    setModalUserId(id.toString());
+    setIsVisible(true);
+  };
+
   const pressMemberListHandler = () => {
     navigation.navigate('GroupMember', {groupId: groupId});
   };
@@ -23,11 +31,14 @@ function LeaderMemberItem({
       <View style={styles.leftBox}>
         <View style={styles.leaderBox}>
           {leader.profile ? (
-            <Pressable style={styles.leaderItem}>
+            <Pressable
+              style={styles.leaderItem}
+              onPress={() => pressMemberHandler(leader.id)}>
               <Image source={{uri: leader.profile}} />
             </Pressable>
           ) : (
             <Pressable
+              onPress={() => pressMemberHandler(leader.id)}
               style={[styles.leaderItem, {backgroundColor: Colors.grey4}]}
             />
           )}
@@ -35,7 +46,7 @@ function LeaderMemberItem({
         <View style={styles.memberBox}>
           {members.map((el, index) => (
             <Pressable
-              onPress={pressMemberHandler}
+              onPress={() => pressMemberHandler(el.id)}
               key={index}
               style={[
                 styles.memberItem,
@@ -44,9 +55,16 @@ function LeaderMemberItem({
                   zIndex: index,
                   backgroundColor: Colors.memberColor[index % 9],
                 },
-              ]}></Pressable>
+              ]}>
+              {el.profile && <Image source={{uri: el.profile}} />}
+            </Pressable>
           ))}
         </View>
+        <UserInfoModal
+          userId={modalUserId}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
       </View>
       <Pressable onPress={pressMemberListHandler}>
         <Text> more </Text>

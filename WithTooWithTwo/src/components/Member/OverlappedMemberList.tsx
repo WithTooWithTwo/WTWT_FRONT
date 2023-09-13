@@ -1,6 +1,8 @@
 import {GroupMember} from '../../util/group';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {Colors} from '../../constants/styles';
+import {useState} from 'react';
+import UserInfoModal from './UserInfoModal';
 
 const MemberList = ({
   leader,
@@ -9,39 +11,60 @@ const MemberList = ({
   leader: GroupMember;
   members: GroupMember[];
 }) => {
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [modalUserId, setModalUserId] = useState<string>('0');
+
+  const pressMemberHandler = (id: number) => {
+    setModalUserId(id.toString());
+    setIsVisible(true);
+  };
+
   return (
     <View style={styles.container}>
       {leader.profile ? (
-        <View key={leader.id} style={[styles.memberItem]}>
-          <Image source={{uri: leader.profile}} />
-        </View>
-      ) : (
-        <View
+        <Pressable
           key={leader.id}
+          style={[styles.memberItem]}
+          onPress={() => pressMemberHandler(leader.id)}>
+          <Image source={{uri: leader.profile}} />
+        </Pressable>
+      ) : (
+        <Pressable
+          key={leader.id}
+          onPress={() => pressMemberHandler(leader.id)}
           style={[
             styles.memberItem,
             {
               backgroundColor: Colors.grey2,
             },
-          ]}></View>
+          ]}></Pressable>
       )}
       {members.map((member, index) =>
         member.profile ? (
-          <View key={member.id} style={[styles.memberItem]}>
-            <Image source={{uri: member.profile}} />
-          </View>
-        ) : (
-          <View
+          <Pressable
             key={member.id}
+            style={[styles.memberItem]}
+            onPress={() => pressMemberHandler(member.id)}>
+            <Image source={{uri: member.profile}} />
+          </Pressable>
+        ) : (
+          <Pressable
+            key={member.id}
+            onPress={() => pressMemberHandler(member.id)}
             style={[
               styles.memberItem,
               {
                 backgroundColor: Colors.memberColor[index % 9],
                 left: index * -7 + -7,
               },
-            ]}></View>
+            ]}></Pressable>
         ),
       )}
+      <UserInfoModal
+        userId={modalUserId}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+      />
     </View>
   );
 };
