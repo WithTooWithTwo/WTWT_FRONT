@@ -4,7 +4,7 @@ import {AuthenticatedTabParamList} from '../../../App';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import MainScreen from '../Home/MainScreen';
 import NewPost from '../Home/NewPost';
-import PostItem from '../../components/List/PostItem';
+import PostItem from '../../components/Post/PostItem';
 import PostDetail from '../Home/PostDetail';
 import NoticeScreen from '../Notice/NoticeScreen';
 

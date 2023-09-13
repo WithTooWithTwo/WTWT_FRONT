@@ -30,7 +30,7 @@ import {Colors} from '../../constants/styles';
 import RenderImages from '../../components/Image/RenderImages';
 import {white} from 'react-native-paper/lib/typescript/src/styles/themes/v2/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import SelectMembers from '../../components/List/SelectMembers';
+import SelectMembers from '../../components/Post/SelectMembers';
 import {GroupMember} from '../../util/group';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 

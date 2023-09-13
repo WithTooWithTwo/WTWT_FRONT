@@ -10,14 +10,14 @@ import PostsSlice, {
   setPopularPosts,
   setPosts,
 } from '../../slices/postsSlice';
-import PostItem from '../../components/List/PostItem';
+import PostItem from '../../components/Post/PostItem';
 import {useEffect, useState} from 'react';
 import {
   fetchPopularPostList,
   fetchPostList,
   PostListType,
 } from '../../util/post';
-import HotItem from '../../components/List/HotItem';
+import HotItem from '../../components/Post/HotItem';
 import MainHeader from '../../components/UI/MainHeader';
 
 type InitialProps = MaterialTopTabScreenProps<MainTabParamList, 'Initial'>;

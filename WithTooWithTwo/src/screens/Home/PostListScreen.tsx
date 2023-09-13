@@ -15,7 +15,7 @@ import {
   setNormalPosts,
   setPosts,
 } from '../../slices/postsSlice';
-import PostOutput from '../../components/List/PostOutput';
+import PostOutput from '../../components/Post/PostOutput';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {RootState} from '../../store/store';
 import FilterPosts from '../../components/Filtering/FilterPosts';
@@ -48,9 +48,7 @@ function PostListScreen() {
     async function getPosts() {
       try {
         const fetchedPosts = await fetchFilteredPosts(filtering);
-        if (filtering.order === 'RECENT' || !filtering.order)
-          dispatch(setPosts(fetchedPosts.reverse()));
-        else dispatch(setPosts(fetchedPosts));
+        dispatch(setPosts(fetchedPosts));
       } catch (error) {
         console.log(error);
       }

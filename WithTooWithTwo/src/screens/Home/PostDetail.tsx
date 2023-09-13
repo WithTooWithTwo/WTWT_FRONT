@@ -15,7 +15,7 @@ import ScreenHeader from '../../components/UI/ScreenHeader';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React, {useEffect, useState} from 'react';
 import {Colors} from '../../constants/styles';
-import PostInfo from '../../components/List/PostInfo';
+import PostInfo from '../../components/Post/PostInfo';
 import {fetchOnePost, OnePostType} from '../../util/post';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {requestChatRoom} from '../../util/chat';
