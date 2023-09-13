@@ -11,6 +11,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {fetchAnotherUser, fetchUser, UserType} from '../../util/user';
 import {Colors} from '../../constants/styles';
+import {useNavigation} from '@react-navigation/native';
 
 const UserInfoModal = ({
   userId,
@@ -22,8 +23,14 @@ const UserInfoModal = ({
   setIsVisible: (v: boolean) => void;
 }) => {
   const [userData, setUserData] = useState<UserType>({} as UserType);
+  const navigation = useNavigation<any>();
   const closeModal = () => {
     setIsVisible(false);
+  };
+
+  const goToUserPage = () => {
+    setIsVisible(false);
+    navigation.navigate('UserPage', {userId: userId});
   };
 
   useEffect(() => {
@@ -53,7 +60,7 @@ const UserInfoModal = ({
                 <Text style={styles.status}>{userData.statusMessage}</Text>
               </View>
               <View style={styles.buttonBox}>
-                <Pressable style={styles.button}>
+                <Pressable style={styles.button} onPress={goToUserPage}>
                   <Text style={styles.buttonText}>정보 보기</Text>
                 </Pressable>
                 {/*<Pressable style={styles.button} disabled={true}>*/}

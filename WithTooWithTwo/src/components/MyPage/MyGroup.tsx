@@ -7,7 +7,7 @@ import MyGroupItem from './MyGroupItem';
 import {useNavigation} from '@react-navigation/native';
 import {MyPageStackParamList} from '../../screens/Authenticated/MyPageScreen';
 
-const MyGroup = () => {
+const MyGroup = ({disable}: {disable?: boolean}) => {
   const [groups, setGroups] = useState<GroupType[]>([]);
   const navigation = useNavigation<any>();
 
@@ -18,7 +18,9 @@ const MyGroup = () => {
   }, []);
 
   const groupListPressHandler = () => {
-    navigation.navigate('MyPageGroups', {groups: groups});
+    if (disable !== false) {
+      navigation.navigate('MyPageGroups', {groups: groups});
+    }
   };
 
   return (
@@ -30,8 +32,12 @@ const MyGroup = () => {
         </Pressable>
       </View>
       <View style={styles.contentBox}>
-        {groups.length !== 0 && <MyGroupItem group={groups[0]} />}
-        {groups.length >= 2 && <MyGroupItem group={groups[1]} />}
+        {groups.length !== 0 && (
+          <MyGroupItem group={groups[0]} disable={false} />
+        )}
+        {groups.length >= 2 && (
+          <MyGroupItem group={groups[1]} disable={false} />
+        )}
       </View>
     </View>
   );

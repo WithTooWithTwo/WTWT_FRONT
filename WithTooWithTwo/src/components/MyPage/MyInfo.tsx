@@ -9,7 +9,7 @@ import LoadingOverlay from '../UI/LoadingOverlay';
 import LinearGradient from 'react-native-linear-gradient';
 import {MyPageStackParamList} from '../../screens/Authenticated/MyPageScreen';
 
-const MyInfo = ({user}: {user: UserType}) => {
+const MyInfo = ({user, isMe}: {user: UserType; isMe?: boolean}) => {
   const navigation = useNavigation<any>();
 
   const groupPressHandler = () => {
@@ -48,7 +48,7 @@ const MyInfo = ({user}: {user: UserType}) => {
           </View>
           <View style={styles.ratingBlock}>
             <Ionicons name={'star'} color={Colors.primary400} size={13} />
-            <Text style={styles.ratingText}>{user?.rate}</Text>
+            <Text style={styles.ratingText}>{user?.rate ? user?.rate : 0}</Text>
           </View>
         </View>
       </View>
@@ -61,7 +61,9 @@ const MyInfo = ({user}: {user: UserType}) => {
           </View>
         </Pressable>
         <View style={styles.dataBlock}>
-          <Text style={styles.dataTitle}>나의 글</Text>
+          <Text style={styles.dataTitle}>
+            {isMe !== false ? '나의 글' : user.nickname + '의 글'}
+          </Text>
           <View style={styles.dataItemBlock}>
             <Ionicons
               name={'document-text-sharp'}

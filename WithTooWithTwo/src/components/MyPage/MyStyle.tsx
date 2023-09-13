@@ -19,6 +19,11 @@ const MyStyle = ({
           </View>
         ))}
       </View>
+      {styleList?.length === 0 && (
+        <View style={styles.emptyBox}>
+          <Text style={styles.emptyText}>스타일 리뷰가 없어요!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -61,6 +66,14 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 14,
     color: Colors.grey10,
+  },
+  emptyBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 13,
+    color: Colors.grey7,
   },
 });
 

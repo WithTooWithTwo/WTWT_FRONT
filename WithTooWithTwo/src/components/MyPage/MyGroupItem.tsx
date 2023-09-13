@@ -5,10 +5,18 @@ import {useNavigation} from '@react-navigation/native';
 import MemberList from '../Member/MemberList';
 import OverlappedMemberList from '../Member/OverlappedMemberList';
 
-const MyGroupItem = ({group}: {group: GroupType}) => {
+const MyGroupItem = ({
+  group,
+  disable,
+}: {
+  group: GroupType;
+  disable?: boolean;
+}) => {
   const navigation = useNavigation<any>();
   const groupPressHandler = () => {
-    navigation.navigate('GroupMain', {groupId: group.id.toString()});
+    if (disable !== false) {
+      navigation.navigate('GroupMain', {groupId: group.id.toString()});
+    }
   };
 
   return (

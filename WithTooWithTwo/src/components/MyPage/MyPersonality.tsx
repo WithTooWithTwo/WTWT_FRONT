@@ -25,6 +25,11 @@ const MyPersonality = ({
           </View>
         ))}
       </View>
+      {personalities?.length === 0 && (
+        <View style={styles.emptyBox}>
+          <Text style={styles.emptyText}>성격 리뷰가 없어요!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -78,6 +83,14 @@ const styles = StyleSheet.create({
   itemCount: {
     fontSize: 14,
     fontWeight: '400',
+    color: Colors.grey7,
+  },
+  emptyBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 13,
     color: Colors.grey7,
   },
 });

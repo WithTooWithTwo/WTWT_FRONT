@@ -19,6 +19,11 @@ const MyReview = ({
           <MyReviewItem key={i} review={review} />
         ))}
       </View>
+      {reviews?.length === 0 && (
+        <View style={styles.emptyBox}>
+          <Text style={styles.emptyText}>받은 리뷰가 없어요!</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -44,6 +49,15 @@ const styles = StyleSheet.create({
   },
   itemBox: {
     gap: 10,
+  },
+  emptyBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  emptyText: {
+    fontSize: 13,
+    color: Colors.grey7,
   },
 });
 export default MyReview;
