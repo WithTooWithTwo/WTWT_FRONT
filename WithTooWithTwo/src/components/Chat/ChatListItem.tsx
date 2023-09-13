@@ -26,12 +26,10 @@ const ChatListItem = ({chat}: {chat: ChatListType}) => {
   return (
     <Pressable style={styles.container} onPress={chatRoomPressHandler}>
       <View style={styles.mainBox}>
-        <View>
-          <Pressable style={styles.titleBox}>
-            <Text style={[styles.title, {color: '#000'}]}>{chat.title}</Text>
-          </Pressable>
-          <View style={styles.line} />
+        <View style={styles.titleBox}>
+          <Text style={[styles.title, {color: '#000'}]}>{chat.title}</Text>
         </View>
+        <View style={styles.line} />
         <Pressable style={styles.chatBox} onPress={chatRoomPressHandler}>
           <Image
             source={require('../../assets/group_main.png')}
@@ -60,14 +58,13 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.22,
+    shadowOpacity: 0.12,
     shadowRadius: 2.22,
     elevation: 3,
   },
   title: {
     fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 7,
+    fontWeight: '500',
   },
   leader: {
     fontSize: 11,
@@ -85,7 +82,6 @@ const styles = StyleSheet.create({
   },
   chatRightBox: {
     paddingLeft: 12,
-    paddingTop: 4,
   },
   chatNickname: {
     fontSize: 13,
@@ -97,11 +93,11 @@ const styles = StyleSheet.create({
     color: '#343434',
   },
   titleBox: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 13,
     justifyContent: 'center',
     alignItems: 'flex-start',
+    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingBottom: 13,
   },
   line: {
     marginHorizontal: 20,

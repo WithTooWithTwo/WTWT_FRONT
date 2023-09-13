@@ -8,9 +8,10 @@ import ScreenHeader from '../../components/UI/ScreenHeader';
 import {Colors} from '../../constants/styles';
 import UserInfoModal from '../../components/Member/UserInfoModal';
 import {useState} from 'react';
+import {MyPageStackParamList} from '../Authenticated/MyPageScreen';
 
 type GroupMemberNavigationProp = NativeStackNavigationProp<
-  GroupDetailStackParamList,
+  GroupDetailStackParamList | MyPageStackParamList,
   'GroupMember'
 >;
 

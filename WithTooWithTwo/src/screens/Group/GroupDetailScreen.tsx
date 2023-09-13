@@ -8,14 +8,16 @@ import GroupMainScreen from './GroupMainScreen';
 import GroupChatScreen from './GroupChatScreen';
 import GroupMemberListScreen from './GroupMemberListScreen';
 import GroupReviewScreen from './GroupReviewScreen';
+import UserPageScreen from '../MyPage/UserPageScreen';
 
 export type GroupDetailStackParamList = {
   GroupChat: {groupId: string};
   GroupMain: {groupId: string};
   GroupMember: {groupId: string};
   GroupReview: {groupId: string};
+  UserPage: {userId: string};
 };
-type GroupDetailScreenProps = NativeStackScreenProps<
+export type GroupDetailScreenProps = NativeStackScreenProps<
   GroupStackParamList,
   'GroupDetail'
 >;
@@ -42,6 +44,11 @@ function GroupDetailScreen({navigation}: GroupDetailScreenProps) {
       <GroupDetailStack.Screen
         name="GroupReview"
         component={GroupReviewScreen}
+        options={{headerShown: false}}
+      />
+      <GroupDetailStack.Screen
+        name="UserPage"
+        component={UserPageScreen}
         options={{headerShown: false}}
       />
     </GroupDetailStack.Navigator>

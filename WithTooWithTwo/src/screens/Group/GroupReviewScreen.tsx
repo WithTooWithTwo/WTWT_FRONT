@@ -22,9 +22,10 @@ import ReviewMember from '../../components/Review/ReviewMember';
 import ReviewContent from '../../components/Review/ReviewContent';
 import {AxiosError} from 'axios/index';
 import axios from 'axios';
+import {MyPageStackParamList} from '../Authenticated/MyPageScreen';
 
 type GroupReviewNavigationProp = NativeStackNavigationProp<
-  GroupDetailStackParamList,
+  GroupDetailStackParamList | MyPageStackParamList,
   'GroupReview'
 >;
 

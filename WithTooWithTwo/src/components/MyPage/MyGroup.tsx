@@ -33,10 +33,10 @@ const MyGroup = ({disable}: {disable?: boolean}) => {
       </View>
       <View style={styles.contentBox}>
         {groups.length !== 0 && (
-          <MyGroupItem group={groups[0]} disable={false} />
+          <MyGroupItem group={groups[0]} disable={disable} />
         )}
         {groups.length >= 2 && (
-          <MyGroupItem group={groups[1]} disable={false} />
+          <MyGroupItem group={groups[1]} disable={disable} />
         )}
       </View>
     </View>

@@ -4,6 +4,7 @@ import {Colors} from '../../constants/styles';
 import {useNavigation} from '@react-navigation/native';
 import MemberList from '../Member/MemberList';
 import OverlappedMemberList from '../Member/OverlappedMemberList';
+import {GroupDetailStackParamList} from '../../screens/Group/GroupDetailScreen';
 
 const MyGroupItem = ({
   group,

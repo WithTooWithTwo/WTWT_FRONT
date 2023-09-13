@@ -6,6 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatListScreen from '../Chat/ChatListScreen';
 import ChatRoomScreen from '../Chat/ChatRoomScreen';
 import {GroupMember} from '../../util/group';
+import UserPageScreen from '../MyPage/UserPageScreen';
 
 type ChatStackScreenProps = BottomTabScreenProps<
   AuthenticatedTabParamList,
@@ -15,6 +16,7 @@ type ChatStackScreenProps = BottomTabScreenProps<
 export type ChatStackParamList = {
   ChatList: undefined;
   ChatRoom: {roomId: string; userId: string; opponent: GroupMember};
+  UserPage: {userId: string};
 };
 
 const ChatStack = createNativeStackNavigator<ChatStackParamList>();
@@ -31,6 +33,11 @@ function ChatScreen() {
         <ChatStack.Screen
           name="ChatRoom"
           component={ChatRoomScreen}
+          options={{headerShown: false}}
+        />
+        <ChatStack.Screen
+          name="UserPage"
+          component={UserPageScreen}
           options={{headerShown: false}}
         />
       </ChatStack.Navigator>

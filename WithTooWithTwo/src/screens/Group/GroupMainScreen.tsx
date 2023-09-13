@@ -21,7 +21,7 @@ import GroupNotice from '../../components/Group/GroupNotice';
 import GroupMemo from '../../components/Group/GroupMemo';
 import GroupPlace from '../../components/Group/GroupPlace';
 
-type GroupMainNavigationProp = NativeStackNavigationProp<
+export type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
   'GroupMain'
 >;

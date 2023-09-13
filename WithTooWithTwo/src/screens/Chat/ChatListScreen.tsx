@@ -20,7 +20,7 @@ const ChatListScreen = () => {
   return (
     <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
       <ScreenHeader color={'white'} isGoBack={false} title="채팅" />
-      <View style={{backgroundColor: Colors.grey1, padding: 24}}>
+      <View style={{backgroundColor: Colors.grey1, padding: 20}}>
         {chatList &&
           chatList.map(item => (
             <ChatListItem key={item.title + item.lastMessage} chat={item} />

@@ -26,14 +26,12 @@ function GroupListScreen() {
   }, []);
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
-      <SafeAreaView style={{flex: 1}}>
-        <ScreenHeader title="그룹" color="#FFFFFF" isGoBack={false} />
-        <View style={styles.container}>
-          <GroupOutput groups={groups.groups} />
-        </View>
-      </SafeAreaView>
-    </View>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <ScreenHeader title="그룹" color="#FFFFFF" isGoBack={false} />
+      <View style={styles.container}>
+        <GroupOutput groups={groups.groups} />
+      </View>
+    </SafeAreaView>
   );
 }
 
