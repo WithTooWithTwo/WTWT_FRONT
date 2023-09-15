@@ -1,13 +1,37 @@
+export const getKoreanDate = (date: string) => {
+  const now = new Date(date);
+  const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+  const koreaTimeDiff = 9 * 60 * 60 * 1000;
+  return new Date(utc + koreaTimeDiff);
+};
+
+export const getNowDate = () => {
+  const now = new Date();
+  const utc = now.getTime() + now.getTimezoneOffset() * 60 * 1000;
+  const koreaTimeDiff = 9 * 60 * 60 * 1000;
+  return new Date(utc + koreaTimeDiff);
+};
+
 export function getFormattedDate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
+export const getKoreanTime = (date: string) => {
+  const newDate = new Date(date);
+  const localeTime = newDate.toLocaleTimeString('ko-KR', {
+    timeZone: 'UTC',
+  });
+  return localeTime.slice(0, -3);
+};
 export function getDateMinusDays(date: Date, days: number) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() - days);
 }
 
 export const detailDate = (a: string) => {
-  const milliSeconds = +new Date() - +new Date(a);
+  const before = getKoreanDate(a);
+  const today = getNowDate();
+
+  const milliSeconds = +today - +before;
   const seconds = milliSeconds / 1000;
   if (seconds < 60) return `방금 전`;
   const minutes = seconds / 60;

@@ -52,6 +52,12 @@ export type GroupMember = {
   profile: string | null;
 };
 
+export const defaultGroupMember = {
+  id: 0,
+  nickname: '',
+  profile: null,
+};
+
 export async function fetchGroup(api: string = '') {
   const response = await axios.get(API_KEY + '/groups/' + api);
   const groups: GroupType = {

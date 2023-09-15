@@ -1,6 +1,5 @@
 import {GroupMember} from './group';
 import axios from 'axios';
-import {MessageType} from '../screens/Chat/ChatRoomScreen';
 import {IMessage} from 'react-native-gifted-chat';
 
 const URL = 'http://3.39.87.78:8080';
@@ -45,7 +44,7 @@ export const fetchChatMessage = async (api: string = '') => {
   return {
     messages: messages.reverse(),
     post: response.data.post,
-    userProfile: response.data.userProfil,
+    userProfile: response.data.userProfile,
   };
 };
 
@@ -55,4 +54,12 @@ export type ChatPostType = {
   firstDay: string;
   lastDay: string;
   image: string | null;
+};
+
+export const defaultChatPost = {
+  id: '0',
+  title: '',
+  firstDay: '',
+  lastDay: '',
+  image: null,
 };

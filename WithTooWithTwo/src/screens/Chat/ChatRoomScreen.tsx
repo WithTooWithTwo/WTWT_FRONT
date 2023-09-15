@@ -2,6 +2,7 @@ import {
   Image,
   SafeAreaView,
   StyleProp,
+  StyleSheet,
   Text,
   TextStyle,
   View,
@@ -11,12 +12,22 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {ChatStackParamList} from '../Authenticated/ChatScreen';
 import React, {useEffect, useState} from 'react';
-import {GiftedChat, IMessage} from 'react-native-gifted-chat';
+import {
+  Composer,
+  Day,
+  GiftedChat,
+  IMessage,
+  InputToolbar,
+  Send,
+} from 'react-native-gifted-chat';
 
-import {ChatPostType, fetchChatMessage} from '../../util/chat';
+import {ChatPostType, defaultChatPost, fetchChatMessage} from '../../util/chat';
 import {Colors} from '../../constants/styles';
 import ScreenHeader from '../../components/UI/ScreenHeader';
-import {fetchGroup} from '../../util/group';
+import {defaultGroupMember, GroupMember} from '../../util/group';
+import ChatPostData from '../../components/Chat/ChatPostData';
+import {getKoreanTime} from '../../util/date';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 type ChatRoomScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
@@ -43,7 +54,9 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
   const userId = route.params.userId;
   const opponent = route.params.opponent;
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [post, setPost] = useState<ChatPostType>();
+  const [post, setPost] = useState<ChatPostType>(defaultChatPost);
+  const [opponentProfile, setOpponentProfile] =
+    useState<GroupMember>(defaultGroupMember);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
   useEffect(() => {
@@ -95,12 +108,9 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
     fetchChatMessage(roomId).then(res => {
       setMessages(res.messages);
       setPost(res.post);
+      setOpponentProfile(res.userProfile);
     });
   }, [userId]);
-
-  // useEffect(() => {
-  //   console.log(messages);
-  // }, [messages]);
 
   const onSend = (newMessages: IMessage[] = []) => {
     if (socket && newMessages.length > 0) {
@@ -110,44 +120,116 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
         message: newMessages[0].text,
       };
       socket.send(JSON.stringify(message));
-      // setMessages(previousMessages =>
-      //   GiftedChat.append(previousMessages, newMessages),
-      // );
     }
   };
 
   const renderMessageBubble = (props: any) => {
-    const {currentMessage, user} = props;
-    //console.log(currentMessage);
+    const {currentMessage} = props;
+    // console.log(currentMessage);
     const position =
       currentMessage.user._id.toString() === userId ? 'right' : 'left';
     const messageStyle: StyleProp<ViewStyle> = {
       backgroundColor: position === 'right' ? Colors.chat : Colors.primary500, // Adjust the colors as needed
-      borderRadius: 12,
+      borderRadius: 8,
+      borderTopLeftRadius: position === 'right' ? 8 : 2,
+      borderTopRightRadius: position === 'right' ? 2 : 8,
       paddingVertical: 10,
       paddingHorizontal: 12,
+      alignSelf: 'flex-start',
+    };
+
+    const containerStyle: StyleProp<ViewStyle> = {
       marginLeft: position === 'left' ? 10 : 50, // Add spacing for right-side messages
       marginRight: position === 'right' ? 10 : 50, // Add spacing for left-side messages
       alignSelf: position === 'right' ? 'flex-end' : 'flex-start', // Align to right or left
-      margin: 3,
+      margin: 4,
+      flexDirection: 'row',
+      gap: 5,
     };
 
     const textStyle: StyleProp<TextStyle> = {
       color: position === 'left' ? 'white' : Colors.grey10,
     };
 
-    return (
-      <View>
-        <View style={messageStyle}>
-          <Text style={textStyle}>{currentMessage.text}</Text>
+    if (position === 'right') {
+      return (
+        <View style={containerStyle}>
+          <Text style={styles.time}>
+            {getKoreanTime(currentMessage.createdAt)}
+          </Text>
+          <View style={messageStyle}>
+            <Text style={textStyle}>{currentMessage.text}</Text>
+          </View>
         </View>
-      </View>
+      );
+    } else {
+      return (
+        <View style={containerStyle}>
+          {opponentProfile.profile ? (
+            <Image
+              style={styles.opponentImage}
+              source={{uri: opponentProfile.profile}}
+            />
+          ) : (
+            <View style={styles.opponentImage} />
+          )}
+          <View style={styles.opponentMessage}>
+            <Text style={styles.opponentName}>{opponentProfile.nickname}</Text>
+            <View style={styles.opponentContainer}>
+              <View style={messageStyle}>
+                <Text style={textStyle}>{currentMessage.text}</Text>
+              </View>
+              <Text style={styles.time}>
+                {getKoreanTime(currentMessage.createdAt)}
+              </Text>
+            </View>
+          </View>
+        </View>
+      );
+    }
+  };
+  const renderDateMarker = (date: any) => {
+    console.log(date);
+    return <Day {...date} containerStyle={{zIndex: 3}} />;
+  };
+
+  const renderInputToolBar = (props: any) => {
+    return (
+      <InputToolbar
+        {...props}
+        renderComposer={p => (
+          <Composer
+            {...p}
+            placeholder={''}
+            textInputStyle={styles.composerText}
+            composerHeight={35}
+          />
+        )}
+        renderSend={p => (
+          <Send {...p} containerStyle={styles.sendButton}>
+            <FontAwesome5
+              name={'arrow-circle-up'}
+              color={Colors.primary500}
+              size={27}
+            />
+          </Send>
+        )}
+        primaryStyle={{
+          backgroundColor: Colors.grey1,
+          paddingVertical: 10,
+          paddingHorizontal: 17,
+          height: 70,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
     );
   };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <ScreenHeader color={'white'} isGoBack={true} title={opponent.nickname} />
+      <ChatPostData post={post} />
       <GiftedChat
         messages={messages}
         onSend={newMessages => onSend(newMessages)}
@@ -155,9 +237,59 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
         scrollToBottom={true}
         alwaysShowSend={true}
         renderMessage={renderMessageBubble}
+        renderInputToolbar={renderInputToolBar}
+        messagesContainerStyle={{paddingBottom: 30}}
       />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  time: {
+    alignSelf: 'flex-end',
+    fontSize: 10,
+    color: Colors.grey4,
+  },
+  toolbar: {
+    backgroundColor: Colors.grey1,
+    paddingVertical: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  composerText: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 14,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingTop: 10,
+    paddingHorizontal: 10,
+  },
+  sendButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  opponentContainer: {
+    flexDirection: 'row',
+    gap: 5,
+  },
+  opponentImage: {
+    width: 32,
+    height: 32,
+    borderRadius: 32,
+    backgroundColor: Colors.sub2,
+  },
+  opponentMessage: {
+    flexDirection: 'column',
+    marginLeft: 5,
+    marginTop: 5,
+    gap: 7,
+  },
+  opponentName: {
+    fontSize: 12,
+    fontWeight: '300',
+  },
+});
 
 export default ChatRoomScreen;
