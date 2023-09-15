@@ -8,6 +8,7 @@ import InitialScreen from './InitialScreen';
 import ThunderScreen from './ThunderScreen';
 import PostListScreen from './PostListScreen';
 import MainHeader from '../../components/UI/MainHeader';
+import {Colors} from '../../constants/styles';
 
 export type MainTabParamList = {
   Initial: undefined;
@@ -28,14 +29,14 @@ function MainScreen({navigation}: MainScreenProps) {
       <Tab.Navigator
         initialRouteName="Initial"
         screenOptions={{
-          tabBarLabelStyle: {fontSize: 15},
+          tabBarLabelStyle: {fontSize: 15, fontWeight: '600'},
           tabBarActiveTintColor: 'black',
-          tabBarInactiveTintColor: '#808080',
+          tabBarInactiveTintColor: Colors.grey3,
           tabBarIndicatorStyle: {
             backgroundColor: 'blue',
             height: 1.5,
-            width: 40,
-            marginLeft: 20,
+            width: 60,
+            marginLeft: 12,
           },
           tabBarStyle: {
             width: '100%',

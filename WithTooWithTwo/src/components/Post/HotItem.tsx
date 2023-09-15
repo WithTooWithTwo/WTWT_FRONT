@@ -3,6 +3,7 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import React from 'react';
+import {Colors} from '../../constants/styles';
 
 function HotItem({
   id,
@@ -67,9 +68,9 @@ const styles = StyleSheet.create({
 
     elevation: 3,
   },
-  orderBox: {width: 35},
+  orderBox: {width: 35, fontSize: 16, color: Colors.grey4, fontWeight: 'bold'},
   titleBox: {justifyContent: 'flex-start', flex: 1},
-  titleText: {fontSize: 13},
+  titleText: {fontSize: 14, fontFamily: 'Pretendard-Regular'},
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

@@ -14,6 +14,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {PostListType} from '../../util/post';
 import {detailDate} from '../../util/date';
+import {Colors} from '../../constants/styles';
 
 function PostItem(post: PostListType) {
   const navigation = useNavigation<any>();
@@ -96,6 +97,7 @@ const styles = StyleSheet.create({
   },
   writerText: {
     fontSize: 12,
+    fontWeight: '300',
   },
   dateText: {
     color: '#A7A7A7',
@@ -103,17 +105,19 @@ const styles = StyleSheet.create({
   },
   titleText: {
     paddingBottom: 5,
-    fontWeight: '500',
+    fontWeight: '600',
     fontSize: 16,
+    fontFamily: 'Pretendard-Regular',
   },
   contentBox: {
-    marginTop: 5,
+    marginTop: 2,
     height: 34,
+    marginBottom: 3,
   },
   contentText: {
-    color: '#808080',
-    fontSize: 11,
-    fontWeight: '300',
+    color: Colors.text,
+    fontSize: 12,
+    fontWeight: '400',
   },
   footerBox: {
     flexDirection: 'row',

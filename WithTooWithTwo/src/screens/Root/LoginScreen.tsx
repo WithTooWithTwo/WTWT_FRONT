@@ -2,11 +2,12 @@ import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import AuthInput from '../../components/Auth/AuthInput';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {login} from '../../util/auth';
+import {login, setStorage} from '../../util/auth';
 import {authenticate} from '../../slices/authSlice';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {RootStackParamList} from '../../../App';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 function LoginScreen({navigation}: SignInScreenProps) {
@@ -34,6 +35,7 @@ function LoginScreen({navigation}: SignInScreenProps) {
     setIsAuthenticating(true);
     try {
       const token = await login(email, password);
+      setStorage('token', token);
       dispatch(authenticate(token));
       Alert.alert('알림', '로그인 되었습니다.');
     } catch (error) {

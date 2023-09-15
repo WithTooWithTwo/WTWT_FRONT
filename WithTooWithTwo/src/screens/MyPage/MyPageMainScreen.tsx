@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react';
 import {defaultUser, fetchUser, UserType} from '../../util/user';
 import MyStyle from '../../components/MyPage/MyStyle';
 import MyReview from '../../components/MyPage/MyReview';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyPageMainScreen = () => {
   const [user, setUser] = useState<UserType>(defaultUser);

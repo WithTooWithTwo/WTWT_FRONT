@@ -96,7 +96,7 @@ const FilterPosts = ({
             <RNPickerSelect
               textInputProps={{underlineColorAndroid: 'transparent'}}
               value={selectedMaxHeadCount}
-              placeholder={{label: '인원수', value: 0}}
+              placeholder={{label: '인원 수', value: 0}}
               onValueChange={onChangeMaxHeadCount}
               fixAndroidTouchableBug={true}
               useNativeAndroidPickerStyle={false}
@@ -125,31 +125,6 @@ const FilterPosts = ({
           onConfirm={handleDateConfirm}
           onCancel={hideDatePicker}
         />
-        {/*<View style={styles.orderBox}>*/}
-        {/*  <View*/}
-        {/*    style={{*/}
-        {/*      flexDirection: 'row',*/}
-        {/*      alignItems: 'center',*/}
-        {/*      justifyContent: 'center',*/}
-        {/*    }}>*/}
-        {/*    <RNPickerSelect*/}
-        {/*      textInputProps={{underlineColorAndroid: 'transparent'}}*/}
-        {/*      value={maxHeadCount}*/}
-        {/*      placeholder={{label: '최신순', value: 'RECENT'}}*/}
-        {/*      onValueChange={onChangeOrder}*/}
-        {/*      fixAndroidTouchableBug={true}*/}
-        {/*      useNativeAndroidPickerStyle={false}*/}
-        {/*      items={[{label: '인기순', value: 'POPULAR'}]}*/}
-        {/*      style={{*/}
-        {/*        // 스타일은 아래 3가지로 나누어 적용한다*/}
-        {/*        placeholder: styles.orderText,*/}
-        {/*        inputAndroid: styles.orderText,*/}
-        {/*        inputIOS: styles.orderText,*/}
-        {/*      }}*/}
-        {/*    />*/}
-        {/*    <FontAwesome5 name="chevron-down" size={11} color={Colors.grey4} />*/}
-        {/*  </View>*/}
-        {/*</View>*/}
       </View>
       <View style={styles.orderBox}>
         <RNPickerSelect
@@ -210,15 +185,16 @@ const styles = StyleSheet.create({
     width: 52,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 12,
+    fontSize: 13,
     color: 'black',
+    paddingLeft: 7,
   },
   headCountText: {
     display: 'flex',
     width: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 12,
+    fontSize: 13,
     color: 'black',
     paddingLeft: 11,
   },

@@ -19,6 +19,8 @@ import {
 } from '../../util/post';
 import HotItem from '../../components/Post/HotItem';
 import MainHeader from '../../components/UI/MainHeader';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Colors} from '../../constants/styles';
 
 type InitialProps = MaterialTopTabScreenProps<MainTabParamList, 'Initial'>;
 function InitialScreen({navigation}: InitialProps) {
@@ -56,7 +58,15 @@ function InitialScreen({navigation}: InitialProps) {
         <Banner />
         <View style={styles.container}>
           <View style={styles.box}>
-            <Text style={styles.title}>번개 만남</Text>
+            <View style={styles.titleBox}>
+              <Text style={styles.title}>번개 만남</Text>
+              <Ionicons
+                name={'chevron-forward'}
+                color={Colors.primary500}
+                size={20}
+              />
+            </View>
+
             {renderLightning.map((post, index) => (
               <PostItem key={index} {...post} />
             ))}
@@ -89,11 +99,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
-    backgroundColor: '#F8F8F9',
+    backgroundColor: Colors.grey1,
   },
   box: {
     flexDirection: 'column',
     marginBottom: 45,
+  },
+  titleBox: {
+    flexDirection: 'row',
+    gap: 7,
   },
   title: {
     fontSize: 19,
