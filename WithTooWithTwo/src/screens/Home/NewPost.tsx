@@ -33,6 +33,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import SelectMembers from '../../components/Post/SelectMembers';
 import {GroupMember} from '../../util/group';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type NewPostScreenProps = NativeStackScreenProps<HomeStackParamList, 'NewPost'>;
 
@@ -41,8 +42,8 @@ function NewPost({navigation}: NewPostScreenProps) {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [firstDay, setFirstDay] = useState(new Date());
-  const [lastDay, setLastDay] = useState(new Date());
+  const [firstDay, setFirstDay] = useState<Date | null>(null);
+  const [lastDay, setLastDay] = useState<Date | null>(null);
   const [category, setCategory] = useState('');
   const [headCount, setHeadCount] = useState('1');
   const [loading, setLoading] = useState(false);
@@ -162,6 +163,10 @@ function NewPost({navigation}: NewPostScreenProps) {
     }
   };
 
+  const goToBack = () => {
+    navigation.goBack();
+  };
+
   const closeModal = () => {
     setIsModalVisible(false);
   };
@@ -173,8 +178,8 @@ function NewPost({navigation}: NewPostScreenProps) {
       formData.append('category_id', category);
       formData.append('title', title);
       formData.append('content', content);
-      formData.append('firstDay', getFormattedDate(firstDay));
-      formData.append('lastDay', getFormattedDate(lastDay));
+      formData.append('firstDay', getFormattedDate(firstDay!));
+      formData.append('lastDay', getFormattedDate(lastDay!));
       formData.append('preferHeadCount', +headCount);
       formData.append('lightning', thunder);
       formData.append('members', members);
@@ -230,10 +235,14 @@ function NewPost({navigation}: NewPostScreenProps) {
     return <LoadingOverlay />;
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: Colors.grey1}}>
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.headerZone}>
+            <Pressable onPress={goToBack}>
+              <Ionicons name={'chevron-back'} color={Colors.grey4} size={25} />
+            </Pressable>
+
             <Pressable style={styles.postButton} onPress={onSubmit}>
               <Text style={{color: '#3C70FF', fontWeight: '600'}}>
                 작성하기
@@ -244,12 +253,27 @@ function NewPost({navigation}: NewPostScreenProps) {
             <View style={styles.countryCategory}>
               <View style={styles.countryCategoryText}>
                 <RNPickerSelect
-                  placeholder={{label: '나라선택', value: 0}}
+                  placeholder={{
+                    label: '나라 선택',
+                    value: 0,
+                  }}
+                  style={{
+                    placeholder: {
+                      color: Colors.placeholder,
+                    },
+                  }}
                   onValueChange={onChangeCategory}
                   fixAndroidTouchableBug={true}
                   useNativeAndroidPickerStyle={false}
                   items={categoryList}
                 />
+                {!category && (
+                  <Ionicons
+                    name={'chevron-down'}
+                    color={Colors.grey4}
+                    size={15}
+                  />
+                )}
               </View>
             </View>
             <View style={styles.radioBox}>
@@ -286,10 +310,12 @@ function NewPost({navigation}: NewPostScreenProps) {
 
             <ScrollView horizontal={true}>
               <View style={styles.imageBox}>
-                <View style={styles.imagePicker}>
-                  <ImagesPicker onSetImages={setImage} text="이미지 선택" />
-                </View>
-                <RenderImages images={image} size={100} />
+                <ImagesPicker
+                  onSetImages={setImage}
+                  count={image.length}
+                  style={styles.imagePicker}
+                />
+                <RenderImages images={image} size={80} />
               </View>
             </ScrollView>
 
@@ -297,10 +323,14 @@ function NewPost({navigation}: NewPostScreenProps) {
               <Text style={styles.infoTitleText}>동행 정보</Text>
               <View style={styles.date}>
                 <Pressable style={styles.dateBox} onPress={showFirstDatePicker}>
-                  <Text>
-                    {firstDay.getFullYear()} - {firstDay.getMonth() + 1} -{' '}
-                    {firstDay.getDate()}
-                  </Text>
+                  {firstDay == null ? (
+                    <Text style={styles.placeholder}>시작 날짜</Text>
+                  ) : (
+                    <Text style={{color: Colors.primary500, fontWeight: '500'}}>
+                      {firstDay.getFullYear()} - {firstDay.getMonth() + 1} -{' '}
+                      {firstDay.getDate()}
+                    </Text>
+                  )}
                 </Pressable>
                 <DateTimePickerModal
                   isVisible={isFirstDatePickerVisible}
@@ -310,10 +340,14 @@ function NewPost({navigation}: NewPostScreenProps) {
                 />
                 <Text>~</Text>
                 <Pressable style={styles.dateBox} onPress={showLastDatePicker}>
-                  <Text>
-                    {lastDay.getFullYear()} - {lastDay.getMonth() + 1} -{' '}
-                    {lastDay.getDate()}
-                  </Text>
+                  {lastDay == null ? (
+                    <Text style={styles.placeholder}>종료 날짜</Text>
+                  ) : (
+                    <Text style={{color: Colors.primary500, fontWeight: '500'}}>
+                      {lastDay.getFullYear()} - {lastDay.getMonth() + 1} -{' '}
+                      {lastDay.getDate()}
+                    </Text>
+                  )}
                 </Pressable>
                 <DateTimePickerModal
                   isVisible={isLastDatePickerVisible}
@@ -328,16 +362,23 @@ function NewPost({navigation}: NewPostScreenProps) {
                 </Text>
                 <View style={styles.headCountButtons}>
                   <TouchableOpacity onPress={minusHeadCount}>
-                    <FontAwesome5 name="chevron-left" color={Colors.grey4} />
+                    <FontAwesome5
+                      name="chevron-left"
+                      color={Colors.grey4}
+                      size={14}
+                    />
                   </TouchableOpacity>
-                  <Text>{headCount}</Text>
+                  <Text style={{fontWeight: '500'}}>{headCount}</Text>
                   <TouchableOpacity onPress={plusHeadCount}>
-                    <FontAwesome5 name="chevron-right" color={Colors.grey4} />
+                    <FontAwesome5
+                      name="chevron-right"
+                      color={Colors.grey4}
+                      size={14}
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
               <Modal
-                style={styles.modalView}
                 animationType={'fade'}
                 transparent={true}
                 visible={isModalVisible}
@@ -457,14 +498,16 @@ function NewPost({navigation}: NewPostScreenProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F8F8F9',
+    backgroundColor: Colors.grey1,
   },
   headerZone: {
+    flexDirection: 'row',
     height: 60,
-    backgroundColor: '#D9D9D980',
-    justifyContent: 'center',
+    backgroundColor: Colors.textInputGrey,
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingRight: 30,
-    alignItems: 'flex-end',
+    paddingLeft: 20,
   },
   postButton: {},
   writingZone: {
@@ -472,15 +515,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   countryCategory: {
-    width: 100,
-    height: 40,
+    width: 110,
+    height: 43,
     padding: 10,
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.textInputGrey,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 7,
   },
-  countryCategoryText: {},
+  countryCategoryText: {
+    flexDirection: 'row',
+    gap: 5,
+  },
   radio: {
     flexDirection: 'row',
     paddingVertical: 7,
@@ -502,16 +548,16 @@ const styles = StyleSheet.create({
   },
   titleBox: {
     marginTop: 10,
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.textInputGrey,
     paddingVertical: 20,
     paddingHorizontal: 20,
-    borderRadius: 13,
+    borderRadius: 10,
   },
   contentBlock: {
     marginTop: 10,
     height: 350,
-    backgroundColor: '#D9D9D950',
-    borderRadius: 13,
+    backgroundColor: Colors.textInputGrey,
+    borderRadius: 10,
     padding: 20,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -523,10 +569,11 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   infoTitleText: {
-    fontSize: 17,
+    fontSize: 16,
+    fontWeight: '500',
   },
   infoBox: {
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.textInputGrey,
     borderRadius: 7,
     padding: 20,
     marginTop: 20,
@@ -542,22 +589,22 @@ const styles = StyleSheet.create({
     width: 140,
     padding: 15,
     marginRight: 0,
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.textInputGrey,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 7,
   },
   headCountBox: {
-    width: 180,
+    width: 170,
     padding: 15,
     marginBottom: 15,
     borderRadius: 7,
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.textInputGrey,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   headCountButtons: {
-    width: 100,
+    width: 90,
     paddingHorizontal: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -576,7 +623,7 @@ const styles = StyleSheet.create({
   groupPeople: {
     padding: 17,
     borderRadius: 7,
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.textInputGrey,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -608,8 +655,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   preferGenderLabel: {
-    color: '#979797',
-    fontSize: 16,
+    color: Colors.placeholder,
+    fontSize: 15,
     marginLeft: 5,
   },
   preferAgeBox: {
@@ -625,14 +672,14 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   preferAgeLabel: {
-    color: '#979797',
+    color: Colors.grey9,
     fontSize: 16,
   },
   submitButton: {
     marginTop: 30,
     flex: 1,
     paddingVertical: 20,
-    borderRadius: 6,
+    borderRadius: 10,
     backgroundColor: '#3C70FF',
     justifyContent: 'center',
     alignItems: 'center',
@@ -640,19 +687,18 @@ const styles = StyleSheet.create({
   submitText: {
     fontSize: 18,
     color: 'white',
+    fontWeight: '500',
   },
   imageBox: {
     flexDirection: 'row',
-    marginTop: 20,
+    marginTop: 15,
     gap: 10,
   },
   imagePicker: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    backgroundColor: Colors.grey5,
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    backgroundColor: Colors.sub,
   },
   tagBox: {
     marginTop: 20,
@@ -673,7 +719,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.grey5,
   },
-  modalView: {},
+  placeholder: {
+    color: Colors.placeholder,
+  },
 });
 
 export default NewPost;

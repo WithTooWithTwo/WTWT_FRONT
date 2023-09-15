@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
   },
   dateText: {
-    fontSize: 12,
+    fontSize: 13,
   },
   orderBox: {
     display: 'flex',

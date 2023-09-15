@@ -30,6 +30,23 @@ export type PostListType = {
   status: string;
 };
 
+export const defaultPostList: PostListType = {
+  id: 0,
+  writer: {
+    id: 0,
+    nickname: '',
+    profile: null,
+  },
+  title: '',
+  content: '',
+  headCount: 0,
+  createdAt: '',
+  hits: 0,
+  isLightning: false,
+  preferHeadCount: 0,
+  status: '',
+};
+
 export async function fetchOnePost(api: string = '') {
   const response = await axios.get(URL + '/posts/' + api);
   const posts: OnePostType = {

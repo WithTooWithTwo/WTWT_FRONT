@@ -9,6 +9,7 @@ import ThunderScreen from './ThunderScreen';
 import PostListScreen from './PostListScreen';
 import MainHeader from '../../components/UI/MainHeader';
 import {Colors} from '../../constants/styles';
+import PostButton from '../../assets/post_button.svg';
 
 export type MainTabParamList = {
   Initial: undefined;
@@ -63,7 +64,7 @@ function MainScreen({navigation}: MainScreenProps) {
       </Tab.Navigator>
       <View style={styles.absoluteView}>
         <Pressable onPress={toNewPost}>
-          <Icon name="pencil" size={30} color="white" />
+          <PostButton />
         </Pressable>
       </View>
     </>
@@ -87,12 +88,9 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   absoluteView: {
-    backgroundColor: '#3C70FF',
     position: 'absolute',
     right: 30,
     bottom: 30,
-    padding: 15,
-    borderRadius: 50,
   },
 });
 

@@ -1,12 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import EvilIcon from 'react-native-vector-icons/EvilIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Colors} from '../../constants/styles';
 
 function StateButton({state}: {state: string}) {
   if (state === 'thunder') {
     return (
       <View style={styles.container}>
-        <FontAwesome name="bolt" color="#3C70FF" />
+        <MaterialIcons name="bolt" color={Colors.primary500} size={18} />
         <Text style={styles.text}>번개만남</Text>
       </View>
     );
@@ -22,17 +24,18 @@ function StateButton({state}: {state: string}) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 73,
-    height: 27,
     flexDirection: 'row',
-    backgroundColor: '#F8F8F9',
-    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    width: 77,
+    height: 27,
+    paddingRight: 3,
+    borderRadius: 8,
+    backgroundColor: Colors.grey1,
   },
   text: {
     color: '#3C70FF',
-    marginLeft: 5,
+    marginLeft: 3,
     fontSize: 10,
     fontWeight: '500',
   },

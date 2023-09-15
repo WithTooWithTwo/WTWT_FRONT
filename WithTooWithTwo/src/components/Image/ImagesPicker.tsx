@@ -4,15 +4,25 @@ import {
   PhotoQuality,
 } from 'react-native-image-picker';
 import {useCallback, useEffect, useState} from 'react';
-import {Platform, Pressable, Text} from 'react-native';
+import {
+  Platform,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  ViewStyle,
+} from 'react-native';
 import {ImageType} from '../../slices/postsSlice';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const ImagesPicker = ({
   onSetImages,
-  text = ' ',
+  count = 0,
+  style,
 }: {
   onSetImages: any;
-  text: string;
+  count: number;
+  style: StyleProp<ViewStyle>;
 }) => {
   const [images, setImages] = useState<ImageType[]>([]);
 
@@ -56,8 +66,18 @@ const ImagesPicker = ({
   }, [images]);
 
   return (
-    <Pressable onPress={pickImage}>
-      <Text>{text}</Text>
+    <Pressable
+      style={[
+        style,
+        {
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+      ]}
+      onPress={pickImage}>
+      <Ionicons name="camera-outline" color="white" size={30} />
+      <Text style={{color: 'white', fontSize: 12}}>{count} / 10</Text>
     </Pressable>
   );
 };

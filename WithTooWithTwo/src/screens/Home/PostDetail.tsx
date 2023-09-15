@@ -36,7 +36,6 @@ type PostDetailScreenProps = {
 
 function PostDetail({navigation, route}: PostDetailScreenProps) {
   const selectedPostId = route.params?.postId;
-  const [imageUrl, setImageUrl] = useState<string[]>([]);
   const [selectedPost, setSelectedPost] = useState<OnePostType | null>(null);
   const navigations = useNavigation<any>();
   const [isVisible, setIsVisible] = useState<boolean>(false);

@@ -107,6 +107,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     fontWeight: '600',
     fontSize: 16,
+    color: Colors.grey10,
     fontFamily: 'Pretendard-Regular',
   },
   contentBox: {
