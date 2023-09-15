@@ -20,6 +20,7 @@ import {fetchGroup, GroupType, storeMemo, storeNotice} from '../../util/group';
 import GroupNotice from '../../components/Group/GroupNotice';
 import GroupMemo from '../../components/Group/GroupMemo';
 import GroupPlace from '../../components/Group/GroupPlace';
+import GroupTimer from '../../components/Group/GroupTimer';
 
 export type GroupMainNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList,
@@ -78,11 +79,6 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
           />
 
           <View style={styles.mainBox}>
-            <Pressable
-              style={styles.reviewButton}
-              onPress={groupReviewPressHandler}>
-              <Text>리뷰 남기기</Text>
-            </Pressable>
             <View style={styles.dDayBox}>
               <Text style={styles.dDay}>
                 D{' '}
@@ -90,6 +86,11 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
                   ? `+ ${selectedGroup.dday * -1}`
                   : `- ${selectedGroup.dday}`}
               </Text>
+              <Pressable
+                style={styles.reviewButton}
+                onPress={groupReviewPressHandler}>
+                <GroupTimer />
+              </Pressable>
             </View>
             <Text style={styles.title}>{selectedGroup.name}</Text>
             <View style={styles.dateBox}>
@@ -103,8 +104,14 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
               </Text>
             </View>
             <View style={styles.keywordBox}>
-              <Text style={styles.keyword}></Text>
-              <Text style={styles.keyword}></Text>
+              {selectedGroup.tags.length &&
+                selectedGroup.tags.map((tag, i) => (
+                  <View style={styles.keyword} key={tag + i}>
+                    <Text style={{color: Colors.grey10, fontSize: 12}}>
+                      {tag}
+                    </Text>
+                  </View>
+                ))}
             </View>
             <View style={styles.memberBox}>
               <LeaderMemberItem
@@ -144,11 +151,13 @@ const styles = StyleSheet.create({
     height: 200,
   },
   mainBox: {
-    padding: 30,
+    paddingVertical: 30,
+    paddingHorizontal: 27,
     backgroundColor: '#FFF',
   },
   dDayBox: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 7,
   },
   dDay: {
@@ -180,8 +189,16 @@ const styles = StyleSheet.create({
   },
   keywordBox: {
     flexDirection: 'row',
+    gap: 10,
+    marginVertical: 10,
   },
-  keyword: {},
+  keyword: {
+    backgroundColor: Colors.sub2,
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+
   memberBox: {
     flexDirection: 'row',
   },

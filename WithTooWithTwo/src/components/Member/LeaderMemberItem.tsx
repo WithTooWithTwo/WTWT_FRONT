@@ -3,7 +3,8 @@ import {Colors, MemberColors} from '../../constants/styles';
 import {useNavigation} from '@react-navigation/native';
 import {GroupMember} from '../../util/group';
 import UserInfoModal from './UserInfoModal';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function LeaderMemberItem({
   groupId,
@@ -30,7 +31,7 @@ function LeaderMemberItem({
     <View style={styles.container}>
       <View style={styles.leftBox}>
         <View style={styles.leaderBox}>
-          {leader.profile ? (
+          {leader && leader.profile ? (
             <Pressable
               style={styles.leaderItem}
               onPress={() => pressMemberHandler(leader.id)}>
@@ -67,7 +68,11 @@ function LeaderMemberItem({
         />
       </View>
       <Pressable onPress={pressMemberListHandler}>
-        <Text> more </Text>
+        <Ionicons
+          name={'chevron-forward-outline'}
+          color={Colors.primary500}
+          size={25}
+        />
       </Pressable>
     </View>
   );

@@ -18,6 +18,7 @@ export const Colors = {
   text: '#A4A4A4',
   sub: '#6A92FF',
   sub2: '#E0E8FE',
+  sub3: '#F3F6FF',
   sub5: '#A2BAFB',
   chat: '#f0f0f1',
   textInputGrey: 'rgba(236,236,239,0.7)',

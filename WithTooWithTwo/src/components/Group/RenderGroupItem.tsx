@@ -16,6 +16,7 @@ import {
   patchList,
 } from '../../util/group';
 import {Colors} from '../../constants/styles';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const RenderGroupItem = ({
   type,
@@ -88,7 +89,7 @@ const RenderGroupItem = ({
             onPress={() => {
               deleteListHandler(lists[i].id);
             }}>
-            <Text style={styles.deleteButton}>삭제</Text>
+            <AntDesign name="close" size={13} color={Colors.grey4} />
           </Pressable>
         </View>
       ))}
@@ -101,10 +102,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   noticeItem: {
     fontSize: 14,
-    marginBottom: 10,
   },
   deleteButton: {
     fontSize: 12,

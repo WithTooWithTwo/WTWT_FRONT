@@ -21,7 +21,7 @@ const GroupMemo = ({
   const submitMemoHandler = async () => {
     try {
       const response = await storeMemo(groupId, newMemo);
-      fetchGroup(response.result).then(res => {
+      fetchGroup(groupId).then(res => {
         setGroup(res);
       });
     } catch (e) {
@@ -36,14 +36,13 @@ const GroupMemo = ({
         <Text style={styles.placeTitleText}>가고싶은 여행지</Text>
       </View>
       <View style={styles.memoContent}>
-        {
-          <RenderGroupItem
-            type="memo"
-            groupId={groupId}
-            lists={memos}
-            setGroup={setGroup}
-          />
-        }
+        <RenderGroupItem
+          type="memo"
+          groupId={groupId}
+          lists={memos}
+          setGroup={setGroup}
+        />
+
         <TextInput
           value={newMemo}
           style={styles.memoInput}
@@ -110,6 +109,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 6,
     borderBottomStartRadius: 6,
     borderBottomEndRadius: 6,
+    paddingLeft: 20,
   },
   memoItem: {
     fontSize: 14,
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.grey9,
     fontWeight: '400',
+    paddingTop: 5,
   },
 });
 

@@ -71,17 +71,19 @@ const styles = StyleSheet.create({
   },
   noticeList: {
     paddingLeft: 25,
-    paddingRight: 15,
+    paddingRight: 5,
     marginBottom: 10,
   },
   noticeItem: {
     fontSize: 14,
     marginBottom: 10,
+    fontWeight: '500',
   },
   noticeInput: {
     fontSize: 13,
     color: Colors.grey9,
     fontWeight: '400',
+    paddingTop: 5,
   },
 });
 
