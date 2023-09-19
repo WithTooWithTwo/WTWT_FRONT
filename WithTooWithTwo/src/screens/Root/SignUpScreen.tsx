@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
+  Image,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../App';
-import {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {createUser} from '../../util/auth';
 import {useDispatch} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -22,6 +23,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {RadioButton} from 'react-native-paper';
 import OneImagePicker from '../../components/Image/OneImagePicker';
 import {ImageType} from '../../slices/postsSlice';
+import {Colors} from '../../constants/styles';
 
 type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -30,15 +32,12 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
   const [name, setName] = useState('');
   const [nickname, setNickname] = useState('');
   const [gender, setGender] = useState('FEMALE');
-  const [bYear, setBYear] = useState(0);
-  const [bMonth, setBMonth] = useState(0);
-  const [bDay, setBDay] = useState(0);
   const [phoneNumber, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [checkPwd, setCheckPwd] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
-  const [profileImage, setProfileImage] = useState<any>('');
+  const [profileImage, setProfileImage] = useState<ImageType>();
 
   const nameRef = useRef<TextInput | null>(null);
   const nicknameRef = useRef<TextInput | null>(null);
@@ -82,16 +81,6 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
     }
   };
 
-  const onChangeBYear = useCallback((text: number) => {
-    setBYear(text);
-  }, []);
-  const onChangeBMonth = useCallback((text: number) => {
-    setBMonth(text);
-  }, []);
-  const onChangeBDay = useCallback((text: number) => {
-    setBDay(text);
-  }, []);
-
   const onPressDate = () => {
     // 날짜 클릭 시
     setMode('date'); // 모달 유형을 date로 변경
@@ -107,9 +96,6 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
     // 날짜 또는 시간 선택 시
     setVisible(false); // 모달 close
     setDate(selectedDate); // 선택한 날짜 변경
-    onChangeBYear(selectedDate.getFullYear());
-    onChangeBMonth(selectedDate.getMonth() + 1);
-    onChangeBDay(selectedDate.getDate());
   };
 
   const setImageHandler = (image: ImageType) => {
@@ -168,6 +154,7 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
       bDay: date.getDay(),
       profileImage: profileImage,
     };
+    console.log(value);
 
     try {
       setIsAuthenticating(true);
@@ -268,12 +255,17 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
                   alignItems: 'center',
                   paddingBottom: 40,
                 }}>
-                <View style={styles.imageCircle}>
-                  <Icon name="user" color="#BDBDBD" size={70} />
-                  {!profileImage && (
-                    <OneImagePicker onSetImages={setImageHandler} />
-                  )}
-                </View>
+                {profileImage === undefined ? (
+                  <OneImagePicker
+                    style={styles.imageCircle}
+                    onSetImages={setImageHandler}
+                  />
+                ) : (
+                  <Image
+                    source={{uri: `${profileImage.uri}`}}
+                    style={styles.imageCircle}
+                  />
+                )}
               </View>
 
               <AuthInput
@@ -316,7 +308,7 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
                       status={gender === 'HIDE' ? 'checked' : 'unchecked'}
                       onPress={() => setGender('HIDE')}
                     />
-                    <Text style={styles.radioText}>선택 안함</Text>
+                    ㄴ<Text style={styles.radioText}>비공개</Text>
                   </View>
                 </View>
               </View>
@@ -450,14 +442,14 @@ const styles = StyleSheet.create({
     height: 55,
     marginTop: 3,
     paddingLeft: 10,
-    backgroundColor: '#EFEFEF',
+    backgroundColor: Colors.grey6,
     borderRadius: 10,
   },
   dateBox: {
     justifyContent: 'center',
     alignItems: 'center',
     height: 55,
-    backgroundColor: '#EFEFEF',
+    backgroundColor: Colors.grey6,
   },
   dateText: {
     color: '#707070',
@@ -510,14 +502,14 @@ const styles = StyleSheet.create({
     height: 50,
     paddingLeft: 10,
     marginRight: 10,
-    backgroundColor: '#EFEFEF',
+    backgroundColor: Colors.grey6,
   },
   space: {
     height: 280,
   },
   imageCircle: {
     borderRadius: 100,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: Colors.grey6,
     height: 110,
     width: 110,
     justifyContent: 'center',
