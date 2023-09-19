@@ -30,7 +30,12 @@ const MemberList = ({members}: {members: GroupMember[]}) => {
             style={[
               styles.memberItem,
               {backgroundColor: Colors.memberColor[index % 9]},
-            ]}></Pressable>
+            ]}>
+            <Image
+              source={require('../../assets/wtwt_logo_image2.png')}
+              style={{width: 18, height: 10}}
+            />
+          </Pressable>
         ),
       )}
       <UserInfoModal
@@ -49,6 +54,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   memberItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 25,
     height: 25,
     borderRadius: 25,

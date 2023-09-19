@@ -37,7 +37,12 @@ const MemberList = ({
             {
               backgroundColor: Colors.grey2,
             },
-          ]}></Pressable>
+          ]}>
+          <Image
+            source={require('../../assets/wtwt_logo_image2.png')}
+            style={{width: 18, height: 10}}
+          />
+        </Pressable>
       )}
       {members.map((member, index) =>
         member.profile ? (
@@ -57,7 +62,12 @@ const MemberList = ({
                 backgroundColor: Colors.memberColor[index % 9],
                 left: index * -7 + -7,
               },
-            ]}></Pressable>
+            ]}>
+            <Image
+              source={require('../../assets/wtwt_logo_image2.png')}
+              style={{width: 18, height: 10}}
+            />
+          </Pressable>
         ),
       )}
       <UserInfoModal
@@ -75,6 +85,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   memberItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 25,
     height: 25,
     borderRadius: 25,
