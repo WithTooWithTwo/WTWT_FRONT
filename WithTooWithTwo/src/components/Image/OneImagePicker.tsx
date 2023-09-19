@@ -4,10 +4,26 @@ import {
   MediaType,
   PhotoQuality,
 } from 'react-native-image-picker';
-import {Platform, Pressable, Text} from 'react-native';
+import {
+  Image,
+  Platform,
+  Pressable,
+  StyleProp,
+  Text,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {ImageType} from '../../slices/postsSlice';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Colors} from '../../constants/styles';
 
-const OneImagePicker = ({onSetImages}: {onSetImages: any}) => {
+const OneImagePicker = ({
+  onSetImages,
+  style,
+}: {
+  onSetImages: any;
+  style: StyleProp<ViewStyle>;
+}) => {
   const [image, setImage] = useState<ImageType>();
 
   const pickImage = useCallback(() => {
@@ -50,8 +66,29 @@ const OneImagePicker = ({onSetImages}: {onSetImages: any}) => {
   }, [image]);
 
   return (
-    <Pressable onPress={pickImage}>
-      <Text>이미지 선택</Text>
+    <Pressable style={style} onPress={pickImage}>
+      <Image
+        source={require('../../assets/wtwt_logo_image2.png')}
+        style={{
+          width: 60,
+          height: 40,
+        }}
+        resizeMethod="resize"
+      />
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 35,
+          height: 35,
+          borderRadius: 35,
+          backgroundColor: Colors.sub,
+        }}>
+        <Ionicons name="camera-outline" color="white" size={22} />
+      </View>
     </Pressable>
   );
 };
