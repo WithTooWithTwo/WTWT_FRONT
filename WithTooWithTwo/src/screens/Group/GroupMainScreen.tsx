@@ -93,6 +93,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
               </Pressable>
             </View>
             <Text style={styles.title}>{selectedGroup.name}</Text>
+
             <View style={styles.dateBox}>
               <Text style={styles.date}>{selectedGroup.firstDay}</Text>
               <FontAwesome name="user-alt" color="#3C70FF99" size={12} />
@@ -103,8 +104,9 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
                 명
               </Text>
             </View>
+
             <View style={styles.keywordBox}>
-              {selectedGroup.tags.length &&
+              {selectedGroup.tags.length > 0 &&
                 selectedGroup.tags.map((tag, i) => (
                   <View style={styles.keyword} key={tag + i}>
                     <Text style={{color: Colors.grey10, fontSize: 12}}>

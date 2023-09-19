@@ -56,7 +56,7 @@ const MyInfo = ({user, isMe}: {user: UserType; isMe?: boolean}) => {
         <Pressable style={styles.dataBlock} onPress={groupPressHandler}>
           <Text style={styles.dataTitle}>동행 수</Text>
           <View style={styles.dataItemBlock}>
-            <Icon name={'users'} color={Colors.primary500} size={21} />
+            <Icon name={'users'} color={Colors.primary500} size={25} />
             <Text style={styles.dataItemText}>{user?.countsOfGroups}</Text>
           </View>
         </Pressable>
@@ -68,7 +68,7 @@ const MyInfo = ({user, isMe}: {user: UserType; isMe?: boolean}) => {
             <Ionicons
               name={'document-text-sharp'}
               color={Colors.primary500}
-              size={21}
+              size={25}
             />
             <Text style={styles.dataItemText}>{user?.countsOfPosts}</Text>
           </View>
@@ -76,7 +76,7 @@ const MyInfo = ({user, isMe}: {user: UserType; isMe?: boolean}) => {
         <View style={styles.dataBlock}>
           <Text style={styles.dataTitle}>받은 리뷰</Text>
           <View style={styles.dataItemBlock}>
-            <Ionicons name={'folder'} color={Colors.primary500} size={21} />
+            <Ionicons name={'folder'} color={Colors.primary500} size={25} />
             <Text style={styles.dataItemText}>{user?.countsOfReviews}</Text>
           </View>
         </View>
@@ -161,7 +161,8 @@ const styles = StyleSheet.create({
   },
   dataItemText: {
     color: Colors.primary500,
-    fontWeight: '500',
+    fontWeight: '600',
+    fontSize: 15,
   },
 });
 
