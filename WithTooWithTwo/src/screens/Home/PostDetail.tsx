@@ -185,7 +185,9 @@ const styles = StyleSheet.create({
   contentBox: {
     padding: 30,
   },
-  contentText: {},
+  contentText: {
+    fontFamily: 'Pretendard-Regular',
+  },
   chatBox: {
     height: 60,
     paddingHorizontal: 30,

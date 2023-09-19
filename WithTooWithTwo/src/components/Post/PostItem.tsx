@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
   },
   titleText: {
     paddingBottom: 5,
-    fontWeight: '600',
     fontSize: 16,
     color: Colors.grey10,
+    fontWeight: '600',
     fontFamily: 'Pretendard-Regular',
   },
   contentBox: {
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontSize: 12,
     fontWeight: '400',
+    fontFamily: 'Pretendard-Regular',
   },
   footerBox: {
     flexDirection: 'row',
