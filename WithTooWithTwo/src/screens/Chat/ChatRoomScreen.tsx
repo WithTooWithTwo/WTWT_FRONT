@@ -1,5 +1,6 @@
 import {
   Image,
+  Pressable,
   SafeAreaView,
   StyleProp,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {ChatStackParamList} from '../Authenticated/ChatScreen';
 import React, {useEffect, useState} from 'react';
 import {
@@ -24,10 +25,18 @@ import {
 import {ChatPostType, defaultChatPost, fetchChatMessage} from '../../util/chat';
 import {Colors} from '../../constants/styles';
 import ScreenHeader from '../../components/UI/ScreenHeader';
-import {defaultGroupMember, GroupMember} from '../../util/group';
+import {
+  AlarmType,
+  defaultAlarm,
+  defaultGroupMember,
+  GroupMember,
+  patchAlarms,
+} from '../../util/group';
 import ChatPostData from '../../components/Chat/ChatPostData';
 import {getKoreanTime} from '../../util/date';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import UserInfoModal from '../../components/Member/UserInfoModal';
+import EventSource from 'react-native-event-source';
 
 type ChatRoomScreenNavigationProp = NativeStackNavigationProp<
   ChatStackParamList,
@@ -58,6 +67,11 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
   const [opponentProfile, setOpponentProfile] =
     useState<GroupMember>(defaultGroupMember);
   const [socket, setSocket] = useState<WebSocket | null>(null);
+  const groupId = 2;
+
+  const navigations = useNavigation<any>();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [modalUserId, setModalUserId] = useState<string>('0');
 
   useEffect(() => {
     // Initialize WebSocket connection
@@ -112,6 +126,11 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
     });
   }, [userId]);
 
+  const pressMemberHandler = (id: number) => {
+    setModalUserId(id.toString());
+    setIsVisible(true);
+  };
+
   const onSend = (newMessages: IMessage[] = []) => {
     if (socket && newMessages.length > 0) {
       const message: MessageType = {
@@ -165,14 +184,16 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
     } else {
       return (
         <View style={containerStyle}>
-          {opponentProfile.profile ? (
-            <Image
-              style={styles.opponentImage}
-              source={{uri: opponentProfile.profile}}
-            />
-          ) : (
-            <View style={styles.opponentImage} />
-          )}
+          <Pressable onPress={() => pressMemberHandler(opponent.id)}>
+            {opponentProfile.profile ? (
+              <Image
+                style={styles.opponentImage}
+                source={{uri: opponentProfile.profile}}
+              />
+            ) : (
+              <View style={styles.opponentImage} />
+            )}
+          </Pressable>
           <View style={styles.opponentMessage}>
             <Text style={styles.opponentName}>{opponentProfile.nickname}</Text>
             <View style={styles.opponentContainer}>
@@ -239,6 +260,12 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
         renderMessage={renderMessageBubble}
         renderInputToolbar={renderInputToolBar}
         messagesContainerStyle={{paddingBottom: 30}}
+      />
+      <UserInfoModal
+        userId={modalUserId}
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        groupId={2}
       />
     </SafeAreaView>
   );

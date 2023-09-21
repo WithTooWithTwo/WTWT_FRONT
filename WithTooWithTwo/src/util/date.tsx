@@ -18,11 +18,11 @@ export function getFormattedDate(date: Date) {
 
 export const getKoreanTime = (date: string) => {
   const newDate = new Date(date);
-  const localeTime = newDate.toLocaleTimeString('ko-KR', {
-    timeZone: 'UTC',
-  });
+  const localeTime = newDate.toLocaleTimeString('ko-KR');
+
   return localeTime.slice(0, -3);
 };
+
 export function getDateMinusDays(date: Date, days: number) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() - days);
 }
