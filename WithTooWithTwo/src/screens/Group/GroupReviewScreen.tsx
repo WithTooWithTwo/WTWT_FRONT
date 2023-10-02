@@ -142,6 +142,7 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
       sendReview();
 
       Alert.alert('알림', '등록 되었습니다!');
+      navigation.goBack();
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
       if (errorResponse) {
@@ -170,6 +171,7 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
               onSelectMember={handleSelectMember}
             />
             <ReviewContent
+              member={members[currentMemberIndex]}
               nickname={members[currentMemberIndex].nickname}
               review={currentMemberReview}
               onChangeReview={handleSelectRating}

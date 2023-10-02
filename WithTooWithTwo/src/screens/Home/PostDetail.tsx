@@ -40,6 +40,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
   const navigations = useNavigation<any>();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [modalUserId, setModalUserId] = useState<string>('0');
+  const newNavigation = useNavigation<any>();
 
   const pressMemberHandler = (id: number) => {
     setModalUserId(id.toString());
@@ -61,7 +62,7 @@ function PostDetail({navigation, route}: PostDetailScreenProps) {
   const makeChatRoom = () => {
     if (selectedPost?.post_id) {
       requestChatRoom(selectedPost?.post_id).then(res =>
-        navigations.navigate('ChatRoom', {roomId: res}),
+        newNavigation.navigate('Chat'),
       );
     }
   };

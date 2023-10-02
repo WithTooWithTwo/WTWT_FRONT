@@ -14,6 +14,7 @@ import {GroupType} from '../../util/group';
 import GroupMainScreen from '../Group/GroupMainScreen';
 import GroupMemberListScreen from '../Group/GroupMemberListScreen';
 import GroupReviewScreen from '../Group/GroupReviewScreen';
+import UserPageScreen from '../MyPage/UserPageScreen';
 
 export type MyPageStackParamList = {
   MyPageMain: undefined;
@@ -23,6 +24,7 @@ export type MyPageStackParamList = {
   GroupMain: {groupId: string};
   GroupMember: {groupId: string};
   GroupReview: {groupId: string};
+  UserPage: {userId: string};
 };
 
 type MyPageStackProps = BottomTabScreenProps<
@@ -68,6 +70,11 @@ function MyPageScreen({navigation}: MyPageStackProps) {
       <MyPageStack.Screen
         name="GroupReview"
         component={GroupReviewScreen}
+        options={{headerShown: false}}
+      />
+      <MyPageStack.Screen
+        name="UserPage"
+        component={UserPageScreen}
         options={{headerShown: false}}
       />
     </MyPageStack.Navigator>
