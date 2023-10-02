@@ -308,7 +308,7 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
                       status={gender === 'HIDE' ? 'checked' : 'unchecked'}
                       onPress={() => setGender('HIDE')}
                     />
-                    ㄴ<Text style={styles.radioText}>비공개</Text>
+                    <Text style={styles.radioText}>비공개</Text>
                   </View>
                 </View>
               </View>
