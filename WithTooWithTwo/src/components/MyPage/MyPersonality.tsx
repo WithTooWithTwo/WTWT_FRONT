@@ -57,13 +57,12 @@ const styles = StyleSheet.create({
   itemBox: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 15,
+    gap: 13,
   },
   personalityItem: {
     flexDirection: 'row',
     paddingVertical: 12,
     paddingHorizontal: 15,
-    marginBottom: 10,
     backgroundColor: 'white',
     borderRadius: 10,
     gap: 7,
