@@ -106,6 +106,30 @@ const Navigation = () => {
 };
 
 function App() {
+  // useEffect(() => {
+  //   const eventSource = new RNEventSource(
+  //     'http://3.39.87.78:8080/notifications/subscribe',
+  //     {
+  //       headers: {
+  //         'Content-Type': 'text/event-stream',
+  //       },
+  //     },
+  //   );
+  //
+  //   eventSource.addEventListener('message', event => {
+  //     const data = JSON.parse(event!.data!);
+  //     // Handle the incoming alert data here and update your UI as needed
+  //     console.log('Received alert:', data);
+  //   });
+  //
+  //   eventSource.addEventListener('error', error => {
+  //     console.error('SSE error:', error);
+  //   });
+  //
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, []);
   return (
     <>
       <Provider store={store}>

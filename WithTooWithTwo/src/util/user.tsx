@@ -1,7 +1,7 @@
 import {ImageType} from '../slices/postsSlice';
 import {OptionType} from './review';
 import axios from 'axios';
-import {GroupMember} from './group';
+import {GroupMember, GroupType} from './group';
 
 const API_KEY = 'http://3.39.87.78:8080';
 
@@ -14,7 +14,7 @@ export interface UserType {
   countsOfGroups: number;
   countsOfPosts: number;
   countsOfReviews: number;
-  myGroups: any[] | null;
+  myGroups: GroupType[];
   styles: MyPageOptionType[] | null;
   personalities: MyPageOptionType[] | null;
   reviews: MyPageReviewType[] | null;
@@ -45,7 +45,7 @@ export const defaultUser: UserType = {
   countsOfGroups: 0,
   countsOfPosts: 0,
   countsOfReviews: 0,
-  myGroups: null,
+  myGroups: [],
   styles: null,
   personalities: null,
   reviews: null,

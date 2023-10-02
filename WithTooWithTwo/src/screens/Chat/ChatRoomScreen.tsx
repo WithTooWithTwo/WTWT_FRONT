@@ -265,7 +265,8 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
         userId={modalUserId}
         isVisible={isVisible}
         setIsVisible={setIsVisible}
-        groupId={2}
+        groupId={6}
+        user={opponentProfile}
       />
     </SafeAreaView>
   );

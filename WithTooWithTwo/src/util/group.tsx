@@ -179,3 +179,42 @@ export const storePlace = async (
   );
   return response.data;
 };
+
+export const inviteMember = async (groupId: string, userId: string) => {
+  const response = await axios.post(
+    API_KEY + '/groups/' + userId + '/invite/' + groupId,
+  );
+  return response;
+};
+
+export type AlarmType = {
+  id: string;
+  message: string;
+  type: string;
+  groupId: string;
+  createdAt: string;
+  read: boolean;
+};
+
+export const defaultAlarm = {
+  id: 0,
+  message: '',
+  type: '',
+  groupId: 0,
+  createdAt: '',
+  read: false,
+};
+
+export const patchAlarms = async () => {
+  const response = await axios.get(API_KEY + '/notifications?isInvite=true');
+  const alarms: AlarmType[] = response.data;
+  // console.log(alarms, 'Alarms');
+  return alarms;
+};
+
+export const acceptInvitation = async (id: string) => {
+  const response = await axios.post(
+    API_KEY + '/notifications/' + id + '?sAccept=true',
+  );
+  return response.data;
+};

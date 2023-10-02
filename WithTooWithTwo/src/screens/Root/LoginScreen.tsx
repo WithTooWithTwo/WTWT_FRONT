@@ -2,7 +2,7 @@ import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import AuthInput from '../../components/Auth/AuthInput';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {login} from '../../util/auth';
+import {login, subscribe} from '../../util/auth';
 import {authenticate} from '../../slices/authSlice';
 import LoadingOverlay from '../../components/UI/LoadingOverlay';
 import {RootStackParamList} from '../../../App';
@@ -36,6 +36,7 @@ function LoginScreen({navigation}: SignInScreenProps) {
     try {
       const token = await login(email, password);
       dispatch(authenticate(token));
+      // const sub = await subscribe();
       Alert.alert('알림', '로그인 되었습니다.');
     } catch (error) {
       Alert.alert('Login Failed!');
