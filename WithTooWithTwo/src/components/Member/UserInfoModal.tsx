@@ -12,15 +12,20 @@ import React, {useEffect, useState} from 'react';
 import {fetchAnotherUser, fetchUser, UserType} from '../../util/user';
 import {Colors} from '../../constants/styles';
 import {useNavigation} from '@react-navigation/native';
+import {AlarmType, GroupMember, inviteMember} from '../../util/group';
 
 const UserInfoModal = ({
   userId,
   isVisible,
   setIsVisible,
+  groupId,
+  user,
 }: {
   userId: string;
   isVisible: boolean;
   setIsVisible: (v: boolean) => void;
+  groupId?: number;
+  user?: GroupMember;
 }) => {
   const [userData, setUserData] = useState<UserType>({} as UserType);
   const navigation = useNavigation<any>();
@@ -31,6 +36,13 @@ const UserInfoModal = ({
   const goToUserPage = () => {
     setIsVisible(false);
     navigation.navigate('UserPage', {userId: userId});
+  };
+
+  const inviteUser = () => {
+    if (groupId) {
+      inviteMember(groupId.toString(), userId).then(r => console.log(r.data));
+      console.log('send invitation');
+    }
   };
 
   useEffect(() => {
@@ -52,8 +64,8 @@ const UserInfoModal = ({
             <View style={styles.modalContainer}>
               <View style={styles.imageBox}>
                 <View style={styles.image}>
-                  {userData.profileImage && (
-                    <Image source={{uri: userData.profileImage.uri}} />
+                  {user && user.profile && (
+                    <Image source={{uri: user.profile}} style={styles.image} />
                   )}
                 </View>
                 <Text style={styles.nickname}>{userData.nickname}</Text>
@@ -63,9 +75,11 @@ const UserInfoModal = ({
                 <Pressable style={styles.button} onPress={goToUserPage}>
                   <Text style={styles.buttonText}>정보 보기</Text>
                 </Pressable>
-                {/*<Pressable style={styles.button} disabled={true}>*/}
-                {/*  <Text style={styles.buttonText}>채팅 하기</Text>*/}
-                {/*</Pressable>*/}
+                {groupId && (
+                  <Pressable style={styles.button} onPress={inviteUser}>
+                    <Text style={styles.buttonText}>그룹 초대하기</Text>
+                  </Pressable>
+                )}
               </View>
             </View>
           </TouchableWithoutFeedback>
@@ -109,6 +123,7 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 12,
     color: Colors.grey4,
+    marginBottom: 8,
   },
   buttonBox: {
     flexDirection: 'row',
