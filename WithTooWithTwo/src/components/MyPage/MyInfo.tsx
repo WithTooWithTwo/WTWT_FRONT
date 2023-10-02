@@ -48,7 +48,9 @@ const MyInfo = ({user, isMe}: {user: UserType; isMe?: boolean}) => {
           </View>
           <View style={styles.ratingBlock}>
             <Ionicons name={'star'} color={Colors.primary400} size={13} />
-            <Text style={styles.ratingText}>{user?.rate ? user?.rate : 0}</Text>
+            <Text style={styles.ratingText}>
+              {user?.rate ? user?.rate.toString().slice(0, 4) : 0}
+            </Text>
           </View>
         </View>
       </View>
