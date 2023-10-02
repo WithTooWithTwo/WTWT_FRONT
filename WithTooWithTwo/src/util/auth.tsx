@@ -58,3 +58,8 @@ export async function createUser(value: valueType) {
 export function login(email: string, password: string) {
   return authenticate(email, password);
 }
+
+export const subscribe = () => {
+  const response = axios.post(API_KEY + '/notifications/subscribe');
+  return response;
+};
