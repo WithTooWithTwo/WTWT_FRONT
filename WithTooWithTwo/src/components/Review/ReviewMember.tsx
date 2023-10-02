@@ -1,4 +1,11 @@
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {GroupMember} from '../../util/group';
 import {useState} from 'react';
 import {Colors} from '../../constants/styles';
@@ -43,7 +50,16 @@ const MemberItem = ({
     <Pressable
       style={[styles.block, isSelected && styles.selectedBlock]}
       onPress={onSelect}>
-      <View style={styles.image}></View>
+      <View style={styles.image}>
+        {member.profile ? (
+          <Image source={{uri: member.profile}} style={styles.image} />
+        ) : (
+          <Image
+            source={require('../../assets/wtwt_logo_image2.png')}
+            style={{width: 30, height: 20}}
+          />
+        )}
+      </View>
       <Text style={[styles.nickname, isSelected && styles.selectedNickname]}>
         {member.nickname}
       </Text>
@@ -64,10 +80,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   image: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 48,
     height: 48,
     borderRadius: 48,
-    backgroundColor: '#cbcbcb',
+    backgroundColor: Colors.sub2,
   },
   nickname: {
     marginTop: 10,

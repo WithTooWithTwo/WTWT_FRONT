@@ -13,12 +13,15 @@ import StarRating from 'react-native-star-rating-widget';
 import {fetchReviewOptions, OptionType} from '../../util/review';
 import {Colors} from '../../constants/styles';
 import {fetchAnotherUser} from '../../util/user';
+import {GroupMember} from '../../util/group';
 
 const ReviewContent = ({
+  member,
   review,
   nickname,
   onChangeReview,
 }: {
+  member: GroupMember;
   review: ReviewType;
   nickname: string;
   onChangeReview: (review: ReviewType) => void;
@@ -99,7 +102,16 @@ const ReviewContent = ({
   return (
     <View style={style.container}>
       <View style={style.ratingBlock}>
-        <View style={style.image}></View>
+        <View style={style.image}>
+          {member.profile !== null ? (
+            <Image source={{uri: member.profile}} style={style.image} />
+          ) : (
+            <Image
+              source={require('../../assets/wtwt_logo_image2.png')}
+              style={{width: 40, height: 25}}
+            />
+          )}
+        </View>
         <Text style={style.nickname}>{nickname}</Text>
         <View style={style.star}>
           <StarRating
@@ -201,11 +213,13 @@ const style = StyleSheet.create({
     backgroundColor: '#D9D9D940',
   },
   image: {
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 64,
     width: 64,
     overflow: 'hidden',
     borderRadius: 64,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: 'white',
   },
   nickname: {
     fontSize: 14,
