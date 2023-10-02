@@ -16,6 +16,7 @@ import {
 import {ImageType} from '../../slices/postsSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Colors} from '../../constants/styles';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const OneImagePicker = ({
   onSetImages,
@@ -44,18 +45,23 @@ const OneImagePicker = ({
         console.log('ImagePicker Error:', response.errorMessage);
       } else {
         if (response.assets && response.assets[0] && response.assets[0].uri) {
-          try {
+          ImageResizer.createResizedImage(
+            response.assets![0].uri,
+            600,
+            600,
+            response.assets![0].type!.includes('png') ? 'PNG' : 'JPEG',
+            100,
+            0,
+          ).then(r =>
             setImage({
               uri:
                 Platform.OS === 'android'
-                  ? response.assets[0].uri
-                  : response.assets[0].uri!.replace('file://', ''),
-              name: response.assets[0].fileName!,
-              type: response.assets[0].type!.includes('png') ? 'PNG' : 'JPEG',
-            });
-          } catch (error: any) {
-            console.log('ImageResizer Error:', error.message);
-          }
+                  ? r.uri
+                  : r.uri.replace('file://', ''),
+              name: r.name,
+              type: response.assets![0].type!.includes('png') ? 'PNG' : 'JPEG',
+            }),
+          );
         }
       }
     });
