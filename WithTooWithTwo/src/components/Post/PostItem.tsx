@@ -54,7 +54,7 @@ function PostItem(post: PostListType) {
           <View style={styles.iconLabel}>
             <FontAwesome name="user-alt" color="#3C70FF99" size={13} />
             <Text style={styles.iconText}>
-              {post.headCount + 1}/{post.preferHeadCount}
+              {post.headCount}/{post.preferHeadCount}
             </Text>
           </View>
         </View>
