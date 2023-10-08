@@ -1,8 +1,9 @@
 import {fetchGroup, GroupType, NoticeType, storeMemo} from '../../util/group';
-import {StyleSheet, Text, TextInput, View} from 'react-native';
+import {Pressable, StyleSheet, Text, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from '../../constants/styles';
 import RenderGroupItem from './RenderGroupItem';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const GroupMemo = ({
   groupId,
@@ -14,6 +15,7 @@ const GroupMemo = ({
   setGroup: (group: GroupType) => void;
 }) => {
   const [newMemo, setNewMemo] = useState<string>('');
+  const [toggle, setToggle] = useState<boolean>(false);
   const changeMemoHandler = (text: string) => {
     setNewMemo(text);
   };
@@ -30,10 +32,17 @@ const GroupMemo = ({
     setNewMemo('');
   };
 
+  const pressToggle = () => {
+    setToggle(prevState => !prevState);
+  };
+
   return (
     <View style={styles.placeBox}>
       <View style={styles.placeTitle}>
         <Text style={styles.placeTitleText}>가고싶은 여행지</Text>
+        <Pressable onPress={pressToggle}>
+          <AntDesign name="pluscircle" color={Colors.primary500} size={17} />
+        </Pressable>
       </View>
       <View style={styles.memoContent}>
         <RenderGroupItem
@@ -42,16 +51,17 @@ const GroupMemo = ({
           lists={memos}
           setGroup={setGroup}
         />
-
-        <TextInput
-          value={newMemo}
-          style={styles.memoInput}
-          placeholder="더 추가하기"
-          onChangeText={changeMemoHandler}
-          onBlur={submitMemoHandler}
-          blurOnSubmit={true}
-          clearButtonMode="while-editing"
-        />
+        <View style={!toggle && styles.none}>
+          <TextInput
+            value={newMemo}
+            style={styles.memoInput}
+            placeholder="더 추가하기"
+            onChangeText={changeMemoHandler}
+            onBlur={submitMemoHandler}
+            blurOnSubmit={true}
+            clearButtonMode="while-editing"
+          />
+        </View>
       </View>
       <View style={{paddingBottom: 50}} />
     </View>
@@ -65,8 +75,10 @@ const styles = StyleSheet.create({
   },
   placeTitle: {
     backgroundColor: '#FFF',
-    width: 120,
+    width: 145,
     padding: 10,
+    gap: 10,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     borderTopStartRadius: 6,
@@ -74,7 +86,7 @@ const styles = StyleSheet.create({
   },
   placeTitleText: {
     color: Colors.primary500,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
   },
   placeContent: {
@@ -120,6 +132,9 @@ const styles = StyleSheet.create({
     color: Colors.grey9,
     fontWeight: '400',
     paddingTop: 5,
+  },
+  none: {
+    display: 'none',
   },
 });
 

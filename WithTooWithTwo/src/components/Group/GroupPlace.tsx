@@ -7,18 +7,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Colors} from '../../constants/styles';
-import {
-  fetchGroup,
-  GroupType,
-  NoticeType,
-  PlaceType,
-  storePlace,
-} from '../../util/group';
-import {LinkPreview} from '@flyerhq/react-native-link-preview';
-import {PreviewDataImage} from '@flyerhq/react-native-link-preview/lib/types';
+import {fetchGroup, GroupType, PlaceType, storePlace} from '../../util/group';
+
 import GroupLinkPreview from './GroupLinkPreview';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const GroupPlace = ({
   groupId,
@@ -31,16 +25,17 @@ const GroupPlace = ({
 }) => {
   const [placeName, setPlaceName] = useState<string>('');
   const [placeLink, setPlaceLink] = useState<string>('');
-
-  useEffect(() => {
-    // console.log(places);
-  }, []);
+  const [toggle, setToggle] = useState<boolean>(false);
 
   const changeNameHandler = (text: string) => {
     setPlaceName(text);
   };
   const changeLinkHandler = (text: string) => {
     setPlaceLink(text);
+  };
+
+  const pressToggle = () => {
+    setToggle(prevState => !prevState);
   };
 
   const submitPlaceHandler = async () => {
@@ -60,6 +55,9 @@ const GroupPlace = ({
     <View style={styles.placeBox}>
       <View style={styles.placeTitle}>
         <Text style={styles.placeTitleText}>꼭 들릴 맛집</Text>
+        <Pressable onPress={pressToggle}>
+          <AntDesign name="pluscircle" color={Colors.primary500} size={17} />
+        </Pressable>
       </View>
       <View style={styles.scroll}>
         <ScrollView
@@ -72,11 +70,11 @@ const GroupPlace = ({
             </View>
           ))}
         </ScrollView>
-        <View style={styles.inputBlock}>
+        <View style={toggle ? styles.inputBlock : styles.none}>
           <TextInput
             value={placeLink}
             style={styles.linkInput}
-            placeholder="링크"
+            placeholder="링크를 입력하세요"
             onChangeText={changeLinkHandler}
             clearButtonMode="while-editing"
           />
@@ -95,17 +93,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   placeTitle: {
-    backgroundColor: '#FFF',
-    width: 120,
-    padding: 10,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    width: 130,
+    padding: 10,
+    gap: 10,
     borderTopStartRadius: 6,
     borderTopRightRadius: 6,
+    backgroundColor: '#FFF',
   },
   placeTitleText: {
     color: Colors.primary500,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600',
   },
   scroll: {
@@ -160,6 +160,10 @@ const styles = StyleSheet.create({
   metadata: {
     // height: 15,
     // overflow: 'hidden',
+    display: 'none',
+  },
+
+  none: {
     display: 'none',
   },
 });
