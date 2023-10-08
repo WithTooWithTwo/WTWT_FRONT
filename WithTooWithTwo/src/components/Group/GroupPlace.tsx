@@ -18,6 +18,7 @@ import {
 } from '../../util/group';
 import {LinkPreview} from '@flyerhq/react-native-link-preview';
 import {PreviewDataImage} from '@flyerhq/react-native-link-preview/lib/types';
+import GroupLinkPreview from './GroupLinkPreview';
 
 const GroupPlace = ({
   groupId,
@@ -32,17 +33,14 @@ const GroupPlace = ({
   const [placeLink, setPlaceLink] = useState<string>('');
 
   useEffect(() => {
-    console.log(places);
+    // console.log(places);
   }, []);
+
   const changeNameHandler = (text: string) => {
     setPlaceName(text);
   };
   const changeLinkHandler = (text: string) => {
     setPlaceLink(text);
-  };
-
-  const temp = {
-    description: '',
   };
 
   const submitPlaceHandler = async () => {
@@ -64,35 +62,17 @@ const GroupPlace = ({
         <Text style={styles.placeTitleText}>꼭 들릴 맛집</Text>
       </View>
       <View style={styles.scroll}>
-        <ScrollView horizontal={true} style={styles.placeContent}>
+        <ScrollView
+          horizontal={true}
+          style={styles.placeContent}
+          showsHorizontalScrollIndicator={false}>
           {places.map(el => (
             <View key={el.id} style={styles.placeItem}>
-              {/*<Image*/}
-              {/*  style={styles.placeImage}*/}
-              {/*  source={require('../../assets/place1.png')}*/}
-              {/*/>*/}
-              {/*<Text style={styles.placeText}>*/}
-              {/*  {el.name.length > 20 ? el.name.slice(0, 20) + '...' : el.name}*/}
-              {/*</Text>*/}
-              <Text style={styles.placeText}>{el.name}</Text>
-              {/*<LinkPreview*/}
-              {/*  text={el.link + ''}*/}
-              {/*  textContainerStyle={styles.metadata}*/}
-              {/*  containerStyle={styles.placeImage}*/}
-              {/*  metadataTextContainerStyle={styles.metadata}*/}
-              {/*  enableAnimation*/}
-              {/*/>*/}
+              <GroupLinkPreview url={el.link + ''} />
             </View>
           ))}
         </ScrollView>
         <View style={styles.inputBlock}>
-          <TextInput
-            value={placeName}
-            style={styles.nameInput}
-            placeholder="이름"
-            onChangeText={changeNameHandler}
-            clearButtonMode="while-editing"
-          />
           <TextInput
             value={placeLink}
             style={styles.linkInput}
@@ -136,15 +116,13 @@ const styles = StyleSheet.create({
   },
   placeContent: {
     flexDirection: 'row',
-    width: '100%',
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
   placeItem: {
-    marginRight: 12,
+    marginRight: 17,
     width: 140,
     height: 110,
-    gap: 15,
   },
   placeImage: {
     width: 140,
@@ -174,7 +152,7 @@ const styles = StyleSheet.create({
     width: 70,
   },
   linkInput: {
-    width: 170,
+    width: 250,
   },
   placeButton: {
     width: 40,
