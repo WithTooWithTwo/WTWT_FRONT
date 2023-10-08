@@ -46,7 +46,7 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
         const group = await fetchGroup(id);
         setSelectedGroup(group);
       } catch (error) {
-        //setError('Could not fetch expense!');
+        console.log(error);
       }
     }
     getGroup();
@@ -56,7 +56,6 @@ function GroupMainScreen({navigation, route}: GroupMainProps) {
     return (
       <View style={styles.container}>
         <SafeAreaView style={{flex: 1}}>
-          {/* 로딩 상태에 대한 UI */}
           <Text>Loading...</Text>
         </SafeAreaView>
       </View>

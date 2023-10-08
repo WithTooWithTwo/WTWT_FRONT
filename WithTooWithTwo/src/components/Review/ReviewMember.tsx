@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   block: {
+    width: 90,
     padding: 12,
     justifyContent: 'center',
     alignItems: 'center',
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
   },
   nickname: {
     marginTop: 10,
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.grey4,
   },
   selectedBlock: {

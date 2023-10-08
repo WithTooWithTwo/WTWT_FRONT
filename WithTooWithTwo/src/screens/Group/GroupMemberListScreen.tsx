@@ -27,7 +27,6 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
   const selectedGroup = groups.find(group => group.id.toString() == id)!;
   const members = selectedGroup.members;
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const clickUser = {};
 
   return (
     <SafeAreaView style={{backgroundColor: Colors.grey1, flex: 1}}>

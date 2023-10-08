@@ -183,23 +183,13 @@ const ReviewContent = ({
           clearButtonMode="while-editing"
         />
       </View>
-      {/*<ScrollView horizontal={true}>*/}
-      {/*  <View style={style.imageBox}>*/}
-      {/*    <View style={style.imagePicker}>*/}
-      {/*      <OneImagePicker onSetImages={setImageHandler} />*/}
-      {/*    </View>*/}
-      {/*    {image !== undefined && image.length > 0 && (*/}
-      {/*      <RenderImages images={image} size={100} />*/}
-      {/*    )}*/}
-      {/*  </View>*/}
-      {/*</ScrollView>*/}
     </View>
   );
 };
 
 const style = StyleSheet.create({
   container: {
-    marginBottom: 100,
+    marginBottom: 50,
   },
   ratingBlock: {
     height: 210,

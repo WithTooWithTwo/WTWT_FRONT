@@ -6,7 +6,6 @@ import ScreenHeader from '../../components/UI/ScreenHeader';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
-  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -44,7 +43,7 @@ export type ReviewType = {
 };
 
 function GroupReviewScreen({navigation, route}: GroupReviewProps) {
-  const id = route.params?.groupId;
+  const id = route.params.groupId;
   const group = useSelector((state: RootState) => state.group).groups;
   const selectedGroup = group.find((g: GroupType) => g.id.toString() === id)!;
   const [members, setMembers] = useState<GroupMember[]>(selectedGroup.members);
@@ -130,8 +129,6 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
   };
 
   const submitHandler = useCallback(() => {
-    console.log(reviews);
-
     try {
       const sendReview = async () => {
         const response = await axios.post(
