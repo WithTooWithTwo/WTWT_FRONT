@@ -1,11 +1,13 @@
 import {
   Image,
+  Keyboard,
   Pressable,
   SafeAreaView,
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
+  TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native';
@@ -249,25 +251,31 @@ const ChatRoomScreen = ({navigation, route}: ChatRoomScreenProps) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-      <ScreenHeader color={'white'} isGoBack={true} title={opponent.nickname} />
-      <ChatPostData post={post} />
-      <GiftedChat
-        messages={messages}
-        onSend={newMessages => onSend(newMessages)}
-        user={{_id: userId, name: 'You'}}
-        scrollToBottom={true}
-        alwaysShowSend={true}
-        renderMessage={renderMessageBubble}
-        renderInputToolbar={renderInputToolBar}
-        messagesContainerStyle={{paddingBottom: 30}}
-      />
-      <UserInfoModal
-        userId={modalUserId}
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-        groupId={6}
-        user={opponentProfile}
-      />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScreenHeader
+          color={'white'}
+          isGoBack={true}
+          title={opponent.nickname}
+        />
+        <ChatPostData post={post} />
+        <GiftedChat
+          messages={messages}
+          onSend={newMessages => onSend(newMessages)}
+          user={{_id: userId, name: 'You'}}
+          scrollToBottom={true}
+          alwaysShowSend={true}
+          renderMessage={renderMessageBubble}
+          renderInputToolbar={renderInputToolBar}
+          messagesContainerStyle={{paddingBottom: 30}}
+        />
+        <UserInfoModal
+          userId={modalUserId}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          groupId={6}
+          user={opponentProfile}
+        />
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };

@@ -200,7 +200,7 @@ const style = StyleSheet.create({
     marginBottom: 30,
     borderRadius: 10,
     gap: 10,
-    backgroundColor: '#D9D9D940',
+    backgroundColor: Colors.grey1,
   },
   image: {
     justifyContent: 'center',
@@ -239,7 +239,7 @@ const style = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 17,
     borderRadius: 7,
-    backgroundColor: Colors.grey6,
+    backgroundColor: Colors.grey11,
   },
   clickedOptionItem: {
     paddingVertical: 15,
@@ -275,7 +275,7 @@ const style = StyleSheet.create({
   contentBlock: {
     marginTop: 10,
     height: 230,
-    backgroundColor: '#D9D9D950',
+    backgroundColor: Colors.grey11,
     borderRadius: 13,
     padding: 20,
     justifyContent: 'flex-start',

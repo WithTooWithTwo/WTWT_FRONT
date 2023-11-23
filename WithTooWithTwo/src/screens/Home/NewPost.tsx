@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Image,
+  Keyboard,
   Modal,
   Pressable,
   SafeAreaView,
@@ -10,6 +11,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
@@ -236,262 +238,280 @@ function NewPost({navigation}: NewPostScreenProps) {
   }
   return (
     <SafeAreaView style={{backgroundColor: Colors.grey1}}>
-      <ScrollView>
-        <View style={styles.container}>
-          <View style={styles.headerZone}>
-            <Pressable onPress={goToBack}>
-              <Ionicons name={'chevron-back'} color={Colors.grey4} size={25} />
-            </Pressable>
-
-            <Pressable style={styles.postButton} onPress={onSubmit}>
-              <Text style={{color: '#3C70FF', fontWeight: '600'}}>
-                작성하기
-              </Text>
-            </Pressable>
-          </View>
-          <View style={styles.writingZone}>
-            <View style={styles.countryCategory}>
-              <View style={styles.countryCategoryText}>
-                <RNPickerSelect
-                  placeholder={{
-                    label: '나라 선택',
-                    value: 0,
-                  }}
-                  style={{
-                    placeholder: {
-                      color: Colors.placeholder,
-                    },
-                  }}
-                  onValueChange={onChangeCategory}
-                  fixAndroidTouchableBug={true}
-                  useNativeAndroidPickerStyle={false}
-                  items={categoryList}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView>
+          <View style={styles.container}>
+            <View style={styles.headerZone}>
+              <Pressable onPress={goToBack}>
+                <Ionicons
+                  name={'chevron-back'}
+                  color={Colors.grey4}
+                  size={25}
                 />
-                {!category && (
-                  <Ionicons
-                    name={'chevron-down'}
-                    color={Colors.grey4}
-                    size={15}
+              </Pressable>
+
+              <Pressable style={styles.postButton} onPress={onSubmit}>
+                <Text style={{color: '#3C70FF', fontWeight: '600'}}>
+                  작성하기
+                </Text>
+              </Pressable>
+            </View>
+            <View style={styles.writingZone}>
+              <View style={styles.countryCategory}>
+                <View style={styles.countryCategoryText}>
+                  <RNPickerSelect
+                    placeholder={{
+                      label: '나라 선택',
+                      value: 0,
+                    }}
+                    style={{
+                      placeholder: {
+                        color: Colors.placeholder,
+                      },
+                    }}
+                    onValueChange={onChangeCategory}
+                    fixAndroidTouchableBug={true}
+                    useNativeAndroidPickerStyle={false}
+                    items={categoryList}
                   />
-                )}
+                  {!category && (
+                    <Ionicons
+                      name={'chevron-down'}
+                      color={Colors.grey4}
+                      size={15}
+                    />
+                  )}
+                </View>
               </View>
-            </View>
-            <View style={styles.radioBox}>
-              <RadioButton
-                value="FEMALE"
-                color="#3C70FF"
-                uncheckedColor="#3C70FF"
-                status={thunder === true ? 'checked' : 'unchecked'}
-                onPress={() => {
-                  thunder === true ? setThunder(false) : setThunder(true);
-                }}
-              />
-              <Text style={styles.radioText}>번개만남으로 올리기</Text>
-            </View>
-            <TextInput
-              value={title}
-              style={styles.titleBox}
-              placeholder="제목을 작성해주세요"
-              onChangeText={onChangeTitle}
-              blurOnSubmit={false}
-              clearButtonMode="while-editing"
-            />
-            <View style={styles.contentBlock}>
+              <View style={styles.radioBox}>
+                <RadioButton
+                  value="FEMALE"
+                  color="#3C70FF"
+                  uncheckedColor="#3C70FF"
+                  status={thunder === true ? 'checked' : 'unchecked'}
+                  onPress={() => {
+                    thunder === true ? setThunder(false) : setThunder(true);
+                  }}
+                />
+                <Text style={styles.radioText}>번개만남으로 올리기</Text>
+              </View>
               <TextInput
-                value={content}
-                style={styles.contentBox}
-                placeholder="내용을 작성해주세요"
-                multiline={true}
-                onChangeText={onChangeContent}
+                value={title}
+                style={styles.titleBox}
+                placeholder="제목을 작성해주세요"
+                onChangeText={onChangeTitle}
                 blurOnSubmit={false}
                 clearButtonMode="while-editing"
               />
-            </View>
-
-            <ScrollView horizontal={true}>
-              <View style={styles.imageBox}>
-                <ImagesPicker
-                  onSetImages={setImage}
-                  count={image.length}
-                  style={styles.imagePicker}
-                />
-                <RenderImages images={image} size={80} />
-              </View>
-            </ScrollView>
-
-            <View style={styles.infoZone}>
-              <Text style={styles.infoTitleText}>동행 정보</Text>
-              <View style={styles.date}>
-                <Pressable style={styles.dateBox} onPress={showFirstDatePicker}>
-                  {firstDay == null ? (
-                    <Text style={styles.placeholder}>시작 날짜</Text>
-                  ) : (
-                    <Text style={{color: Colors.primary500, fontWeight: '500'}}>
-                      {firstDay.getFullYear()} - {firstDay.getMonth() + 1} -{' '}
-                      {firstDay.getDate()}
-                    </Text>
-                  )}
-                </Pressable>
-                <DateTimePickerModal
-                  isVisible={isFirstDatePickerVisible}
-                  mode="date"
-                  onConfirm={handleFirstConfirm}
-                  onCancel={hideFirstDatePicker}
-                />
-                <Text>~</Text>
-                <Pressable style={styles.dateBox} onPress={showLastDatePicker}>
-                  {lastDay == null ? (
-                    <Text style={styles.placeholder}>종료 날짜</Text>
-                  ) : (
-                    <Text style={{color: Colors.primary500, fontWeight: '500'}}>
-                      {lastDay.getFullYear()} - {lastDay.getMonth() + 1} -{' '}
-                      {lastDay.getDate()}
-                    </Text>
-                  )}
-                </Pressable>
-                <DateTimePickerModal
-                  isVisible={isLastDatePickerVisible}
-                  mode="date"
-                  onConfirm={handleLastConfirm}
-                  onCancel={hideLastDatePicker}
+              <View style={styles.contentBlock}>
+                <TextInput
+                  value={content}
+                  style={styles.contentBox}
+                  placeholder="내용을 작성해주세요"
+                  multiline={true}
+                  onChangeText={onChangeContent}
+                  blurOnSubmit={false}
+                  clearButtonMode="while-editing"
                 />
               </View>
-              <View style={styles.headCountBox}>
-                <Text style={[styles.headCountLabel, {marginLeft: 7}]}>
-                  인원
-                </Text>
-                <View style={styles.headCountButtons}>
-                  <TouchableOpacity onPress={minusHeadCount}>
-                    <FontAwesome5
-                      name="chevron-left"
-                      color={Colors.grey4}
-                      size={14}
-                    />
-                  </TouchableOpacity>
-                  <Text style={{fontWeight: '500'}}>{headCount}</Text>
-                  <TouchableOpacity onPress={plusHeadCount}>
-                    <FontAwesome5
-                      name="chevron-right"
-                      color={Colors.grey4}
-                      size={14}
-                    />
-                  </TouchableOpacity>
+
+              <ScrollView horizontal={true}>
+                <View style={styles.imageBox}>
+                  <ImagesPicker
+                    onSetImages={setImage}
+                    count={image.length}
+                    style={styles.imagePicker}
+                  />
+                  <RenderImages images={image} size={80} />
                 </View>
-              </View>
-              <Modal
-                animationType={'fade'}
-                transparent={true}
-                visible={isModalVisible}
-                onRequestClose={() => {
-                  setIsModalVisible(!isModalVisible);
-                }}>
-                <SelectMembers
-                  onClose={closeModal}
-                  members={members}
-                  addMember={onChangeMembers}
-                  deleteMember={deleteMembers}
-                />
-              </Modal>
-              <Pressable
-                style={styles.groupPeople}
-                onPress={() => setIsModalVisible(!isModalVisible)}>
-                <Text style={styles.groupPeopleLabel}>그룹 인원 추가하기</Text>
-                <View
-                  style={{gap: 10, flexDirection: 'row', alignItems: 'center'}}>
-                  {members && members.length != 0 && (
-                    <Text style={styles.groupPeopleCount}>
-                      {members.length}명
-                    </Text>
-                  )}
-                  <FeatherIcon
-                    name="plus"
-                    color={members.length ? Colors.grey4 : Colors.primary500}
-                    size={25}
+              </ScrollView>
+
+              <View style={styles.infoZone}>
+                <Text style={styles.infoTitleText}>동행 정보</Text>
+                <View style={styles.date}>
+                  <Pressable
+                    style={styles.dateBox}
+                    onPress={showFirstDatePicker}>
+                    {firstDay == null ? (
+                      <Text style={styles.placeholder}>시작 날짜</Text>
+                    ) : (
+                      <Text
+                        style={{color: Colors.primary500, fontWeight: '500'}}>
+                        {firstDay.getFullYear()} - {firstDay.getMonth() + 1} -{' '}
+                        {firstDay.getDate()}
+                      </Text>
+                    )}
+                  </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isFirstDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleFirstConfirm}
+                    onCancel={hideFirstDatePicker}
+                  />
+                  <Text>~</Text>
+                  <Pressable
+                    style={styles.dateBox}
+                    onPress={showLastDatePicker}>
+                    {lastDay == null ? (
+                      <Text style={styles.placeholder}>종료 날짜</Text>
+                    ) : (
+                      <Text
+                        style={{color: Colors.primary500, fontWeight: '500'}}>
+                        {lastDay.getFullYear()} - {lastDay.getMonth() + 1} -{' '}
+                        {lastDay.getDate()}
+                      </Text>
+                    )}
+                  </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isLastDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleLastConfirm}
+                    onCancel={hideLastDatePicker}
                   />
                 </View>
+                <View style={styles.headCountBox}>
+                  <Text style={[styles.headCountLabel, {marginLeft: 7}]}>
+                    인원
+                  </Text>
+                  <View style={styles.headCountButtons}>
+                    <TouchableOpacity onPress={minusHeadCount}>
+                      <FontAwesome5
+                        name="chevron-left"
+                        color={Colors.grey4}
+                        size={14}
+                      />
+                    </TouchableOpacity>
+                    <Text style={{fontWeight: '500'}}>{headCount}</Text>
+                    <TouchableOpacity onPress={plusHeadCount}>
+                      <FontAwesome5
+                        name="chevron-right"
+                        color={Colors.grey4}
+                        size={14}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <Modal
+                  animationType={'fade'}
+                  transparent={true}
+                  visible={isModalVisible}
+                  onRequestClose={() => {
+                    setIsModalVisible(!isModalVisible);
+                  }}>
+                  <SelectMembers
+                    onClose={closeModal}
+                    members={members}
+                    addMember={onChangeMembers}
+                    deleteMember={deleteMembers}
+                  />
+                </Modal>
+                <Pressable
+                  style={styles.groupPeople}
+                  onPress={() => setIsModalVisible(!isModalVisible)}>
+                  <Text style={styles.groupPeopleLabel}>
+                    그룹 인원 추가하기
+                  </Text>
+                  <View
+                    style={{
+                      gap: 10,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}>
+                    {members && members.length != 0 && (
+                      <Text style={styles.groupPeopleCount}>
+                        {members.length}명
+                      </Text>
+                    )}
+                    <FeatherIcon
+                      name="plus"
+                      color={members.length ? Colors.grey4 : Colors.primary500}
+                      size={25}
+                    />
+                  </View>
+                </Pressable>
+              </View>
+              <View style={styles.infoZone}>
+                <Text style={styles.infoTitleText}>지역 설정</Text>
+                <View style={styles.tagBox}>
+                  <View style={styles.groupPeople}>
+                    <TextInput
+                      value={newTag}
+                      onChangeText={onChangeNewTag}
+                      style={styles.groupPeopleLabel}
+                      placeholder="선호지역 추가하기"
+                      onBlur={plusTags}
+                    />
+                  </View>
+                  <View style={styles.tagListBox}>
+                    {tags.map(tag => (
+                      <View key={tag} style={styles.tags}>
+                        <Text>{tag}</Text>
+                        <AntDesign
+                          name="close"
+                          color={Colors.primary500}
+                          onPress={() => deleteTags(tag)}
+                        />
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+              <View style={styles.infoZone}>
+                <Text style={styles.infoTitleText}>동행인 설정</Text>
+                <View style={styles.infoBox}>
+                  <View style={styles.preferBox}>
+                    <Text style={styles.preferText}>선호하는 성별</Text>
+                    <RadioButton.Group
+                      onValueChange={value => onChangePreferGender(value)}
+                      value={preferGender}>
+                      <View style={styles.preferGenderGroup}>
+                        <View style={styles.preferGenderBox}>
+                          <RadioButton value="FEMALE" color="#3C70FF" />
+                          <Text style={styles.preferGenderLabel}>여자</Text>
+                        </View>
+                        <View style={styles.preferGenderBox}>
+                          <RadioButton value="MALE" color="#3C70FF" />
+                          <Text style={styles.preferGenderLabel}>남자</Text>
+                        </View>
+                        <View style={styles.preferGenderBox}>
+                          <RadioButton value="NONE" color="#3C70FF" />
+                          <Text style={styles.preferGenderLabel}>상관없음</Text>
+                        </View>
+                      </View>
+                    </RadioButton.Group>
+                  </View>
+                  <View style={styles.preferBox}>
+                    <Text style={styles.preferText}>선호하는 나이대</Text>
+                    <View style={styles.preferAgeBox}>
+                      <Pressable style={styles.preferAgeButton}>
+                        <Text style={styles.preferAgeLabel}>{range[0]}대</Text>
+                      </Pressable>
+                      <Text
+                        style={[styles.preferAgeLabel, {marginHorizontal: 10}]}>
+                        ~
+                      </Text>
+                      <Pressable style={styles.preferAgeButton}>
+                        <Text style={styles.preferAgeLabel}>{range[1]}대</Text>
+                      </Pressable>
+                    </View>
+                    <MultiSlider
+                      values={range}
+                      min={0}
+                      max={70}
+                      step={10}
+                      trackStyle={{height: 5}}
+                      onValuesChange={onChangeRange}
+                    />
+                  </View>
+                </View>
+              </View>
+              <Pressable style={styles.submitButton} onPress={onSubmit}>
+                <Text style={styles.submitText}>작성하기</Text>
               </Pressable>
             </View>
-            <View style={styles.infoZone}>
-              <Text style={styles.infoTitleText}>지역 설정</Text>
-              <View style={styles.tagBox}>
-                <View style={styles.groupPeople}>
-                  <TextInput
-                    value={newTag}
-                    onChangeText={onChangeNewTag}
-                    style={styles.groupPeopleLabel}
-                    placeholder="선호지역 추가하기"
-                    onBlur={plusTags}
-                  />
-                </View>
-                <View style={styles.tagListBox}>
-                  {tags.map(tag => (
-                    <View key={tag} style={styles.tags}>
-                      <Text>{tag}</Text>
-                      <AntDesign
-                        name="close"
-                        color={Colors.primary500}
-                        onPress={() => deleteTags(tag)}
-                      />
-                    </View>
-                  ))}
-                </View>
-              </View>
-            </View>
-            <View style={styles.infoZone}>
-              <Text style={styles.infoTitleText}>동행인 설정</Text>
-              <View style={styles.infoBox}>
-                <View style={styles.preferBox}>
-                  <Text style={styles.preferText}>선호하는 성별</Text>
-                  <RadioButton.Group
-                    onValueChange={value => onChangePreferGender(value)}
-                    value={preferGender}>
-                    <View style={styles.preferGenderGroup}>
-                      <View style={styles.preferGenderBox}>
-                        <RadioButton value="FEMALE" color="#3C70FF" />
-                        <Text style={styles.preferGenderLabel}>여자</Text>
-                      </View>
-                      <View style={styles.preferGenderBox}>
-                        <RadioButton value="MALE" color="#3C70FF" />
-                        <Text style={styles.preferGenderLabel}>남자</Text>
-                      </View>
-                      <View style={styles.preferGenderBox}>
-                        <RadioButton value="NONE" color="#3C70FF" />
-                        <Text style={styles.preferGenderLabel}>상관없음</Text>
-                      </View>
-                    </View>
-                  </RadioButton.Group>
-                </View>
-                <View style={styles.preferBox}>
-                  <Text style={styles.preferText}>선호하는 나이대</Text>
-                  <View style={styles.preferAgeBox}>
-                    <Pressable style={styles.preferAgeButton}>
-                      <Text style={styles.preferAgeLabel}>{range[0]}대</Text>
-                    </Pressable>
-                    <Text
-                      style={[styles.preferAgeLabel, {marginHorizontal: 10}]}>
-                      ~
-                    </Text>
-                    <Pressable style={styles.preferAgeButton}>
-                      <Text style={styles.preferAgeLabel}>{range[1]}대</Text>
-                    </Pressable>
-                  </View>
-                  <MultiSlider
-                    values={range}
-                    min={0}
-                    max={70}
-                    step={10}
-                    trackStyle={{height: 5}}
-                    onValuesChange={onChangeRange}
-                  />
-                </View>
-              </View>
-            </View>
-            <Pressable style={styles.submitButton} onPress={onSubmit}>
-              <Text style={styles.submitText}>작성하기</Text>
-            </Pressable>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

@@ -7,6 +7,8 @@ import {CategoryType, fetchCategoryList} from '../../util/post';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../store/store';
 import {setCategory} from '../../slices/filteringSlice';
+import {patchAlarms} from '../../util/group';
+import AlarmIcon from './AlarmIcon';
 
 function MainHeader() {
   const navigation = useNavigation<any>();
@@ -50,7 +52,7 @@ function MainHeader() {
           }}
         />
       </Pressable>
-      <Icon name="bell" size={25} color="#868B94" onPress={goToNoticeHandler} />
+      <AlarmIcon />
     </View>
   );
 }

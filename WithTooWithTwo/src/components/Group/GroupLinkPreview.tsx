@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 10,
+    fontSize: 13,
   },
 });
 

@@ -62,7 +62,7 @@ function GroupMemberListScreen({navigation, route}: GroupMemberProps) {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: Colors.grey0,
+    backgroundColor: 'white',
     paddingHorizontal: 32,
     paddingTop: 20,
   },

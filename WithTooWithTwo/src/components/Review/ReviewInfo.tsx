@@ -6,10 +6,16 @@ const ReviewInfo = ({group}: {group: GroupType}) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageBlock}>
-        {group.image && (
+        {group.image ? (
           <Image
             source={{uri: group.image}}
-            resizeMode={'cover'}
+            resizeMode="cover"
+            style={{width: 60, height: 60}}
+          />
+        ) : (
+          <Image
+            source={require('../../assets/group_main.png')}
+            resizeMode="cover"
             style={{width: 60, height: 60}}
           />
         )}
@@ -34,7 +40,7 @@ const styles = StyleSheet.create({
     height: 92,
     paddingVertical: 14,
     paddingHorizontal: 24,
-    backgroundColor: Colors.grey6,
+    backgroundColor: Colors.grey1,
   },
   imageBlock: {
     width: 60,

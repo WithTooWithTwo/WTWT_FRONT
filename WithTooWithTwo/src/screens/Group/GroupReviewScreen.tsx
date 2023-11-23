@@ -22,6 +22,7 @@ import ReviewContent from '../../components/Review/ReviewContent';
 import {AxiosError} from 'axios/index';
 import axios from 'axios';
 import {MyPageStackParamList} from '../Authenticated/MyPageScreen';
+import {sendReview} from '../../util/review';
 
 type GroupReviewNavigationProp = NativeStackNavigationProp<
   GroupDetailStackParamList | MyPageStackParamList,
@@ -128,16 +129,9 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
     });
   };
 
-  const submitHandler = useCallback(() => {
+  const submitHandler = useCallback(async () => {
     try {
-      const sendReview = async () => {
-        const response = await axios.post(
-          'http://3.39.87.78:8080' + '/reviews/' + id,
-          reviews,
-        );
-      };
-      sendReview();
-
+      const response = await sendReview(id, reviews);
       Alert.alert('알림', '등록 되었습니다!');
       navigation.goBack();
     } catch (error) {
@@ -152,8 +146,8 @@ function GroupReviewScreen({navigation, route}: GroupReviewProps) {
 
   return (
     <View style={{flex: 1}}>
-      <SafeAreaView style={{backgroundColor: Colors.grey1, flex: 1}}>
-        <ScreenHeader title="그룹" color={Colors.grey1} isGoBack={true} />
+      <SafeAreaView style={{backgroundColor: 'white', flex: 1}}>
+        <ScreenHeader title="그룹" color={'white'} isGoBack={true} />
         <ScrollView style={styles.container}>
           <ReviewInfo group={selectedGroup} />
           <View style={styles.header}>
