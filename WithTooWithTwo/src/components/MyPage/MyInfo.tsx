@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Colors} from '../../constants/styles';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,7 +19,17 @@ const MyInfo = ({user, isMe}: {user: UserType; isMe?: boolean}) => {
   return (
     <View style={styles.container}>
       <View style={styles.userBox}>
-        <View style={styles.leftBox}></View>
+        <View style={styles.leftBox}>
+          {user.profileImage.uri ? (
+            <Image source={{uri: user.profileImage.uri}} resizeMode="cover" />
+          ) : (
+            <Image
+              source={require('../../assets/wtwt_logo_image2.png')}
+              resizeMode="cover"
+              style={{width: 45, height: 25}}
+            />
+          )}
+        </View>
         <View style={styles.rightBox}>
           <View style={styles.nicknameBlock}>
             <Text style={styles.nicknameText}>{user?.nickname}님</Text>
@@ -99,14 +109,18 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   leftBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 70,
     height: 70,
     borderRadius: 70,
-    backgroundColor: Colors.grey5,
+    backgroundColor: Colors.sub2,
+    marginLeft: 7,
   },
   rightBox: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
     gap: 6,
   },
   nicknameBlock: {

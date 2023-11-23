@@ -31,10 +31,14 @@ const ChatListItem = ({chat}: {chat: ChatListType}) => {
         </View>
         <View style={styles.line} />
         <Pressable style={styles.chatBox} onPress={chatRoomPressHandler}>
-          <Image
-            source={require('../../assets/group_main.png')}
-            style={styles.chatImage}
-          />
+          {chat.user.profile ? (
+            <Image source={{uri: chat.user.profile}} style={styles.chatImage} />
+          ) : (
+            <Image
+              source={require('../../assets/wtwt_logo_image.png')}
+              style={{width: 43, height: 43}}
+            />
+          )}
           <View style={styles.chatRightBox}>
             <Text style={styles.chatNickname}>{chat.user.nickname}</Text>
             <Text style={styles.chatContent}>{chat.lastMessage}</Text>
@@ -76,11 +80,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 5,
   },
   chatImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 43,
     height: 43,
-    borderRadius: 43 / 2,
+    borderRadius: 43,
+    backgroundColor: Colors.sub2,
+    borderWidth: 1,
+    borderColor: Colors.sub2,
   },
   chatRightBox: {
     paddingLeft: 12,
@@ -88,6 +98,7 @@ const styles = StyleSheet.create({
   chatNickname: {
     fontSize: 13,
     marginBottom: 5,
+    fontWeight: '500',
   },
   chatContent: {
     fontWeight: '300',

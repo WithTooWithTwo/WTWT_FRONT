@@ -1,4 +1,13 @@
-import {Alert, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import AuthInput from '../../components/Auth/AuthInput';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -54,41 +63,43 @@ function LoginScreen({navigation}: SignInScreenProps) {
     return <LoadingOverlay message="Logging you in..." />;
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.logo}>
-        <Image
-          style={{width: 260, height: 30}}
-          source={require('../../assets/logo_black.png')}
-        />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <View style={styles.logo}>
+          <Image
+            style={{width: 260, height: 30}}
+            source={require('../../assets/logo_black.png')}
+          />
+        </View>
+        <View style={styles.inputZone}>
+          <AuthInput
+            label="이메일 입력"
+            value={email}
+            onUpdateValue={val => updateInputValueHandler('email', val)}
+          />
+          <AuthInput
+            label="비밀번호 입력"
+            value={password}
+            onUpdateValue={val => updateInputValueHandler('password', val)}
+          />
+        </View>
+        <View style={styles.buttonZone}>
+          <Pressable
+            onPress={loginHandler}
+            style={
+              !canGoNext
+                ? styles.loginButton
+                : [styles.loginButton, styles.loginButtonActive]
+            }
+            disabled={!canGoNext}>
+            <Text style={styles.loginButtonText}>로그인 하기</Text>
+          </Pressable>
+          <Pressable onPress={toSignUp}>
+            <Text style={styles.joinButton}>회원가입하기</Text>
+          </Pressable>
+        </View>
       </View>
-      <View style={styles.inputZone}>
-        <AuthInput
-          label="이메일 입력"
-          value={email}
-          onUpdateValue={val => updateInputValueHandler('email', val)}
-        />
-        <AuthInput
-          label="비밀번호 입력"
-          value={password}
-          onUpdateValue={val => updateInputValueHandler('password', val)}
-        />
-      </View>
-      <View style={styles.buttonZone}>
-        <Pressable
-          onPress={loginHandler}
-          style={
-            !canGoNext
-              ? styles.loginButton
-              : [styles.loginButton, styles.loginButtonActive]
-          }
-          disabled={!canGoNext}>
-          <Text style={styles.loginButtonText}>로그인 하기</Text>
-        </Pressable>
-        <Pressable onPress={toSignUp}>
-          <Text style={styles.joinButton}>회원가입하기</Text>
-        </Pressable>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 

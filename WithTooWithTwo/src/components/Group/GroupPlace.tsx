@@ -79,7 +79,7 @@ const GroupPlace = ({
             clearButtonMode="while-editing"
           />
           <Pressable style={styles.placeButton} onPress={submitPlaceHandler}>
-            <Text>저장</Text>
+            <AntDesign name={'enter'} size={17} color={Colors.grey4} />
           </Pressable>
         </View>
       </View>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     width: 250,
   },
   placeButton: {
-    width: 40,
+    marginRight: -5,
   },
   metadata: {
     // height: 15,

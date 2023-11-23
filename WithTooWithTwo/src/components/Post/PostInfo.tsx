@@ -46,12 +46,15 @@ function PostInfo({postData}: {postData: OnePostType}) {
           <Text style={styles.label}>선호 지역</Text>
         </View>
         <View style={styles.itemBox}>
-          {postData.tags &&
+          {postData?.tags?.length ? (
             postData.tags.slice(0, 3).map(tag => (
               <View key={tag} style={styles.item}>
                 <Text style={styles.itemText}>{tag}</Text>
               </View>
-            ))}
+            ))
+          ) : (
+            <Text style={styles.emptyString}>선호 지역이 없어요 :)</Text>
+          )}
         </View>
       </View>
       <View style={styles.dataBox}>
@@ -65,7 +68,13 @@ function PostInfo({postData}: {postData: OnePostType}) {
           <Text style={styles.label}>사람들</Text>
         </View>
         <View style={styles.itemBox}>
-          <MemberList members={postData.members} />
+          {postData.members.length ? (
+            <MemberList members={postData.members} />
+          ) : (
+            <Text style={styles.emptyString}>
+              아직 함께하는 사람들이 없어요 :)
+            </Text>
+          )}
         </View>
       </View>
       <View style={styles.dataBox}>
@@ -137,6 +146,10 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 12,
     fontWeight: '400',
+  },
+  emptyString: {
+    fontSize: 11,
+    color: Colors.grey4,
   },
 });
 export default PostInfo;

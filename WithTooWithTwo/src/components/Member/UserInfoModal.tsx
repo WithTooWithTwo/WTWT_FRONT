@@ -64,12 +64,22 @@ const UserInfoModal = ({
             <View style={styles.modalContainer}>
               <View style={styles.imageBox}>
                 <View style={styles.image}>
-                  {user && user.profile && (
+                  {user?.profile ? (
                     <Image source={{uri: user.profile}} style={styles.image} />
+                  ) : (
+                    <Image
+                      source={require('../../assets/wtwt_logo_image2.png')}
+                      style={{
+                        width: 45,
+                        height: 27,
+                      }}
+                    />
                   )}
                 </View>
                 <Text style={styles.nickname}>{userData.nickname}</Text>
-                <Text style={styles.status}>{userData.statusMessage}</Text>
+                <Text style={styles.status}>
+                  {userData.statusMessage ? userData.statusMessage : 'wtwt :)'}
+                </Text>
               </View>
               <View style={styles.buttonBox}>
                 <Pressable style={styles.button} onPress={goToUserPage}>
@@ -115,6 +125,8 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 80,
     backgroundColor: Colors.grey6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   nickname: {
     fontSize: 16,
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 12,
     color: Colors.grey4,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   buttonBox: {
     flexDirection: 'row',

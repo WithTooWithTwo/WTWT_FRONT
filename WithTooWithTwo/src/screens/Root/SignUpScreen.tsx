@@ -3,12 +3,14 @@ import {
   Alert,
   Dimensions,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -76,11 +78,12 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
         setCheckPwd(enteredValue.trim());
         break;
       case 'statusMessage':
-        setStatusMessage(enteredValue.trim());
+        setStatusMessage(enteredValue);
         break;
     }
   };
 
+  console.log(date);
   const onPressDate = () => {
     // 날짜 클릭 시
     setMode('date'); // 모달 유형을 date로 변경
@@ -188,27 +191,28 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
   };
 
   const handleKeyboardSubmit = () => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd();
-    }
+    // if (scrollViewRef.current) {
+    //   scrollViewRef.current.scrollToEnd();
+    // }
   };
 
   const handleScrollUp = () => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollTo({y: 0});
-    }
+    // if (scrollViewRef.current) {
+    //   scrollViewRef.current.scrollTo({y: 0});
+    // }
   };
 
   const canGoNext =
     name && nickname && phoneNumber && email && password && checkPwd;
 
   return (
-    <>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView>
         <ScrollView
-          ref={scrollViewRef}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}>
+        // ref={scrollViewRef}
+        // onScroll={handleScroll}
+        // scrollEventThrottle={16}
+        >
           <DismissKeyboardView style={styles.container}>
             <View style={styles.inputZone}>
               <AuthInput
@@ -382,7 +386,7 @@ function SignUpScreen({navigation}: SignUpScreenProps) {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    </>
+    </TouchableWithoutFeedback>
   );
 }
 

@@ -18,14 +18,11 @@ export async function fetchReviewOptions(api: string = '') {
   return options;
 }
 
-export const sendReview = async (
-  id: string,
-  review: ReviewType,
-  contentType: string,
-) => {
-  const response = await axios.post(URL + '/reviews/' + id, {
-    headers: {'content-type': contentType || ''},
-  });
+export const sendReview = async (id: string, reviews: ReviewType[]) => {
+  const response = await axios.post(
+    'http://3.39.87.78:8080' + '/reviews/' + id,
+    reviews,
+  );
   const result = response.data.result;
   return response;
 };
