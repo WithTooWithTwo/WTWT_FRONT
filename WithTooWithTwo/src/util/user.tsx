@@ -3,8 +3,6 @@ import {OptionType} from './review';
 import axios from 'axios';
 import {GroupMember, GroupType} from './group';
 
-const API_KEY = 'http://3.39.87.78:8080';
-
 export interface UserType {
   id: number;
   profileImage: ImageType;
@@ -52,13 +50,13 @@ export const defaultUser: UserType = {
 };
 
 export const fetchUser = async () => {
-  const response = await axios.get(API_KEY + '/users');
+  const response = await axios.get(process.env.API_KEY + '/users');
   const user: UserType = await response.data;
   return user;
 };
 
 export const fetchAnotherUser = async (id: string) => {
-  const response = await axios.get(API_KEY + '/users/' + id);
+  const response = await axios.get(process.env.API_KEY + '/users/' + id);
   const user: UserType = await response.data;
   return user;
 };
@@ -70,7 +68,7 @@ export type SearchUserType = {
 
 export const checkIsUser = async (nickname: string) => {
   const response = await axios.get(
-    API_KEY + '/users/check?nickname=' + nickname,
+    process.env.API_KEY + '/users/check?nickname=' + nickname,
   );
   const data: SearchUserType = response.data;
   return data;

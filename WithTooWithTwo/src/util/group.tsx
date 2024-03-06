@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const API_KEY = 'http://3.39.87.78:8080';
-
 const testGroup = {
   groupId: Math.random().toString(),
   groupImage: 'hi.jpeg',
@@ -59,7 +57,7 @@ export const defaultGroupMember = {
 };
 
 export async function fetchGroup(api: string = '') {
-  const response = await axios.get(API_KEY + '/groups/' + api);
+  const response = await axios.get(process.env.API_KEY + '/groups/' + api);
   const groups: GroupType = {
     id: response.data.id,
     dday: response.data.dday,
@@ -91,7 +89,7 @@ export type MyGroupType = {
 };
 
 export async function fetchGroupList() {
-  const response = await axios.get(API_KEY + '/groups');
+  const response = await axios.get(process.env.API_KEY + '/groups');
   const groups = new Array<GroupType>();
   for (const key in response.data) {
     const groupObj = {
@@ -115,7 +113,9 @@ export async function fetchGroupList() {
 }
 
 export const fetchMemberList = async (groupId: string) => {
-  const response = await axios.get(API_KEY + '/groups/' + groupId + '/members');
+  const response = await axios.get(
+    process.env.API_KEY + '/groups/' + groupId + '/members',
+  );
   const members = new Array<GroupMember>();
   for (const key in response.data) {
     const memberObj = {
@@ -131,7 +131,12 @@ export const fetchMemberList = async (groupId: string) => {
 
 export const storeNotice = async (groupId: string, notice: string) => {
   const response = await axios.post(
-    API_KEY + '/groups/' + groupId + '/notice' + '?contents=' + notice,
+    process.env.API_KEY +
+      '/groups/' +
+      groupId +
+      '/notice' +
+      '?contents=' +
+      notice,
   );
   return response.data;
 };
@@ -143,21 +148,27 @@ export const patchList = async (
   notice: string,
 ) => {
   const response = await axios.patch(
-    API_KEY + '/groups/' + groupId + `/${type}/` + id + '?contents=' + notice,
+    process.env.API_KEY +
+      '/groups/' +
+      groupId +
+      `/${type}/` +
+      id +
+      '?contents=' +
+      notice,
   );
   return response.data;
 };
 
 export const deleteList = async (type: string, groupId: string, id: number) => {
   const response = await axios.delete(
-    API_KEY + '/groups/' + groupId + `/${type}/` + id,
+    process.env.API_KEY + '/groups/' + groupId + `/${type}/` + id,
   );
   return response.data;
 };
 
 export const storeMemo = async (groupId: string, memo: string) => {
   const response = await axios.post(
-    API_KEY + '/groups/' + groupId + '/memo' + '?contents=' + memo,
+    process.env.API_KEY + '/groups/' + groupId + '/memo' + '?contents=' + memo,
   );
   return response.data;
 };
@@ -168,7 +179,7 @@ export const storePlace = async (
   link: string,
 ) => {
   const response = await axios.post(
-    API_KEY +
+    process.env.API_KEY +
       '/groups/' +
       groupId +
       '/link' +
@@ -182,7 +193,7 @@ export const storePlace = async (
 
 export const inviteMember = async (groupId: string, userId: string) => {
   const response = await axios.post(
-    API_KEY + '/groups/' + userId + '/invite/' + groupId,
+    process.env.API_KEY + '/groups/' + userId + '/invite/' + groupId,
   );
   return response;
 };
@@ -206,7 +217,9 @@ export const defaultAlarm = {
 };
 
 export const patchAlarms = async () => {
-  const response = await axios.get(API_KEY + '/notifications?isInvite=true');
+  const response = await axios.get(
+    process.env.API_KEY + '/notifications?isInvite=true',
+  );
   const alarms: AlarmType[] = response.data;
   // console.log(alarms, 'Alarms');
   return alarms;
@@ -214,7 +227,7 @@ export const patchAlarms = async () => {
 
 export const acceptInvitation = async (id: string) => {
   const response = await axios.post(
-    API_KEY + '/notifications/' + id + '?sAccept=true',
+    process.env.API_KEY + '/notifications/' + id + '?sAccept=true',
   );
   return response.data;
 };

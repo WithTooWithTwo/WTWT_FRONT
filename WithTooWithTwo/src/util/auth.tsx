@@ -3,10 +3,8 @@ import {Platform} from 'react-native';
 import {ImagePickerResponse} from 'react-native-image-picker';
 import {ImageType} from '../slices/postsSlice';
 
-const API_KEY = 'http://3.39.87.78:8080';
-
 async function authenticate(email: string, password: string) {
-  const response = await axios.post(API_KEY + '/login', {
+  const response = await axios.post(process.env.API_KEY + '/login', {
     email: email,
     password: password,
   });
@@ -50,7 +48,7 @@ export async function createUser(value: valueType) {
   //   API_KEY + '/login?email=&password=',
   //   formData,
   // );
-  const response = await axios.post(API_KEY + '/users', formData);
+  const response = await axios.post(process.env.API_KEY + '/users', formData);
   // 현재 토큰 없이 아이디만 제공됨
   return response.data.id;
 }
@@ -60,6 +58,6 @@ export function login(email: string, password: string) {
 }
 
 export const subscribe = () => {
-  const response = axios.post(API_KEY + '/notifications/subscribe');
+  const response = axios.post(process.env.API_KEY + '/notifications/subscribe');
   return response;
 };
